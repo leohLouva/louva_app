@@ -20,6 +20,7 @@
     <!-- Vector Map css -->
     <link rel="stylesheet" href="{{ asset("/assets/vendor/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css") }}">
 
+    
     <!-- Theme Config Js -->
     <script src="{{ asset("/assets/js/hyper-config.js") }}"></script>
 
