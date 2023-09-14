@@ -1,7 +1,4 @@
-
-
-
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-layout-mode="detached" data-topbar-color="dark" data-menu-color="light" data-sidenav-user="true">
 
 <head>
@@ -40,53 +37,51 @@
                         <span><img src="assets/images/logo.png" alt="logo" height="150px"></span>
                     </a>
                 </div>
-                <form method="POST" action="{{ route('login') }}">
-                    @csrf <!-- Agrega el token CSRF -->
+
                 <div class="my-auto">
                     <div class="mb-3"></div>
-                    <div class="mb-3"></div>
-                    <div class="mb-3">                            
-                        <label for="emailaddress" class="form-label">{{ __('Email') }}</label>
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Ingresa tu email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-                        @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
                     <div class="row mb-3">
-                        <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Ingresa tu password" name="password" required autocomplete="current-password">
-                        @error('password')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror 
-                    </div>
-                    <div class="row mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
-                            <label class="form-check-label" for="remember">
-                                {{ __('Remember Me') }}
-                            </label>
+                        <div class="col-md-6">
+
+                            @error('password')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                     </div>
-                    <div class="row mb-0">
-                        <div class="col-md-8 offset-md-4">
-                            <button type="submit" class="btn btn-primary">
-                                {{ __('Login') }}
-                            </button>
 
-                            @if (Route::has('password.request'))
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
-                                </a>
-                            @endif
+                        <div class="mb-3">
+                           
                         </div>
-                    </div>
-                    </form><!-- end form-->
-                
+                        <div class="mb-3">                            
+                            <label for="emailaddress" class="form-label">{{ __('Email') }}</label>
+                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Ingresa tu email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">{{ __('Password') }}</label>
+                            <input class="form-control @error('password') is-invalid @enderror" type="password" required autocomplete="current-password" id="password" placeholder="Ingresa tu contraseña">
+                        </div>
+                        <div class="d-grid mb-0 text-center">
+                            <button type="submit" class="btn btn-primary">{{ __('Login') }}</button>
+                                @if (Route::has('password.request'))
+                                    <a class="btn btn-link" href="{{ route('password.request') }}">
+                                        {{ __('Forgot Your Password?') }}
+                                    </a>
+                                @endif
+                            
+                        </div>
+                      
+                    </form>
+                    <!-- end form-->
+                </div>
 
                 <!-- Footer-->
                 <footer class="footer footer-alt">
@@ -98,17 +93,16 @@
         <!-- end auth-fluid-form-box-->
 
         <!-- Auth fluid right content -->
-        <!--<div class="auth-fluid-right text-center">
+        <div class="auth-fluid-right text-center">
             <div class="auth-user-testimonial">
                 <h2 class="mb-3">Louva Studio</h2>
                 <p class="lead"><i class="mdi mdi-format-quote-open"></i>Estudio de arquitectura, ingeniería y urbanismo <i class="mdi mdi-format-quote-close"></i>
                 </p>
      
-            </div>  end auth-user-testimonial-->
+            </div> <!-- end auth-user-testimonial-->
         </div>
         <!-- end Auth fluid right content -->
     </div>
-</div>
     <!-- end auth-fluid-->
     <!-- Vendor js -->
     <script src="assets/js/vendor.min.js"></script>
@@ -119,8 +113,6 @@
 </body>
 
 </html>
-
-
 
 
 

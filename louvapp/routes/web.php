@@ -18,17 +18,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
 // Rutas de autenticación
 Auth::routes();
 /*Route::middleware(['auth'])->group(function () {
     // Rutas protegidas
     
 });*/
+
+
 // Otras rutas de tu aplicación
-//Route::get('/home', 'HomeController@index')->name('home');
-
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/user/list_user', [App\Http\Controllers\UserController::class, 'index'])->name('user');
 

@@ -1,4 +1,3 @@
-@extends('layouts.test')
 
 @section('titulo')
     Users - Con sesión iniciada
@@ -23,7 +22,7 @@
                             </div>
                         @endif
                         
-                        {{ __('Estamos en usuarios') }}
+                        
                     </div>
                 </div>
             </div>
