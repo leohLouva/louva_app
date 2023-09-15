@@ -1,4 +1,6 @@
-function actionMenu(section,action){
+function actionMenu(event, section,action){
+    event.preventDefault(); // Evita la navegación predeterminada
+
     switch (section) {
         case 'user':
             switch (action) {
