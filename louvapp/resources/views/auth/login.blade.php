@@ -1,7 +1,4 @@
-
-
-
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-layout-mode="detached" data-topbar-color="dark" data-menu-color="light" data-sidenav-user="true">
 
 <head>
@@ -12,16 +9,16 @@
     <meta content="Coderthemes" name="author" />
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="assets/images/favicon.ico">
+    <link rel="shortcut icon" href="{{ asset("/assets/images/favicon.ico") }}">
 
     <!-- Theme Config Js -->
-    <script src="assets/js/hyper-config.js"></script>
+    <script src="{{ asset("/assets/js/hyper-config.js") }}"></script>
 
     <!-- App css -->
-    <link href="assets/css/app-modern.min.css" rel="stylesheet" type="text/css" id="app-style" />
+    <link href="{{ asset("/assets/css/app-modern.min.css") }}" rel="stylesheet" type="text/css" id="app-style" />
 
     <!-- Icons css -->
-    <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="{{ asset("/assets/css/icons.min.css") }}" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="authentication-bg pb-0">
@@ -33,11 +30,11 @@
 
                 <!-- Logo -->
                 <div class="auth-brand text-center text-lg-start">
-                    <a href="index.html" class="logo-dark">
-                        <span><img src="assets/images/logo-dark.png" alt="dark logo" height="125px"></span>
+                    <a href="{{ url("index.html") }}" class="logo-dark">
+                        <span><img src="{{ asset("/assets/images/logo-dark.png") }}" alt="dark logo" height="125px"></span>
                     </a>
-                    <a href="index.html" class="logo-light">
-                        <span><img src="assets/images/logo.png" alt="logo" height="150px"></span>
+                    <a href="{{ url("index.html") }}" class="logo-light">
+                        <span><img src="{{ asset("/assets/images/logo.png") }}" alt="logo" height="150px"></span>
                     </a>
                 </div>
                 <form method="POST" action="{{ route('login') }}">
@@ -54,8 +51,8 @@
                             </span>
                         @enderror
                     </div>
-                    <div class="row mb-3">
-                        <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+                    <div class="mb-3">
+                        <label for="password" class="col-form-label text-md-end">{{ __('Password') }}</label>
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Ingresa tu password" name="password" required autocomplete="current-password">
                         @error('password')
                             <span class="invalid-feedback" role="alert">
@@ -63,7 +60,7 @@
                             </span>
                         @enderror 
                     </div>
-                    <div class="row mb-3">
+                    <!--<div class="row mb-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
@@ -71,19 +68,18 @@
                                 {{ __('Remember Me') }}
                             </label>
                         </div>
-                    </div>
-                    <div class="row mb-0">
-                        <div class="col-md-8 offset-md-4">
-                            <button type="submit" class="btn btn-primary">
-                                {{ __('Login') }}
-                            </button>
+                    </div>-->
+                    
+                    <div class="d-grid mb-0 text-center">
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Ingresar') }}
+                        </button>
 
-                            @if (Route::has('password.request'))
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
-                                </a>
-                            @endif
-                        </div>
+                        @if (Route::has('password.request'))
+                            <!--<a class="btn btn-link" href="{{ route('password.request') }}">
+                                {{ __('Forgot Your Password?') }}
+                            </a>-->
+                        @endif
                     </div>
                     </form><!-- end form-->
                 
@@ -111,10 +107,10 @@
 </div>
     <!-- end auth-fluid-->
     <!-- Vendor js -->
-    <script src="assets/js/vendor.min.js"></script>
+    <script src="{{ asset("/assets/js/vendor.min.js") }}"></script>
 
     <!-- App js -->
-    <script src="assets/js/app.min.js"></script>
+    <script src="{{ asset("/assets/js/app.min.js") }}"></script>
 
 </body>
 

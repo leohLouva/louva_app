@@ -27,7 +27,8 @@ Auth::routes();
 
 
 // Otras rutas de tu aplicación
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/user/list_user', [App\Http\Controllers\UserController::class, 'index'])->name('user');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('user')->name('home');
+Route::get('/user/listUser', [App\Http\Controllers\UserController::class, 'listUser'])->name('user');
+Route::get('/user/addUser', [App\Http\Controllers\UserController::class, 'viewAddUser']);
 
 
