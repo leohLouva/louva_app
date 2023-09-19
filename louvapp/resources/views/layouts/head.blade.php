@@ -44,5 +44,6 @@
         <script src="{{ asset("/assets/js/menu_functions.js") }}"></script>
         <!-- Js para las vistas-->
         <script src="{{ asset("/assets/js/views/user.js") }}"></script>
-
+        
+        
     </head>
