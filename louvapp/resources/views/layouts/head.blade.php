@@ -41,7 +41,6 @@
         <!-- App js -->
         <script src="{{ asset("/assets/js/app.min.js") }}"></script>
         <script src="{{ asset("/assets/js/menu_functions.js") }}"></script>
-        
-        
+        <script src="{{ asset("/assets/js/axios.js") }}"></script>
 
     </head>
