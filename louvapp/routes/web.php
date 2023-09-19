@@ -16,8 +16,12 @@ use Illuminate\Support\Facades\Route;
 */
 //Ruta principal
 Route::get('/', function () {
-    return view('auth/login');
+    //return view('auth/login');
+    return view('home');
 });
+
+
+
 // Rutas de autenticación
 Auth::routes();
 /*Route::middleware(['auth'])->group(function () {

@@ -13,6 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
+        //todo usuario debe de tener una sesion
         $this->middleware('auth');
     }
 
@@ -23,6 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        //dd(auth());
         return view('home');
     }
-}
+} 

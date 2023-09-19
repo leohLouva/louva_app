@@ -5,10 +5,15 @@ function actionMenu(event, section,action){
         case 'user':
             switch (action) {
                 case 'view':
-                    console.log("Acá todo good")
-                    $("#main_container").load("/user/list_user");
-                    break;
+                    //viewUsers();
+                break;
+                case 'add':
+                    console.log("Vamos a agregar un usuario")
+                    $("#main_container").load("/user/addUser");
+                break;
             }
             break;
         }
 }
+
+

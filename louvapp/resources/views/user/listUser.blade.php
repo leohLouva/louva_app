@@ -33,26 +33,6 @@
 <link href="{{ asset("/assets/vendor/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css") }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset("/assets/vendor/datatables.net-select-bs5/css/select.bootstrap5.min.css") }}" rel="stylesheet" type="text/css" />
 
-<!-- start page title -->
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box">
-            <h4 class="page-title">
-                <i class="uil-user-square"></i> Lista de usuarios</h4>
-        </div>
-    </div>
-</div>
-<!-- end page title -->
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <div id="bodyPanelUser"></div>
-                <!--<table id="users-table" class="table table-striped dt-responsive nowrap w-100"></table>-->
-            </div>
-        </div>
-    </div>
-</div>
 <!-- Datatables js -->
 <script src="{{ asset("/assets/vendor/datatables.net/js/jquery.dataTables.min.js") }}"></script>
 <script src="{{ asset("/assets/vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js") }}"></script>
@@ -74,4 +54,25 @@
 <script>
     viewUsers();
 </script>
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+            <h4 class="page-title">
+                <i class="uil-user-square"></i> Lista de usuarios</h4>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                Hay un pex
+                <!--<table id="users-table" class="table table-striped dt-responsive nowrap w-100"></table>-->
+            </div>
+        </div>
+    </div>
+</div>
 

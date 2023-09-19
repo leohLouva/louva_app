@@ -1,4 +1,4 @@
-const samf =  {
+const louvax =  {
     url: "",
     imgDefault: "",
     getImage(imageName) {

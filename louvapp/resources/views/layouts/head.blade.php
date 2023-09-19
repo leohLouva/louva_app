@@ -39,8 +39,10 @@
         <!-- Dashboard App js -->
         <script src="{{ asset("/assets/js/pages/demo.dashboard.js") }}"></script>
         <!-- App js -->
+        <script src="{{ asset("/assets/js/axios.js") }}"></script>
         <script src="{{ asset("/assets/js/app.min.js") }}"></script>
         <script src="{{ asset("/assets/js/menu_functions.js") }}"></script>
-        <script src="{{ asset("/assets/js/axios.js") }}"></script>
+        <!-- Js para las vistas-->
+        <script src="{{ asset("/assets/js/views/user.js") }}"></script>
 
     </head>
