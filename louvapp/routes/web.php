@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,32 +16,31 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes(); 
 
-
-
-
-// Rutas de autenticación
-Auth::routes();
+// Rutas protegidas
 Route::middleware(['auth'])->group(function () {
-    // Rutas protegidas
-    //Ruta principal
-    Route::get('/', function () {
+    Route::get('/home', function () {  
         return view('home');
     });
+    Route::get('/lista-usuarios', function () {  
+        return view('/listUsers');
+    });
+    //usurios
+    Route::get('/agregar-usuario', function () {  
+        return view('/addUser');
+    });    
+    Route::post('/addingUser', [App\Http\Controllers\UserController::class, 'store']);
+    Route::post('/imagenes', [App\Http\Controllers\ImageController::class, 'store'])->name('imagenes.store');
+
+    //Cerrar sessipon
+    Route::post('auth/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout']);
+
+ 
+
+    
+
 });
 
 
-
-/*
-
- Vistas de usuarios
-Route::get('/user/listUser', [App\Http\Controllers\UserController::class, 'listUser']);
-Route::get('/user/addUser', [App\Http\Controllers\UserController::class, 'viewAddUser']);
-
-Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-Route::post('/users', [UserController::class, 'store'])->name('users.store');
-//vistas para Fuerza de trabajo
-// Otras rutas de tu aplicación
-
- */
-
+// Rutas de autenticación
