@@ -7,16 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
     <meta content="Coderthemes" name="author" />
-
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset("/assets/images/favicon.ico") }}">
-
     <!-- Theme Config Js -->
     <script src="{{ asset("/assets/js/hyper-config.js") }}"></script>
-
     <!-- App css -->
     <link href="{{ asset("/assets/css/app-modern.min.css") }}" rel="stylesheet" type="text/css" id="app-style" />
-
     <!-- Icons css -->
     <link href="{{ asset("/assets/css/icons.min.css") }}" rel="stylesheet" type="text/css" />
 </head>
@@ -27,7 +23,6 @@
         <!--Auth fluid left content -->
         <div class="auth-fluid-form-box">
             <div class="card-body d-flex flex-column h-100 gap-3">
-
                 <!-- Logo -->
                 <div class="auth-brand text-center text-lg-start">
                     <a href="{{ url("index.html") }}" class="logo-dark">
@@ -44,7 +39,7 @@
                     <div class="mb-3"></div>
                     <div class="mb-3">                            
                         <label for="emailaddress" class="form-label">{{ __('Email') }}</label>
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Ingrssssssesa tu email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Ingresa tu email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                         @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
