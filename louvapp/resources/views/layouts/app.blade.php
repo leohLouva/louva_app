@@ -3,7 +3,7 @@
 <html lang="en" data-layout-mode="detached" data-topbar-color="light" data-menu-color="dark" data-sidenav-user="true">
     <head>
         <meta charset="utf-8" />
-        <title> Homes - Louvapp</title>
+        <title> Inicio - Louvapp</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="" name="description" />
@@ -19,15 +19,17 @@
         
         <!-- App favicon -->
         <link rel="shortcut icon" href="{{ asset("/assets/images/favicon.ico") }}">
+
         @stack('styles') <!--Solo carga estilos donde se les da push (requeridos)-->
-        <!-- Dropzone File Css From dropzone webpage-->
-        <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+        
+
         <!-- Daterangepicker css -->
         <link rel="stylesheet" href="{{ asset("/assets/vendor/daterangepicker/daterangepicker.css") }}">
         <!-- Vector Map css -->
         <link rel="stylesheet" href="{{ asset("/assets/vendor/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css") }}">
         <!-- Theme Config Js -->
         <script src="{{ asset("/assets/js/hyper-config.js") }}"></script>
+ 
         <!-- App css -->
         <link href="{{ asset("/assets/css/app-modern.min.css") }}" rel="stylesheet" type="text/css" id="app-style" />
         <!-- Icons css -->
@@ -42,12 +44,12 @@
         <!-- Vector Map js -->
         <script src="{{ asset("/assets/vendor/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js") }}"></script>
         <script src="{{ asset("/assets/vendor/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js") }}"></script>
-        <!-- Dashboard App js -->
-        <script src="{{ asset("/assets/js/pages/demo.dashboard.js") }}"></script>
+        
         <!-- App js -->
- 
         <script src="{{ asset("/assets/js/app.min.js") }}"></script>
-        <script src="resources/js/app.js"></script>
+
+        @vite('resources/js/app.js')
+        
     </head>  
     <body>
     
@@ -71,10 +73,12 @@
                         <!-- Logo light -->
                         <a href="{{ url('/home') }}" class="logo-light">
                             <span class="logo-lg">
-                                <img src="assets/images/logo.png" alt="logo">
+                                <img src="{{ asset("assets/images/logo.png") }}" alt="logo">
+
                             </span>
                             <span class="logo-sm">
-                                <img src="assets/images/logo-sm.png" alt="small logo">
+                                <img src="{{ asset("assets/images/logo-sm.png") }}" alt="small logo">
+                                
                             </span>
                         </a>
 
@@ -134,7 +138,7 @@
                         <a class="dropdown-item" href="{{ route('logout') }}"
                         onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">
-                            {{ __('Logout') }}
+                            {{ __('Cerrar Sesión') }}
                         </a>
                         
 
@@ -145,7 +149,7 @@
                     <li class="dropdown">
                         <a class="nav-link dropdown-toggle arrow-none nav-user px-2" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                             <span class="account-user-avatar">
-                                <img src="assets/images/users/avatar-1.jpg" alt="user-image" width="32" class="rounded-circle">
+                                <img src="{{ asset("/assets/images/users/avatar-1.jpg") }}" alt="user-image" width="32" class="rounded-circle">
                             </span>
                             <span class="d-lg-flex flex-column gap-1 d-none">
                                 <h5 class="my-0"> {{ Auth::user()->name }}</h5>
@@ -194,20 +198,20 @@
             <!-- Brand Logo Light -->
             <a href="#" class="logo logo-light">
                 <span class="logo-lg">
-                    <img src="assets/images/logo.png" alt="logo">
+                    <img src="{{ asset("assets/images/logo.png") }}" alt="logo">
                 </span>
                 <span class="logo-sm">
-                    <img src="assets/images/logo-sm.png" alt="small logo">
+                    <img src="{{ asset("assets/images/logo-sm.png") }}" alt="small logo">
                 </span>
             </a>
 
             <!-- Brand Logo Dark -->
             <a href="#" class="logo logo-dark">
                 <span class="logo-lg">
-                    <img src="assets/images/logo-dark.png" alt="dark logo">
+                    <img src="{{ asset("assets/images/logo-dark.png") }}" alt="dark logo">
                 </span>
                 <span class="logo-sm">
-                    <img src="assets/images/logo-dark-sm.png" alt="small logo">
+                    <img src="{{ asset("assets/images/logo-dark-sm.png") }}" alt="small logo">
                 </span>
             </a>
 
@@ -226,7 +230,7 @@
                 <!-- Leftbar User -->
                 <div class="leftbar-user">
                     <a href="{{ url('/home') }}">
-                        <img src="assets/images/users/avatar-1.jpg" alt="user-image" height="42" class="rounded-circle shadow-sm">
+                        <img src="{{ asset("/assets/images/users/avatar-1.jpg") }}" alt="user-image" height="42" class="rounded-circle shadow-sm">
                         <span class="leftbar-user-name mt-2">{{ Auth::user()->name }}</span>
                     </a>
                 </div>
@@ -235,7 +239,7 @@
                <ul class="side-nav">
                     <li class="side-nav-item">
                         <a data-bs-toggle="collapse" href="#sidebarFdeT" aria-expanded="false" aria-controls="sidebarFdeT" class="side-nav-link">
-                            <i class=" ri-file-user-fill"></i>
+                            <i class=" uil-users-alt"></i>
                             <span> Fuerza de trabajo </span>
                             <span class="menu-arrow"></span>
                         </a>
@@ -251,6 +255,43 @@
                         </div>
                     </li>
                     <li class="side-nav-item">
+                        <a data-bs-toggle="collapse" href="#sidebarContractor" aria-expanded="false" aria-controls="sidebarContractor" class="side-nav-link">
+                            <i class="mdi mdi-account-hard-hat"></i>
+                            <span> Contratistas </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="sidebarContractor">
+                            <ul class="side-nav-second-level">
+                                <li>
+                                    <a href="#" >Ver </a>
+
+                                </li>
+                                <li>
+                                    <a href="#">Agregar nuevo </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="side-nav-item">
+                        <a data-bs-toggle="collapse" href="#sidebarProject" aria-expanded="false" aria-controls="sidebarProject" class="side-nav-link">
+                            <i class="ri-file-copy-2-line"></i>
+                            <span> Proyectos </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="sidebarProject">
+                            <ul class="side-nav-second-level">
+                                <li>
+                                    <a href="{{ route('lista-proyectos.index') }}" >Ver</a>
+                                </li>
+                                <li>
+                                    <a href="#">Agregar nuevo </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="side-nav-item">
                         <a data-bs-toggle="collapse" href="#sidebarUser" aria-expanded="false" aria-controls="sidebarUser" class="side-nav-link">
                             <i class=" ri-file-user-fill"></i>
                             <span> Usuarios </span>
@@ -259,16 +300,15 @@
                         <div class="collapse" id="sidebarUser">
                             <ul class="side-nav-second-level">
                                 <li>
-                                    <a href="/lista-usuarios" >Ver Usuarios</a>
+                                    <a href="{{ route('lista-usuarios.index') }}" >Ver </a>
                                 </li>
                                 <li>
-                                    <a href="/agregar-usuario">Agregar Usuario</a>
+                                    <a href="{{ route('agregar-usuario.verAgregarUsuario') }}">Agregar nuevo</a>
                                 </li>
 
                             </ul>
                         </div>
                     </li>
-
                 
                 </ul>
                
@@ -988,7 +1028,8 @@
             </div>
         </div>
     </div>
-    
+    @stack('js') <!--Solo carga js donde se les da push (requeridos)-->
+
     <!-- Vendor js -->
     <script src="{{ asset("/assets/js/vendor.min.js") }}"></script>
 
@@ -1001,11 +1042,17 @@
     <script src="{{ asset("/assets/vendor/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js") }}"></script>
     <script src="{{ asset("/assets/vendor/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js") }}"></script>
 
-    <!-- Dashboard App js -->
-    <script src="{{ asset("/assets/js/pages/demo.dashboard.js") }}"></script>
+
 
     <!-- App js -->
     <script src="{{ asset("/assets/js/app.min.js") }}"></script>
 
+    <script>
+        /*const options = {
+            // Configuración de ApexCharts
+        };
+        const chart = new ApexCharts(document.querySelector('#chart-element'), options);
+        chart.render();*/
+    </script>
     </body>
 </html>
