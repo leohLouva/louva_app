@@ -24,7 +24,8 @@ class User extends Authenticatable
         'email',
         'password',
         'access_level',
-        'isDisable'
+        'isDisable',
+        'img_profile'
         
     ];
 

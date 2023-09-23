@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-<!-- Dropzone File Upload js -->
-<script src="{{ asset("/assets/vendor/dropzone/min/dropzone.min.js") }}"></script>
+@push('styles')
+<!-- Dropzone File Css From dropzone webpage-->
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+@endpush
 
-<!-- init js -->
-<script src="{{ asset("/assets/js/ui/component.fileupload.js") }}"></script>
 @section('main_container')
 
 <div class="row">
@@ -20,11 +20,9 @@
     </div>
     <div class="col-lg-6">
         <div class="mb-3 mt-3 mt-xl-0">
-            <label for="projectname" class="mb-0">Avatar</label>
             <p class="text-muted font-14">Tamaño de imagen recomendado 800x400 (px).</p>
 
-            <form action="{{ route('imagenes.store')}}" method="post" enctype="multipart/form-data" class="dropzone" id="myAwesomeDropzone" data-plugin="dropzone" data-previews-container="#file-previews"
-                data-upload-preview-template="#uploadPreviewTemplate">
+            <form action="{{ route('imagenes.store')}}" method="post" enctype="multipart/form-data" class="dropzone" id="dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
                 @csrf
                 <div class="fallback">
                     <input name="file" type="file" />
@@ -34,7 +32,7 @@
                     <i class="h3 text-muted ri-upload-cloud-2-line"></i>
                     <h4>Drop files here or click to upload.</h4>
                 </div>
- 
+
             </form>
 
             <!-- Preview -->
@@ -73,6 +71,9 @@
             <div class="card-body">            
                 <div class="tab-content">
                     <div class="tab-pane show active" id="custom-styles-preview">
+                        <div class="mb-3">
+                            <input type="text" name="flImage" value="">
+                        </div>
                             <div class="mb-3">
                                 <label class="form-label" for="validationCustom01">Nombre</label>
                                 <input type="text" class="form-control" name="txtName" id="txtName" placeholder="" value="" required>
@@ -160,4 +161,7 @@
 
 </form>
 
+
 @endsection
+
+       

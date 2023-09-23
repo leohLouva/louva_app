@@ -2,31 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use DataTables;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Exception;
+
+    
+
+
 
 
 class UserController extends Controller
 {
     //ver lista de usuarios
-    public function index(Request $request)
+    public function index()
     {
-        return view('user/listUsers');
+        $user = User::all();
+        return view('usuarios/lista-usuarios', ['users' => $user]);
     }
 
     
     //ver formulario de agregar usuarios
-    public function viewAddUser()
+    public function verAgregarUsuario()
     {
-        return view('user/addUser');
+        return view('usuarios/agregar-usuario');
     }
 
     public function store(Request $request)
     {
-        
-        //dd($request);
+        //dd($request->all());
         // Validar los datos del formulario
         /*$validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -34,11 +40,8 @@ class UserController extends Controller
             'userName' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'access_level' => 'required|string|max:255',
-            'img_profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-        */
-        //dd($request->all());
+            'access_level' => 'required|string|max:255'
+        ]);*/
         // Guardar el usuario en la base de datos
         $user = new User([
             'name' => $request->txtName,
@@ -47,27 +50,40 @@ class UserController extends Controller
             'email' => $request->txtEmail,
             'password' => Hash::make($request->txtPassword),
             'access_level' => $request->slcAccess,
-            'isDisable' => 0
-
+            'isDisable' => 0,
+            'img_profile' => $request->flImage
         ]);
-
-        // Subir y almacenar la imagen de perfil si se proporciona
-        if ($request->hasFile('img_profile')) {
-            $imgPath = $request->file('img_profile')->store('img_profiles');
-            $user->img_profile = $imgPath;
-        }else{
-            $user->img_profile = "sin imagen";
-        }
-        //dd($request->all());
         $user->save();
         
-        echo "Finalizado y se agregó";
+        return redirect()->route('editar-usuario.show', ['id' => $user->id])->with('success', 'Usuario agregado correctamente.');
+
+    }
+
+    public function show($id){
+        //$user = User::find($id);
+        $user = DB::table('users')
+            ->leftjoin('access_level', 'users.access_level', '=', 'access_level.idAccess')
+            ->where('users.id', '=', $id)
+            ->first();
+        return view('usuarios/editar-usuarios', ['user' => $user]);
+    }
+
+    public function update(User $user, Request $request){
+        $user->update([
+            'name' => $request->txtName,
+            'lastName' => $request->txtLastName,
+            'userName' => $request->txtUserName,
+            'img_profile' => $request->flImage,
+            'updated_at' => now()
+        ]);
         
-        //return redirect()->route('listUsers')->with('success', 'Usuario agregado correctamente.');
+        return redirect()->route('editar-usuario.show', ['id' => $user->id])->with('success', 'Usuario editado correctamente.');
+
+
     }
-    public function getListUser(Request $request){ 
-        dd($request);
-    }
+
+    
+
 
 
 }

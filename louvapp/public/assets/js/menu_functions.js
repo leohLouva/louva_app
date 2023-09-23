@@ -9,7 +9,6 @@ function actionMenu(event, section,action){
                 break;
                 case 'add':
                     console.log("Vamos a agregar un usuario")
-                    $("#main_container").load("/user/addUser");
                 break;
             }
             break;
