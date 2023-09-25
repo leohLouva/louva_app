@@ -22,7 +22,7 @@
         <div class="mb-3 mt-3 mt-xl-0">
             <p class="text-muted font-14">Tamaño de imagen recomendado 800x400 (px).</p>
 
-            <form action="{{ route('imagenes.store')}}" method="post" enctype="multipart/form-data" class="dropzone" id="dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
+            <form action="{{ route('imagenes.store')}}" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneUser" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
                 @csrf
                 <div class="fallback">
                     <input name="file" type="file" />

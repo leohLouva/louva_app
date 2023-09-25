@@ -8,13 +8,9 @@
         <div class="col-12">
             <div class="page-title-box">
                 <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">CRM</a></li>
-                        <li class="breadcrumb-item active">Projects</li>
-                    </ol>
+                   
                 </div>
-                <h4 class="page-title">Projects</h4>
+                <h4 class="page-title">Ejemplo</h4>
             </div>
         </div>
     </div>
@@ -146,7 +142,7 @@
                 <div class="col-sm-6 col-xl-3 mb-3">
                     <div class="card mb-0 h-100">
                         <div class="card-body">
-                            <div class="border-dashed border-2 border h-100 w-100 rounded d-flex align-items-center justify-content-center">
+                            <div class="border-dashed border-2 h-100 w-100 rounded d-flex align-items-center justify-content-center">
                                 <a href="javascript:void(0);" class="text-center text-muted p-2" data-bs-toggle="modal" data-bs-target="#CreateProject">
                                     <i class="mdi mdi-plus h3 my-0"></i> <h4 class="font-16 mt-1 mb-0 d-block">Add New Project</h4>
                                 </a>

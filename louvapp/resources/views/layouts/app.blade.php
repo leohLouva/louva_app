@@ -152,8 +152,8 @@
                                 <img src="{{ asset("/assets/images/users/avatar-1.jpg") }}" alt="user-image" width="32" class="rounded-circle">
                             </span>
                             <span class="d-lg-flex flex-column gap-1 d-none">
-                                <h5 class="my-0"> {{ Auth::user()->name }}</h5>
-                                <h6 class="my-0 fw-normal">{{ Auth::user()->name }}</h6>
+                                <h5 class="my-0"> {{ Auth::user()->userName }}</h5>
+                                <h6 class="my-0 fw-normal"></h6>
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated profile-dropdown">
@@ -231,7 +231,7 @@
                 <div class="leftbar-user">
                     <a href="{{ url('/home') }}">
                         <img src="{{ asset("/assets/images/users/avatar-1.jpg") }}" alt="user-image" height="42" class="rounded-circle shadow-sm">
-                        <span class="leftbar-user-name mt-2">{{ Auth::user()->name }}</span>
+                        <span class="leftbar-user-name mt-2">{{ Auth::user()->name }}<br>{{ Auth::user()->lastName }}</span>
                     </a>
                 </div>
                 
@@ -275,7 +275,7 @@
                     </li>
                     <li class="side-nav-item">
                         <a data-bs-toggle="collapse" href="#sidebarProject" aria-expanded="false" aria-controls="sidebarProject" class="side-nav-link">
-                            <i class="ri-file-copy-2-line"></i>
+                            <i class="uil-briefcase"></i>
                             <span> Proyectos </span>
                             <span class="menu-arrow"></span>
                         </a>
@@ -285,7 +285,7 @@
                                     <a href="{{ route('lista-proyectos.index') }}" >Ver</a>
                                 </li>
                                 <li>
-                                    <a href="#">Agregar nuevo </a>
+                                    <a href="{{ route('agregar-proyecto.verAgregarProyecto') }}">Crear proyecto </a>
                                 </li>
 
                             </ul>
@@ -1042,17 +1042,7 @@
     <script src="{{ asset("/assets/vendor/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js") }}"></script>
     <script src="{{ asset("/assets/vendor/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js") }}"></script>
 
-
-
     <!-- App js -->
     <script src="{{ asset("/assets/js/app.min.js") }}"></script>
-
-    <script>
-        /*const options = {
-            // Configuración de ApexCharts
-        };
-        const chart = new ApexCharts(document.querySelector('#chart-element'), options);
-        chart.render();*/
-    </script>
     </body>
 </html>

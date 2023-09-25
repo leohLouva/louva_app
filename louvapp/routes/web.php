@@ -21,17 +21,11 @@ Auth::routes();
 
 // Rutas protegidas
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', function () {  
-        return view('home');
-    });
-    Route::get('/home', function () {  
-        return view('home');
-    });
+    Route::get('/', function () { return view('home'); });
+    Route::get('/home', function () { return view('home');});
 
     //usuarios
-    Route::get('usuarios/agregar-usuario', function () {  
-        return view('usuarios/agregar-usuario');
-    })->name('agregar-usuario.verAgregarUsuario');    
+    Route::get('usuarios/agregar-usuario', function () { return view('usuarios/agregar-usuario');})->name('agregar-usuario.verAgregarUsuario');    
     //guardar usuario
     Route::post('/addingUser', [App\Http\Controllers\UserController::class, 'store']);
     //almacenar imagen de usuario
@@ -48,8 +42,8 @@ Route::middleware(['auth'])->group(function () {
     /****PROYECTOS****/
     //Ver Proyectos
     Route::get('proyectos/lista-proyectos', [App\Http\Controllers\ProjectController::class, 'index'])->name('lista-proyectos.index');
-
-
+    //Ver agregar proyecto
+    Route::get('usuarios/agregar-proyecto', function () {  return view('proyectos/agregar-proyecto');})->name('agregar-proyecto.verAgregarProyecto');   
 
  
 
