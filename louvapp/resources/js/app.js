@@ -1,10 +1,11 @@
+
 //import './bootstrap';
 //import ApexCharts from 'apexcharts';
 import Dropzone from 'dropzone';
 
 Dropzone.autoDiscover = false;
 
-const dropzoneUser = new Dropzone("#dropzoneUser",{
+const dropzone = new Dropzone("#dropzone",{
     dictDefaultMessage:"Sube aquí tu imagen",
     acceptedFiles:".png,.jpg,.jpeg,.git,PNG",
     addRemoveLinks: true,
@@ -18,36 +19,34 @@ const dropzoneUser = new Dropzone("#dropzoneUser",{
             const imagePublicated = {};
             imagePublicated.size = 1234;
             imagePublicated.name =  document.querySelector('[name="flImage"]').value = response.imagen;
-
+            
             this.options.addedfile.call(this, imagePublicated);
-            this.options.thumbnail.call(this, imagePublicated,'{uploads/usuarios/${imagePublicated.name}');
+            //this.options.thumbnail.call(this, imagePublicated,'{uploads/proyectos/${imagePublicated.name}');
 
             imagePublicated.previewElement.classList.add(
                 
             );
         }else{
+
             console.log("elase")
         }
 
     }
 });
 
-dropzoneUser.on('success', function(file,response){
+dropzone.on('success', function(file,response){
+    console.log(" SUCCESSS")
     console.log(response);
     document.querySelector('[name="flImage"]').value = response.imagen;
 });
 
-dropzoneUser.on("complete", function(file) {
-    console.log("imagen guadada complete on");
-    console.log(file)
+dropzone.on("error", function(file,message) {
+    console.log(message)
     //myDropzone.removeFile(file);
 });
 
-dropzoneUser.on('removedfile', function(response){
+dropzone.on('removedfile', function(response){
     console.log(response);
-    //dropzoneUser.removeFile('uploads/usuarios/'+removingImg);
+    //dropzone.removeFile('uploads/usuarios/'+removingImg);
     document.querySelector('[name="flImage"]').value = '';
-    
 });
-
-

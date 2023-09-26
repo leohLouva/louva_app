@@ -1,6 +1,6 @@
 !function () {
     var t = sessionStorage.getItem("__HYPER_CONFIG__"), e = document.getElementsByTagName("html")[0], i = {
-        theme: "light", nav: "vertical",
+        theme: "dark", nav: "vertical",
         layout: { mode: "fluid", position: "fixed" }, 
         topbar: { color: "light" }, menu: { color: "dark" }, sidenav: { size: "default", user: !1 }
     }, 
