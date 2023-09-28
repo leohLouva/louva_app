@@ -43,13 +43,18 @@ Route::middleware(['auth'])->group(function () {
     //Ver Proyectos
     Route::get('proyectos/lista-proyectos', [App\Http\Controllers\ProjectController::class, 'index'])->name('lista-proyectos.index');
     //Ver agregar proyecto
-    Route::get('usuarios/agregar-proyecto', function () {  return view('proyectos/agregar-proyecto');})->name('agregar-proyecto.verAgregarProyecto');   
-
- 
-
+    Route::get('proyectos/agregar-proyecto', function () {  return view('proyectos/agregar-proyecto');})->name('agregar-proyecto.verAgregarProyecto');   
+    //guardar proyecto
+    Route::post('/image', [App\Http\Controllers\ImageController::class, 'store'])->name('imagenes.store');
+    Route::post('/addingProject', [App\Http\Controllers\ProjectController::class, 'store']);
+    Route::get('/editar-proyecto/{id}', [App\Http\Controllers\ProjectController::class, 'show'])->name('editar-proyecto.show');
+    Route::post('editingProject/{id}',[App\Http\Controllers\ProjectController::class,'update'])->name('profile.update');
+    
+    /***CONTRATISTAS */
+     //Ver Contratistas
+    Route::get('contratista/lista-contratista', [App\Http\Controllers\ContractorController::class, 'index'])->name('lista-contratistas.index');
+    Route::get('contratista/agregar-contratista', [App\Http\Controllers\ContractorController::class, 'verAgregarContratista'])->name('agregar-contratista.verAgregarContratista');
+    Route::post('/addingContractor', [App\Http\Controllers\ContractorController::class, 'store']);
     
 
 });
-
-
-// Rutas de autenticación
