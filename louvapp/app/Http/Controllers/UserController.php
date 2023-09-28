@@ -10,16 +10,15 @@ use Illuminate\Support\Facades\Hash;
 use Exception;
 
     
-
-
-
-
 class UserController extends Controller
 {
     //ver lista de usuarios
     public function index()
     {
-        $user = User::all();
+        //$user = User::all();
+        $user = DB::table('users')
+                ->leftjoin('access_level', 'users.access_level', '=', 'access_level.idAccess')
+                ->get();
         return view('usuarios/lista-usuarios', ['users' => $user]);
     }
 

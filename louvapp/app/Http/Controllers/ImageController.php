@@ -15,14 +15,20 @@ class ImageController extends Controller
 
     public function store(Request $request)
     {
+        //dd($request->all());
         // Obtén la imagen del formulario
         $imageFile = $request->file('file');
-
+        
         // Verifica si se subió una imagen válida
         if ($imageFile->isValid()) {
 
             $imageName = Str::uuid() . "." . $imageFile->extension();
-            $imagePath = public_path('assets/images/users/louva_usuarios') . "/" . $imageName;
+            /*if($request->hdnType == 'usuario'){
+                $imagePath = public_path('uploads/usuarios') . "/" . $imageName;
+            }else{
+                $imagePath = public_path('uploads/proyectos') . "/" . $imageName;
+            }*/
+            $imagePath = public_path('uploads') . "/" . $imageName;
             //File::makeDirectory($imagePath, 0777, true, true);
             $image = Image::make($imageFile);
             $image->resize(1000, 1000);
@@ -34,8 +40,12 @@ class ImageController extends Controller
             return response()->json(['imagen' => $imageName]);
         } else {
             // Maneja el caso en el que no se subió una imagen válida
-            return response()->json(['error' => 'No se ha subido una imagen válida.']);
+            return response()->json([
+                'code' => 'Error: No se ha subido una imagen válida.'
+            ]);
         }
     }
+
+   
 
 }
