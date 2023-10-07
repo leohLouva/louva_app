@@ -13,8 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
+        
         Schema::create('contractors', function (Blueprint $table) {
-            $table->id();
+            $table->integer('idContractor');
+            $table->integer('idIntern');
+            $table->integer('idProject_project');
+            $table->string('contractorName');
+            $table->string('email');
+            $table->string('phone');
+            $table->string('whatsapp');
+            $table->string('img_contractor');
+            $table->string('folderName');
+            $table->primary('idContractor');
             $table->timestamps();
         });
     }

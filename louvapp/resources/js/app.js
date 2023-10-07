@@ -1,52 +1,49 @@
-
-//import './bootstrap';
-//import ApexCharts from 'apexcharts';
 import Dropzone from 'dropzone';
 
 Dropzone.autoDiscover = false;
 
-const dropzone = new Dropzone("#dropzone",{
-    dictDefaultMessage:"Sube aquí tu imagen",
-    acceptedFiles:".png,.jpg,.jpeg,.git,PNG",
-    addRemoveLinks: true,
-    dictRemoveFile:"Borrar Archivo",
-    maxFiles:1,
-    uploadMultiple: false,
+    // Tu código Dropzone aquí
+    
+    const dropzone = new Dropzone("#dropzone",{
+        dictDefaultMessage:"Sube aquí tu imagen",
+        acceptedFiles:".png,.jpg,.jpeg,.gif,application/pdf",
+        addRemoveLinks: true, //permite al usuario remover la imagen
+        dictRemoveFile:"Borrar Archivo",
+        maxFiles:15,
+        parallelUploads:10,
+        uploadMultiple:false,
 
-    init: function(){
-        const response = "";
-        if(document.querySelector('[name="flImage"]').value.trim()){
-            const imagePublicated = {};
-            imagePublicated.size = 1234;
-            imagePublicated.name =  document.querySelector('[name="flImage"]').value = response.imagen;
+        init: function(){
+            const response = "";
             
-            this.options.addedfile.call(this, imagePublicated);
-            //this.options.thumbnail.call(this, imagePublicated,'{uploads/proyectos/${imagePublicated.name}');
-
-            imagePublicated.previewElement.classList.add(
+            if(document.querySelector('[name="flImage"]').value.trim()){
+                console.log("Flimage ya tiene dato");
                 
-            );
-        }else{
-
-            console.log("elase")
+            }else{
+                console.log("entra el else de init")   
+            }
+    
         }
+    });
 
-    }
-});
+    dropzone.on('success', function(file,response){
+        console.log(" SUCCESSS")
+        console.log(response); 
+        document.querySelector('[id="folderName"]').value = response.folderName;
+        document.querySelector('[name="flImage"]').value = response.imagen;
 
-dropzone.on('success', function(file,response){
-    console.log(" SUCCESSS")
-    console.log(response);
-    document.querySelector('[name="flImage"]').value = response.imagen;
-});
+    });
+    
+    dropzone.on("error", function(file,response) {
+        //mostrarModal("No se ha guardado la imagen, asegúrate que elegiste un contratista antes de subir la imagen ")
+        mostrarModal(response.message)
+        //myDropzone.removeFile(file);
+    });
+    
+    dropzone.on('removedfile', function(response){
+        console.log("borrando imagen");
+        console.log(response);
+        document.querySelector('[name="flImage"]').value = '';
+    });
 
-dropzone.on("error", function(file,message) {
-    console.log(message)
-    //myDropzone.removeFile(file);
-});
-
-dropzone.on('removedfile', function(response){
-    console.log(response);
-    //dropzone.removeFile('uploads/usuarios/'+removingImg);
-    document.querySelector('[name="flImage"]').value = '';
-});
+  

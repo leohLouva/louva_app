@@ -4,8 +4,11 @@
 <!-- Dropzone File Css From dropzone webpage-->
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 @endpush
-
+@push('js.app')
+    @vite('resources/js/app.js')
+@endpush
 @section('main_container')
+<script src="{{ asset("/assets/js/views/usuarios.js") }}"></script>
 
 <div class="row">
     <div class="col-12">
@@ -23,17 +26,18 @@
                 <div class="tab-content">
                     <div class="tab-pane show active" id="custom-styles-preview">
                         <p class="text-muted font-14">Tamaño de imagen recomendado 800x400 (px).</p>
-                        <form action="{{ route('imagenes.store')}}" method="post" enctype="multipart/form-data" class="dropzone" id="dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
-                        @csrf
-                            <div class="fallback">
-                                <input type="text" name="hdnType" value="usuario">
-                                <input name="file" type="file" />
-                            </div>
+                        <form action="{{ route('imagenes.storeUser')}}" method="post" enctype="multipart/form-data" class="dropzone" id="dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
+                            @csrf
+                            <input type="hidden" name="typeOfView" value="usuarios">
 
-                            <div class="dz-message needsclick">
-                                <i class="h3 text-muted ri-upload-cloud-2-line"></i>
-                                <h4>Suelta los archivos aquí o haz clic para cargarlos.</h4>
-                            </div>
+                                <div class="fallback">
+                                    <input name="file" type="file" />
+                                </div>
+
+                                <div class="dz-message needsclick">
+                                    <i class="h3 text-muted ri-upload-cloud-2-line"></i>
+                                    <h4>Suelta los archivos aquí o haz clic para cargarlos.</h4>
+                                </div>
                         </form>                                                    
                         <!-- Preview -->
                         <div class="dropzone-previews mt-3" id="file-previews"></div>
@@ -44,7 +48,7 @@
     </div>
 
     <div class="col-lg-6">
-        <form action="/addingUser" method="POST">
+        <form action="/addingUser" method="POST" id="formUsuario">
             @csrf
         <div class="card">
             <div class="card-body">            
@@ -69,8 +73,7 @@
                             <label class="form-label" for="validationCustomUsername">Email</label>
                             <div class="input-group">
                                 <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                <input type="email" class="form-control" name="txtEmail" id="txtEmail" placeholder=""
-                                    aria-describedby="inputGroupPrepend" required>
+                                <input type="email" class="form-control" name="txtEmail" id="txtEmail" placeholder="" aria-describedby="inputGroupPrepend" required>
                                
                             </div>
                         </div>
@@ -80,9 +83,14 @@
                             
                         </div>
                         <div class="mb-3">
+                            <label class="form-label" for="validationCustom03">Confirma Password</label>
+                            <input type="password" class="form-control" name="txtConfirmPassword" id="txtConfirmPassword" placeholder="" required>
+
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label" for="validationCustom04">Puesto</label>
                             <select class="form-select mb-3" name="slcAccess" id="slcAccess">
-                                <option selected>Elige una opción del menú</option>
+                                <option value="0" selected>Elige una opción del menú</option>
                                 <option value="1">Dirección Ggeneral</option>
                                 <option value="2">Subdirección</option>
                                 <option value="3">Dirección de proyectos</option>
@@ -95,9 +103,11 @@
                         </div>
                         <div class="mb-3">
                             <input type="hidden" name="flImage" value="">
+                            <input type="hidden" id="folderName" value="">
+
                         </div>
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-primary" >
+                            <button type="button" class="btn btn-primary" onclick="agregarUsuario()" >
                                 Agregar usuario
                             </button>
                         </div>
@@ -107,10 +117,6 @@
             </div> <!-- end card-body-->
         </div> <!-- end card-->
     </div>
- 
-     
-    
-
 </div>
 
 

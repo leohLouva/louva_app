@@ -4,6 +4,9 @@
 <!-- Dropzone File Css From dropzone webpage-->
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 @endpush
+@push('js.app')
+    @vite('resources/js/app.js')
+@endpush
 
 @section('main_container')
 <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
@@ -13,33 +16,6 @@
             <div class="page-title-right">
             </div>
             <h4 class="header-title">Agrega un contratista nuevo</h4>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-body">            
-                <div class="tab-content">
-                    <div class="tab-pane show active" id="custom-styles-preview">
-                        <p class="text-muted font-14">Tamaño de imagen recomendado 800x400 (px).</p>
-                        <form action="{{ route('imagenes.store')}}" method="post" enctype="multipart/form-data" class="dropzone" id="dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
-                        @csrf
-                            <div class="fallback">
-                                <input name="file" type="file" />
-                            </div>
-
-                            <div class="dz-message needsclick">
-                                <i class="h3 text-muted ri-upload-cloud-2-line"></i>
-                                <h4>Suelta los archivos aquí o haz clic para cargarlos.</h4>
-                            </div>
-                        </form>                                                    
-                        <!-- Preview -->
-                        <div class="dropzone-previews mt-3" id="file-previews"></div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -55,7 +31,7 @@
                         <div class="tab-pane show active" id="custom-styles-preview">
                             <div class="mb-3">
                                 <label class="form-label" for="validationCustom01">Nombre</label>
-                                <input type="text" class="form-control" name="contractorName" id="contractorName" placeholder="" value="" required>
+                                <input type="text" class="form-control" name="contractorName" id="contractorName"  placeholder="" value="" required>
                                 
                             </div>
                             <div class="mb-3">
@@ -94,7 +70,8 @@
                                 
                             </div>
                             <div class="mb-3">
-                                <input type="hidden" name="flImage" value="">
+                                <input type="hidden" id="folderName" value="">
+                                <input type="text" class="form-control" name="flImage" value="">
                             </div>
                             <div class="mb-3">
                                 <button type="submit" class="btn btn-primary" >
@@ -109,4 +86,38 @@
     </form>
     </div><!--end col-12-->
 </div><!--end row-->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">            
+                <p class="text-muted font-14">Tamaño de imagen recomendado 800x400 (px).</p>
+                <form action="{{ route('imagenes.storeContractor')}}" method="POST" enctype="multipart/form-data" class="dropzone border-dashed border-2 w-full h-96 rounded flex flex-col-justify-center items-center" id="dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
+                @csrf
+                <input id="nameOfContractor" type="text" value="" />
+                <input type="hidden" name="typeOfView" value="contratista">
+
+                    <div class="fallback">
+                        <input name="fileContractor" type="file" />
+                        
+                    </div>
+
+                    <div class="dz-message needsclick">
+                        <i class="h3 text-muted ri-upload-cloud-2-line"></i>
+                        <h4>Arrastra y Suelta los archivos aquí o haz clic para cargarlos.</h4>
+                    </div>
+                </form>                                                    
+                <!-- Preview -->
+                <div class="dropzone-previews mt-3" id="file-previews"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById("contractorName").oninput = () => {
+        const input = document.getElementById('contractorName');
+        const output = document.getElementById('nameOfContractor');
+
+  output.value = input.value;
+};
+</script>
 @endsection

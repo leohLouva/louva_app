@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Contractor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
 class ContractorController extends Controller
@@ -18,9 +19,7 @@ class ContractorController extends Controller
             //$project = Project::all(); 
             $contractor = DB::table('contractors')
             ->leftjoin('projects', 'projects.id', '=', 'contractors.idProject_project')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
+            ->get();
             return view('contratistas/lista-contratista', ['contractors' => $contractor]);
         }
 
@@ -32,7 +31,9 @@ class ContractorController extends Controller
 
     public function store(Request $request){
         //dd($request->all());
-
+        
+        $directoryPath = public_path('contractors') . "/" . $request->contractorName;
+        File::makeDirectory($directoryPath, 0777, true, true);
         $contractor = new Contractor([
             'contractorName' => $request->contractorName, 
             'idIntern' => $request->idIntern, 

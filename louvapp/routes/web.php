@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Auth;
 
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,8 +27,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('usuarios/agregar-usuario', function () { return view('usuarios/agregar-usuario');})->name('agregar-usuario.verAgregarUsuario');    
     //guardar usuario
     Route::post('/addingUser', [App\Http\Controllers\UserController::class, 'store']);
-    //almacenar imagen de usuario
-    Route::post('/image', [App\Http\Controllers\ImageController::class, 'store'])->name('imagenes.store');
+    
+    
     //ver lista de usuarios
     Route::get('usuarios/lista-usuarios', [App\Http\Controllers\UserController::class, 'index'])->name('lista-usuarios.index');
     //ver usuario
@@ -42,19 +41,40 @@ Route::middleware(['auth'])->group(function () {
     /****PROYECTOS****/
     //Ver Proyectos
     Route::get('proyectos/lista-proyectos', [App\Http\Controllers\ProjectController::class, 'index'])->name('lista-proyectos.index');
-    //Ver agregar proyecto
     Route::get('proyectos/agregar-proyecto', function () {  return view('proyectos/agregar-proyecto');})->name('agregar-proyecto.verAgregarProyecto');   
-    //guardar proyecto
-    Route::post('/image', [App\Http\Controllers\ImageController::class, 'store'])->name('imagenes.store');
+    
     Route::post('/addingProject', [App\Http\Controllers\ProjectController::class, 'store']);
     Route::get('/editar-proyecto/{id}', [App\Http\Controllers\ProjectController::class, 'show'])->name('editar-proyecto.show');
     Route::post('editingProject/{id}',[App\Http\Controllers\ProjectController::class,'update'])->name('profile.update');
     
     /***CONTRATISTAS */
-     //Ver Contratistas
     Route::get('contratista/lista-contratista', [App\Http\Controllers\ContractorController::class, 'index'])->name('lista-contratistas.index');
     Route::get('contratista/agregar-contratista', [App\Http\Controllers\ContractorController::class, 'verAgregarContratista'])->name('agregar-contratista.verAgregarContratista');
     Route::post('/addingContractor', [App\Http\Controllers\ContractorController::class, 'store']);
+
+    /***FUERZA DE TRABAJO */
+    Route::get('fuerza-trabajo/lista-trabajadores', [App\Http\Controllers\WorkerController::class, 'index'])->name('lista-trabajadores.index');
+    Route::get('fuerza-trabajo/credenciales-trabajadores', [App\Http\Controllers\WorkerController::class, 'indexC'])->name('credenciales-trabajadores.indexC');
+    Route::get('fuerza-trabajo/editar-trabajador/{id}', [App\Http\Controllers\WorkerController::class, 'show'])->name('fuerza-trabajo.editar-trabajador.show');
+    Route::get('fuerza-trabajo/agregar-trabajador', [App\Http\Controllers\WorkerController::class, 'verAgregarTrabajador'])->name('agregar-trabajador.verAgregarTrabajador');
+    Route::post('/addingWorker',[App\Http\Controllers\WorkerController::class,'store']);
     
+    Route::post('/validar-documentos', [App\Http\Controllers\DocumentsController::class, 'validateDocuments'])->name('validateDocuments');
+    
+    //
+    //almacenar imagen de usuario
+    //Route::post('/image', [App\Http\Controllers\ImageController::class, 'storeImgProfileWorker'])->name('imagen.storeImgProfileWorker');
+    
+
+
+    //IMAGENES
+    //almacenar imagen de usuario
+    Route::post('/image', [App\Http\Controllers\ImageController::class, 'storeUser'])->name('imagenes.storeUser');
+    Route::post('/image/contractor', [App\Http\Controllers\ImageController::class, 'storeContractor'])->name('imagenes.storeContractor');
+    Route::post('/image/worker', [App\Http\Controllers\ImageController::class, 'storeImgProfileWorker'])->name('imagenes.storeImgProfileWorker');
+    //Subir documentos
+    Route::post('/pdfs', [App\Http\Controllers\WorkerController::class, 'storeDocuments']);
+    //Route::get('/pdfs', 'PdfController@index');
+    //Route::post('/pdfs', 'PdfController@store');    
 
 });

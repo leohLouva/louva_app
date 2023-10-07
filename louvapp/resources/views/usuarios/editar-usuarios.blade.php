@@ -4,7 +4,9 @@
 <!-- Dropzone File Css From dropzone webpage-->
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 @endpush
-
+@push('js.app')
+    @vite('resources/js/app.js')
+@endpush
 @section('main_container')
 
 <div class="row">
@@ -33,7 +35,7 @@
                     @if ($user && is_object($user) && property_exists($user, 'img_profile') && $user->img_profile == NULL)
                         <img src="{{ asset("uploads/user.png") }}" style="height: 100px;" alt="avatar-2" class="rounded-circle img-thumbnail">
                     @elseif ($user && is_object($user) && property_exists($user, 'img_profile'))
-                        <img src="{{ asset("uploads//$user->img_profile") }}" style="height: 100px;" alt="avatar-2" class="rounded-circle img-thumbnail">
+                        <img src="{{ asset("uploads/usuarios/$user->img_profile") }}" style="height: 100px;" alt="avatar-2" class="rounded-circle img-thumbnail">
                     @endif
 
                     <h4 class="mb-0 mt-2">{{$user->name}} {{$user->lastName}}</h4>
@@ -52,10 +54,12 @@
                 </div> <!-- end card-body -->
             </div> <!-- end card -->
             
-            <div style="display: none;">
+            <div style="display: block;">
                 <p class="text-muted font-14">El tamaño de imagen recomendado 800x400 (px).</p>
-                <form action="{{ route('imagenes.store')}}" method="post" enctype="multipart/form-data" class="dropzone" id="dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
+                <form action="{{ route('imagenes.storeUser')}}" method="post" enctype="multipart/form-data" class="dropzone" id="dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
                     @csrf
+                    <input type="hidden" name="typeOfView" value="usuarios">
+
                     <div class="fallback">
                         <input name="file" type="file" />
                     </div>
@@ -84,7 +88,7 @@
                 <div class="tab-content">
                     <div class="tab-pane show active" id="custom-styles-preview">
                         <div class="mb-3">
-                            <input type="hidden" name="flImage" value="{{ $user->img_profile }}">
+                            <input type="text" name="flImage" value="{{ $user->img_profile }}">
                         </div>
                             <div class="mb-3">
                                 <label class="form-label" for="validationCustom01">Nombre</label>
@@ -117,6 +121,8 @@
                                 <select class="form-select mb-3" name="slcAccess" id="slcAccess">
                                     <option value="{{ $user->access_level}}">{{ $user->accessName }}</option>
                                 </select>  
+                                <input type="hidden" id="folderName" value="">
+
                             </div>                      
                     </div> <!-- end preview-->
                 </div> <!-- end tab-content-->
