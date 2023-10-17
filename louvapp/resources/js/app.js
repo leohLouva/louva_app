@@ -8,7 +8,7 @@ Dropzone.autoDiscover = false;
         dictDefaultMessage:"Sube aquí tu imagen",
         acceptedFiles:".png,.jpg,.jpeg,.gif,application/pdf",
         addRemoveLinks: true, //permite al usuario remover la imagen
-        dictRemoveFile:"Borrar Archivo",
+        dictRemoveFile:"",
         maxFiles:15,
         parallelUploads:10,
         uploadMultiple:false,
@@ -27,11 +27,24 @@ Dropzone.autoDiscover = false;
     });
 
     dropzone.on('success', function(file,response){
-        console.log(" SUCCESSS")
-        console.log(response); 
+        console.log(response)
+        var status = response.status;
+
+        var modalTitle = document.getElementById("modalTitle");
+        var modalIcon = document.getElementById("modalIcon");
+
+        /*if (status === 'Success') {
+            modalTitle.textContent = 'Éxito';
+            modalIcon.classList.add('text-success', 'ri-check-fill');
+        } else {
+            modalTitle.textContent = 'Error';
+            modalIcon.classList.add('text-danger', 'ri-information-line');
+        }
+        mostrarModal(response.message);*/
+
+        console.log(response.message);
         document.querySelector('[id="folderName"]').value = response.folderName;
         document.querySelector('[name="flImage"]').value = response.imagen;
-
     });
     
     dropzone.on("error", function(file,response) {

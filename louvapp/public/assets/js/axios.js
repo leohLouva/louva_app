@@ -1,5 +1,3 @@
-
-
 const louvax = {
     url: "",
     imgDefault: "",
