@@ -16,13 +16,31 @@ class Project extends Model
      *
      * @var array<int, string>
      */
+    protected $primaryKey = 'id';
+    
     protected $fillable = [
+        'projectImage',
         'projectName',
+        'telefono',
         'description',
         'progress',
-        'img_logo',
         'fechaInicio',
-        'urlPowerBi'
-        
+        'urlPowerBi',
+        'projectType',
+        'squareMeterSuperficial',
+        'squareMeterSotano',
+        'address',
+        'location',
+        'state',
+        'constructionSystem',
+        'idUser_projectManager',
+        'idUser_workManager',
+        'totalScheduledCost'           
     ];
+
+    public function municipio()
+    {
+        return $this->belongsTo(Municipio::class, 'municipio_id');
+    }
+
 }

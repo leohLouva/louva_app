@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-layout-mode="detached" data-topbar-color="light" data-menu-color="dark" data-sidenav-user="true">
+<html lang="es" data-layout-mode="detached" data-topbar-color="light" data-menu-color="dark" data-sidenav-user="true">
     <head>
         <meta charset="utf-8" />
         <title> Inicio - Louvapp</title>
@@ -24,6 +24,8 @@
 
         <!-- Icons css -->
         <link href="{{ asset("/assets/css/icons.min.css") }}" rel="stylesheet" type="text/css" />
+        <script src="{{ asset("/assets/js/axios.js") }}"></script>
+
         @stack('js.app')
         
     </head>  
@@ -198,7 +200,7 @@
                 <div class="leftbar-user">
                     <a href="{{ url('/home') }}">
                         <img src="{{ asset("/assets/images/users/avatar-1.jpg") }}" alt="user-image" height="42" class="rounded-circle shadow-sm">
-                        <span class="leftbar-user-name mt-2">{{ Auth::user()->name }}<br>{{ Auth::user()->lastName }}</span>
+                        <span class="leftbar-user-name mt-2">{{ Auth::user()->userName }}</span>
                     </a>
                 </div>
                 <ul class="side-nav">
@@ -254,7 +256,7 @@
                                 </li>
                             </ul>
                         </li>
-                    <li class="side-nav-item">
+                    <li class="side-nav-item" style="display:none;">
                         <a data-bs-toggle="collapse" href="#sidebarUser" aria-expanded="false" aria-controls="sidebarUser" class="side-nav-link">
                             <i class="uil-user"></i>
                             <span> Usuarios </span>
@@ -291,14 +293,14 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-6">
-                            <script>document.write(new Date().getFullYear())</script> © Hyper - Coderthemes.com
+                            <script>document.write(new Date().getFullYear())</script> © Louva Studio 
                         </div>
                         <div class="col-md-6">
-                            <div class="text-md-end footer-links d-none d-md-block">
+                            <!--<div class="text-md-end footer-links d-none d-md-block">
                                 <a href="javascript: void(0);">About</a>
                                 <a href="javascript: void(0);">Support</a>
                                 <a href="javascript: void(0);">Contact Us</a>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -1015,11 +1017,9 @@
             <div class="modal-content">
                 <div class="modal-body p-4">
                     <div class="text-center">
-                        <i class="ri-information-line h1 text-danger"></i>
-                        <h4 class="mt-2" id="modalTitle">Error</h4>
+                        <i class="" id="modalIcon"></i>
+                        <h4 class="mt-2" id="modalTitle"></h4>
                         <p id="modalMessage"></p>
-
-
                     </div>
                 </div>
             </div><!-- /.modal-content -->

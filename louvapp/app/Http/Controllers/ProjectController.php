@@ -21,41 +21,139 @@ class ProjectController extends Controller
             return view('proyectos/lista-proyectos', ['projects' => $project]);
         }
 
+        public function verAgregarProyecto()
+        {
+            $getStates = DB::table('estados')->get();
+            $getOwner = DB::table('users')
+                ->join('workers', 'workers.idUser_worker', '=', 'users.id')
+                ->where('users.idType_user_type', '=', 4)
+                ->get();
+            $getResponsable = DB::table('users')
+                ->join('workers', 'workers.idUser_worker', '=', 'users.id')
+                ->where('users.idType_user_type', '=', 2)
+                ->get();
+            $getProgress = DB::table('progress_projects')
+                ->get();
+
+            return view('proyectos/agregar-proyecto', [
+                'states' => $getStates,
+                'owners' => $getOwner,
+                'reponsables' => $getResponsable,
+                'progresss' => $getProgress
+            ]);
+            
+        }
+
         public function store(Request $request)
         {
-            // Guardar el pryecto en la base de datos
-            $project = new Project([
-                    'projectName' => $request->name,
-                    'description' => $request->description,
-                    'progress' => 1,
-                    'img_logo' => $request->flImage,
-                    'fechaInicio' => date('Y/m/d', strtotime($request->fechaInicio)),
-                    'urlPowerBi' => null
-            ]);
-            $project->save();
-            return redirect()->route('proyectos/editar-proyecto.show', ['id' => $project->id])->with('success', 'Proyecto agregado correctamente.');
-            
 
-    
+            $fechaInicio = date('Y-m-d', strtotime($request->fechaInicio));
+
+            
+            $project = new Project([
+                'projectImage' => $request->flImage,
+                'projectName' => $request->nombre,
+                'telefono' => $request->telefono,
+                'description' => $request->descripcion,
+                'progress' => $request->porcentaje,
+                'fechaInicio' => $fechaInicio,
+                'squareMeterSuperficial' => $request->mtsSuperficiales,
+                'squareMeterSotano' => $request->mtsSotano,
+                'projectType' => $request->tipoProyecto,
+                'address' => $request->direccion,
+                'location' => $request->locacion,
+                'state' => $request->estado,
+                'constructionSystem' => $request->sistemaConstruccion,
+                'idUser_projectManager' => $request->desarrollador,
+                'idUser_workManager' => $request->responsableObra,
+                'totalScheduledCost' => $request->totalCosto
+            ]);
+            
+            $project->save();
+            return redirect()->route('editar-proyecto.show', ['id' => $project->id])->with('success', 'Proyecto agregado correctamente.');
+            
         }
 
         public function show($id){
-            $project = Project::find($id);
-            return view('proyectos/editar-proyecto', ['projects' => $project]);
+
+            $project = DB::table('projects')
+            ->leftjoin('estados', 'projects.state', '=', 'estados.idEstado')
+            ->leftjoin('municipios', 'projects.location', '=', 'municipios.idMunicipio')
+            ->where('projects.id', $id)
+            ->first();
+            
+            $getStates = DB::table('estados')->get();
+            
+            $getOwner = DB::table('users')
+                ->join('workers', 'workers.idUser_worker', '=', 'users.id')
+                ->where('users.idType_user_type', '=', 4)
+                ->get();
+             
+            $getResponsable = DB::table('users')
+                ->join('workers', 'workers.idUser_worker', '=', 'users.id')
+                ->where('users.idType_user_type', '=', 2)
+                ->get();
+            $getProgress = DB::table('progress_projects')
+                ->get();
+
+            return view('proyectos/editar-proyecto', [
+                'states' => $getStates,
+                'owners' => $getOwner,
+                'reponsables' => $getResponsable,
+                'progresss' => $getProgress,
+                'projects' => $project
+            ]);
+            
 
         }
 
-        public function update(Project $project, Request $request){
-            $project->update([
-                'projectName' => $request->txtName,
-                'description' => $request->txtLastName,
-                'progress' => $request->txtUserName,
-                'img_profile' => $request->flImage,
+        public function update(Request $request, $idProject){
+            $oProject = new Project();
+            $oProject = Project::findOrFail($idProject);
+            
+            /*$request->validate([
+                'flImage' => 'required', // Ejemplo de regla de validación
+                'nombre' => 'required|string',
+                'telefono' => 'required|string',
+                'descripcion' => 'required|string',
+                'porcentaje' => 'required|numeric',
+                'fechaInicio' => 'required|date',
+                'mtsSuperficiales' => 'required|numeric',
+                'mtsSotano' => 'required|numeric',
+                'tipoProyecto' => 'required|string',
+                'direccion' => 'required|string',
+                'locacion' => 'required|integer',
+                'estado' => 'required|integer',
+                'sistemaConstruccion' => 'required|string',
+                'desarrollador' => 'required|integer',
+                'responsableObra' => 'required|integer',
+                'totalCosto' => 'required|numeric',
+            ]);
+            */
+            
+            $oProject->update([
+                'projectImage' => $request->flImage,
+                'projectName' => $request->nombre,
+                'telefono' => $request->telefono,
+                'description' => $request->descripcion,
+                'progress' => $request->porcentaje,
+                'squareMeterSuperficial' => $request->mtsSuperficiales,
+                'squareMeterSotano' => $request->mtsSotano,
+                'projectType' => $request->tipoProyecto,
+                'address' => $request->direccion,
+                'location' => $request->municipio,
+                'state' => $request->estado,
+                'constructionSystem' => $request->sistemaConstruccion,
+                'idUser_projectManager' => $request->desarrollador,
+                'idUser_workManager' => $request->responsableObra,
+                'totalScheduledCost' => $request->totalCosto,
                 'updated_at' => now()
             ]);
             
-            return redirect()->route('editar-usuario.show', ['id' => $project->id])->with('success', 'Proyecto editado correctamente.');
-    
+
+            //$oProject->toSql;
+                return redirect()->route('editar-proyecto.show', ['id' => $oProject->id])->with('success', 'Proyecto editado correctamente.');
+            
         }
 
         public function createDirecrotory($request)
