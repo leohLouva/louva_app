@@ -16,13 +16,21 @@ class Contractor extends Model
      *
      * @var array<int, string>
      */
+    protected $primaryKey = 'idContractor';
+    
     protected $fillable = [
         'contractorName',
-        'idIntern',
+        'rfc',
         'idProject_project',
         'email',
         'phone',
-        'whatsapp',
+        'sitio_web',
+        'actividad',
+        'domicilio',
+        'codigoPostal',
+        'idEstado_estado',
+        'idMunicipio_municipio',
+        'folderName',
         'img_contractor'
     ];
 }
