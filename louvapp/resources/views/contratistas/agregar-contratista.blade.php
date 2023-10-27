@@ -38,15 +38,6 @@
                         <input type="text" class="form-control" name="rfc" id="rfc" >
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Proyecto</label>
-                        <select class="form-control select2" data-toggle="select2" name="nombreProyecto" id="nombreProyecto">
-                            <option value="0">Selecciona una Proyecto</option>
-                            @foreach ($projects as $project)
-                                <option value="{{$project->id}}">{{$project->projectName}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
                         <label class="form-label" for="validationCustomUsername">Email</label>
                         <div class="input-group">
                             <span class="input-group-text" id="inputGroupPrepend">@</span>
@@ -72,7 +63,16 @@
         </div>
         <div class="col-6">
             <div class="card">
-                <div class="card-body">            
+                <div class="card-body">     
+                    <div class="mb-3">
+                        <label class="form-label">Proyecto</label>
+                        <select class="form-control select2" data-toggle="select2" name="idProyecto" id="idProyecto">
+                            <option value="0">Selecciona un proyecto</option>
+                            @foreach ($projects as $project)
+                                <option value="{{$project->id}}">{{$project->projectName}}</option>
+                            @endforeach
+                        </select>
+                    </div>       
                     <div class="mb-3">
                         <label class="form-label">Domicilio</label>
                         <input type="text" class="form-control" name="domicilio" id="domicilio" >

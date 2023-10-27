@@ -34,8 +34,7 @@
                         <h4 class="mt-3 my-1">{{$contractor->contractorName}} <i class="mdi mdi-check-decagram text-success"></i></h4>
                         <p class="mb-0 text-muted"><i class="mdi mdi-email-outline me-1"></i>{{$contractor->emailContractor}}</p>
                         <hr class="bg-dark-lighten my-3">
-                        <h5 class="mt-3 fw-semibold text-muted">Proyecto: <b>{{$contractor->projectName}}</b></h5>
-                    
+                        
                         <div class="row mt-3">
                             <div class="col-6">
                                 <a href="tel:{{$contractor->phoneContractor}}" class="btn w-100 btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="Call"><i class="mdi mdi-phone"></i></a>

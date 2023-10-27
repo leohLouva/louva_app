@@ -6,6 +6,7 @@ use Exception;
 use DataTables;
 use App\Models\User;
 use App\Models\Contractor;
+use App\Models\Worker_project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -17,11 +18,14 @@ class ContractorController extends Controller
     {
 
         $contractor = DB::table('contractors')
-        ->leftjoin('projects', 'projects.id', '=', 'contractors.idProject_project')
         ->get();
+        $getProjects = DB::table('projects')->get();
+
+
 
         return view('contratistas/lista-contratista', [
-            'contractors' => $contractor
+            'contractors' => $contractor,
+            'projects' => $getProjects
         ]);
     }
 
@@ -61,21 +65,29 @@ class ContractorController extends Controller
         
         $contractor = new Contractor([
             'contractorName' => $request->nombreEmpresa,
-            'rfc' => $request->rfc,
-            'idProject_project' => $request->nombreProyecto,
-            'email' => $request->email,
-            'phone' => $request->telefono,
+            'rfcContractor' => $request->rfc,
+            'emailContractor' => $request->email,
+            'phoneContractor' => $request->telefono,
             'sitio_web' => $request->web,
             'actividad' => $request->actividad,
-            'domicilio' => $request->domicilio,
-            'codigoPostal' => $request->cp,
+            'domicilioContractor' => $request->domicilio,
+            'codigoPostalContractor' => $request->cp,
             'idEstado_estado' => $request->estado,
             'idMunicipio_municipio' => $request->municipio,
             'folderName' => $request->folderName,
             'img_contractor' => $request->flImage
         ]);
         $contractor->save();
-        return redirect()->route('contratista/editar-contratista.show', ['id' => $contractor->idContractor])->with('success', 'Proyecto agregado correctamente.');
+
+        $project = new Worker_project([
+            'idContractor_project' => $contractor->id,
+            'idProyecto' => $request->idProyecto
+        ]);
+        $project->save();
+        
+
+        return redirect()->route('editar-contratista.show', ['id' => $contractor->idContractor])->with('success', 'Proyecto agregado correctamente.');
+        
     }
 
     public function update(Request $request, $idContractor){
@@ -84,19 +96,28 @@ class ContractorController extends Controller
         
         $oContractor->update([
             'contractorName' => $request->nombreEmpresa,
-            'rfc' => $request->rfc,
-            'idProject_project' => $request->nombreProyecto,
-            'email' => $request->email,
-            'phone' => $request->telefono,
+            'rfcContractor' => $request->rfc,
+            'emailContractor' => $request->email,
+            'phoneContractor' => $request->telefono,
             'sitio_web' => $request->web,
             'actividad' => $request->actividad,
-            'domicilio' => $request->domicilio,
-            'codigoPostal' => $request->cp,
+            'domicilioContractor' => $request->domicilio,
+            'codigoPostalContractor' => $request->cp,
             'idEstado_estado' => $request->estado,
             'idMunicipio_municipio' => $request->municipio,
             'folderName' => $request->folderName,
             'img_contractor' => $request->flImage
         ]);
+
+        $oProject = Worker_project::where('idContractor_project', $idContractor)->first();
+
+        if ($oProject) {
+            // Actualizar los datos del proyecto del trabajador
+            $oProject->update([
+                'idProyecto' => $request->idProyecto
+            ]);
+        }
+        
 
         return redirect()->route('editar-contratista.show', ['id' => $oContractor->idContractor])->with('success', 'Proyecto editado correctamente.');
 

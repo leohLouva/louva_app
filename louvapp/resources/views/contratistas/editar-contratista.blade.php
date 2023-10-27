@@ -38,12 +38,10 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Proyecto</label>
-                    <select class="form-control select2" data-toggle="select2" name="nombreProyecto" id="nombreProyecto">
-                        <option value="0">Selecciona una Proyecto</option>
+                    <select class="form-control select2" data-toggle="select2" name="idProyecto" id="idProyecto">
+                        <option value="0">Selecciona un proyecto</option>
                         @foreach ($projects as $project)
                             <option value="{{$project->id}}">{{$project->projectName}}</option>
-                            <option value="{{$project->id}}"@if ($project->id == $contractor->idProject_project) selected @endif>{{$project->projectName}}</option>
-
                         @endforeach
                     </select>
                 </div>
