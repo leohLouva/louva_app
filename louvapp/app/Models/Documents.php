@@ -19,7 +19,8 @@ class Documents extends Model
     protected $fillable = [
         'id',
         'path',
-        'idWorker_workers'
+        'idWorker_workers',
+        'idDocument_documentType',
         
     ];
 

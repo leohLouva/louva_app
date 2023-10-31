@@ -1,3 +1,4 @@
+
 function agregarUsuario()
 {
     nombre = document.getElementById("txtName").value;
@@ -46,7 +47,20 @@ function agregarUsuario()
         mostrarModal("Debes elegir una opción") 
         return;
       }
+      
+    //document.getElementById("formUsuario").submit();
+    louvax.setURL("usuarios/lista-usuarios");
+    louvax.asyncGet([{ action: "lista-usuarios" }])
+        .then(jsonInfo => {
+
+            console.log(jsonInfo)
+        })
+        .catch(err => {
+            
+            
+
+            console.log(err.message);
+        });
     
-    document.getElementById("formUsuario").submit();
 }
 

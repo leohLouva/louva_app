@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Worker;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,30 @@ use Intervention\Image\Facades\Image;
 
 class ImageController extends Controller
 {
+
+    public function storeProject(Request $request)
+    {
+        try{
+            $imageFile = $request->file('file');
+            $imageName = Str::uuid() . "." . $imageFile->extension();
+            $imageServer = Image::make($imageFile);
+            $imageServer->fit(1000,1000);
+            //$directory = "uploads/".$request->typeOfView;
+            $imagePath = public_path('uploads/proyectos') . '/' . $imageName;
+            $imageServer->save($imagePath);
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Imágen almacenada con éxito',
+                'imagen' => $imageName
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'Error',
+                'message' => $e->getMessage()
+            ]);
+        }
+
+    }
 
     public function storeUser(Request $request)
     {
@@ -31,90 +56,98 @@ class ImageController extends Controller
 
     public function storeContractor(Request $request)
     {
-
+        
         $imageFile = $request->file('file');
         $imageName = Str::uuid() . "." . $imageFile->extension();
         $imageServer = Image::make($imageFile);
         $imageServer->fit(1000,1000);
-        //creamos el directorio
-        $randomFolderName = uniqid('folder_');
-        $my_dir = 'uploads/'.$request->typeOfView.'/'.$randomFolderName;
-        if(!is_dir($my_dir)){
-            mkdir($my_dir);
-            echo "Se hizo el directorio " . $my_dir;
         
-        }else{
-            echo "Algo falló ";
-            
+        //creamos el directorio
+        $randomFolderName = uniqid($request->nombreEmpresaF . '_');
+        $my_dir = 'uploads/'.$request->typeOfView.'/' .$randomFolderName;
+
+        if (!is_dir($my_dir)) {
+            if (mkdir($my_dir, 0777, true)) {
+                $imagePath = public_path($my_dir) . '/' . $imageName;
+                $imageServer->save($imagePath);
+                return response()->json([
+                    'status' => 'Success',
+                    'message' => 'Imágen almacenada con éxito',
+                    'folderName' => $randomFolderName,
+                    'flImage' => $imageName,
+                    'imagen' => $imageName
+                ]);
+            } else {
+                echo "No se pudo crear el directorio.";
+            }
+        } else {
+            echo "El directorio ya existe.";
         }
-        //$directory = $this->createDirectory($request->typeOfView);
-        $imagePath = public_path('uploads/'.$request->typeOfView.'/'.$randomFolderName) . '/' . $imageName;
-        $imageServer->save($imagePath);
+        
         return response()->json([
             'imagen' => $imageName
         ]);
 
-
     }
 
+    //guardamos la imagen del perfil del trabajador
     public function storeImgProfileWorker(Request $request)
     {
+        $imageFile = $request->file('file');
+        $imageName = Str::uuid() . "." . $imageFile->extension();
+        $imageServer = Image::make($imageFile);
+        $imageServer->fit(1000,1000);
         
-        $contractor = DB::table('contractors')
-            ->where('contractors.idContractor', '=', $request->idContractor)
-            ->first();
+        //creamos el directorio
+        $randomFolderName = uniqid($request->folderName . '_');
+        $my_dir = 'uploads/empresa/' .$request->folderNameCont.'/'.$request->folderTrabajador;
+
+        if (!is_dir($my_dir)) {
+            if (mkdir($my_dir, 0777, true)) {
+                $imagePath = public_path($my_dir) . '/' . $imageName;
+                $imageServer->save($imagePath);
+                return response()->json([
+                    'status' => 'Success',
+                    'message' => 'Imágen almacenada con éxito',
+                    'folderName' => $randomFolderName,
+                    'flImage' => $imageName,
+                    'imagen' => $imageName
+                ]);
+            } else {
+                echo "No se pudo crear el directorio.";
+                return;
+            }
+        } else {
+            $imagePath = public_path($my_dir) . '/' . $imageName;
+            $imageServer->save($imagePath);
+            $worker = Worker::find($request->idWorker_);
         
-        if($contractor == null){
-            return response()->json([
-                'message' => 'Contratista no tiene directorio' 
-            ]);
-        }else{
+            if ($worker) {
             
-            $directorio = public_path("uploads/contratista/".$contractor->folderName);
-            if (is_dir($directorio)) {
-                $archivos = scandir($directorio);
-                foreach ($archivos as $archivo) {
-                    $rutaArchivo = $directorio . '/' . $archivo;
-                    
-                    if (!is_dir($rutaArchivo)) {
-                        //dd("Directorio encontrado: " . $archivo);
-                        return response()->json([
-                            'message' => "No se encontró el directorio"
-                        ]);
-                    }else{
-                        //creamos directorio unico para el trabajador 
-                        $randomFolderName = uniqid('trabajador_');
-                        $my_dir = $rutaArchivo.'/'.$randomFolderName;
-                        if(!is_dir($my_dir)){
-                            mkdir($my_dir);
-                            //echo "Se hizo el directorio " . $my_dir;
-                            $imageFile = $request->file('file');
-                            $imageName = Str::uuid() . "." . $imageFile->extension();
-                            $imageServer = Image::make($imageFile);
-                            $imageServer->fit(1000,1000);
-    
-                            $imagePath = public_path('uploads/contratista/'.$contractor->folderName.'/'.$randomFolderName) . '/' . $imageName;
-    
-                            $imageServer->save($imagePath);
-                            return response()->json([
-                                'folderName' => $randomFolderName,
-                                'imagen' => $imageName
-                            ]);
-                        }else{
-                            return response()->json([
-                                'message' => "Falló al crear directorio"
-                            ]);
-                            
-                        }
-                        
-                    }
-                }
+                //$worker->imgWorker = $imageName;
+                //$worker->save();
+                $worker->update([
+                    'imgWorker' => $imageName
+                ]);
+
+                return redirect()->route('fuerza-trabajo.editar-trabajador.show', ['idWorker' => $request->idWorker_])->with('success', 'Usuario editado correctamente.');
+
             } else {
                 return response()->json([
-                    'message' => "El directorio no existe."
+                    'status' => 'Error',
+                    'message' => 'Hubo un problema al guardar el nombre de la imagen'
                 ]);
             }
+            /*return response()->json([
+                'status' => 'Success',
+                'message' => 'Imágen almacenada con éxito en directorio existente',
+                'folderName' => $randomFolderName,
+                'flImage' => $imageName,
+                'imagen' => $imageName
+            ]);*/
         }
+        
+        
             
     }
 

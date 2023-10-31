@@ -27,24 +27,22 @@
                         <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100">
                             <thead>
                                 <tr>
-                                    <th>Id de Usuario</th>
                                     <th>Nombre</th>
-                                    <th>Apellido</th>
+                                    <th>Apellidos</th>
                                     <th>Nombre de usuario</th>
                                     <th>Email</th>
-                                    <th>Puesto</th>
+                                    <th>Tipo de Usuario</th>
                                     <th>Ver</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($users as $user)
                                     <tr>
-                                        <td>{{$user->id}}</td>
                                         <td>{{$user->name}}</td>
                                         <td>{{$user->lastName}}</td>
                                         <td>{{$user->userName}}</td>
                                         <td>{{$user->email}}</td>
-                                        <td>{{$user->accessName}}</td>
+                                        <td>{{$user->typeName}}</td>
                                         <td><a href="{{ route('editar-usuario.show', ['id' => $user->id]) }}" class="btn btn-warning" >Ver</a></td>
                                     </tr>
                                 @endforeach

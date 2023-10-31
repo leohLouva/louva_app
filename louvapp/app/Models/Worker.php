@@ -15,14 +15,18 @@ class Worker extends Model
      *
      * @var array<int, string>
      */
+    
+    protected $primaryKey = 'idWorker';
+    
     protected $fillable = [
         'idJob_jobs',
+        'idUser_worker',
         'idContractor_contractors',
-        'idIntern_worker',
         'name',
         'lastName',
+        'rfc',
+        'curp',
         'nss',
-        'nrp',
         'personalPhone',
         'emergencyPhone',
         'blodType',

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Worker;
+use App\Models\Worker_project;
 use App\Models\Documents;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -19,37 +21,36 @@ class WorkerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function index()
     {
-        //$worker = Worker::all();
         $worker = DB::table('workers')
             ->join('jobs', 'workers.idJob_jobs', '=', 'jobs.idJob')
             ->join('contractors', 'workers.idContractor_contractors', '=', 'contractors.idContractor')
-            ->where('workers.status','=','0')
+            ->where('workers.status','=','1')
             ->get();
-        return view('fuerza-trabajo/lista-trabajadores', ['workers' => $worker]);
+            
+            $totalTrabajadores = $worker->count();
+        
+            return view('fuerza-trabajo/lista-trabajadores', [
+                'workers' => $worker,
+                'totalTrabajadores' => $totalTrabajadores,
+            ]);
 
     }
+    
+    
 
     public function indexC()
     {
-        $totalTrabajadores = DB::table('workers')
-            ->where('workers.status', '=', '0')
-            ->count();
 
-
-        //$worker = Worker::all();
-        $worker = DB::table('workers')
-            ->join('jobs', 'workers.idJob_jobs', '=', 'jobs.idJob')
-            ->join('contractors', 'workers.idContractor_contractors', '=', 'contractors.idContractor')
-            //->join('validations', 'workers.id', '=', 'validations.idWorker_workers')
-            ->where('workers.status','=','0')
+        $projects = DB::table('projects')
             ->get();
-        return view('fuerza-trabajo/credenciales-trabajadores', [
-            'workers' => $worker,
-            'totalTrabajadores' => $totalTrabajadores,
-        ]);
         
+        return view('fuerza-trabajo/reporte-trabajadores', [
+            'projects' => $projects
+        ]);
+
 
     }
     
@@ -66,15 +67,25 @@ class WorkerController extends Controller
 
     public function verAgregarTrabajador()
     {
+        //obtener el tipo de trabajador
+        $getUser_type = DB::table('user_type')
+        ->get();
+
         //obtener los puestos de trabajo
         $getJobs = DB::table('jobs')
             ->get();
+        //obtener las empresas
         $getContractors = DB::table('contractors')
             ->get();
+        
+        $project = DB::table('projects')
+                ->get();
 
         return view('fuerza-trabajo/agregar-trabajador', [
             'contractors' => $getContractors,
             'jobs' => $getJobs,
+            'types' =>$getUser_type,
+            'projects' =>$project
         ]);
     }
 
@@ -85,29 +96,61 @@ class WorkerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    { 
+       
+    try{
+        DB::beginTransaction();
+        
+        $user = new User([
+            'userName' => $request->data['nombreUsuario'], 
+            'password' => bcrypt($request->data['password']),
+            'idType_user_type' => $request->data['tipoUsuario'],
+            'email' => $request->data['correo'], 
+            'isDisable' => 0
+        ]);
+        $user->save(); 
 
         $worker = new Worker([
-            'idJob_jobs' => $request->puesto,
-            'idContractor_contractors' => $request->contratista,
-            'idIntern_worker' => $request->contratista,
-            'name' => $request->nombre,
-            'lastName' => $request->apellido,
-            'nss' => $request->nss,
-            'nrp' => $request->nrp,
-            'personalPhone' => $request->telefonoPersonal,
-            'emergencyPhone' => $request->telefonoEmergencia,
-            'blodType' => $request->tipoSangre,
-            'chronicDiseases' => $request->enfermedades,
-            'alergies' => $request->alergias,
-            'status' => 0,
-            'imgWorker' => $request->flImage,
-            'foldeName' => $request->folderName
-        ]);
+                'idUser_worker'=> $user->id,
+                'idJob_jobs' => $request->data['puesto'],
+                'idContractor_contractors' => $request->data['contratista'],
+                'name' => strtoupper($request->data['nombre']),
+                'lastName' => strtoupper($request->data['apellido']),
+                'curp' => strtoupper($request->data['curp']),
+                'rfc' => strtoupper($request->data['rfc']),
+                'nss' => strtoupper($request->data['nss']),
+                'personalPhone' => $request->data['telefonoPersonal'],
+                'emergencyPhone' => $request->data['telefonoEmergencia'],
+                'blodType' => strtoupper($request->data['tipoSangre']),
+                'chronicDiseases' => strtoupper($request->data['enfermedades']),
+                'alergies' => strtoupper($request->data['alergias']),
+                'status' => 1,
+                'imgWorker' => 'NULL',
+                'foldeName' => $user->id . '-' .$request->data['nombre']
+            ]);
         $worker->save();
         
-        return redirect()->route('fuerza-trabajo.editar-trabajador.show', ['id' => $worker->id])->with('success', 'Usuario agregado correctamente.');
-        //$this->show($worker->id);
+        $worker1 = new Worker_project([
+            'idUser_worker_project'=> $user->id,
+            'idProject_worker_project' => $request->data['idProyecto'],
+            'status_worker_project' => $request->data['nombre'],
+            
+        ]);
+        
+        $worker1->save();
+        //dd($worker->idWorker);
+        DB::commit();
+            
+        //return redirect()->route('fuerza-trabajo.editar-trabajador.show', ['idWorker' => $worker->idWorker])->with('success', 'Usuario agregado correctamente.');
+        return response()->json([
+            'redirect' => route('fuerza-trabajo.editar-trabajador.show', ['idWorker' => $worker->idWorker])
+        ]);
+
+        } catch (\Exception $e) {
+            DB::rollback(); // Deshace la transacción en caso de error
+            // Manejar el error o lanzar una excepción si es necesario
+           dd("hay un error en el insert " . $e); 
+        }
 
     }
 
@@ -119,33 +162,54 @@ class WorkerController extends Controller
      */
     public function show($id)
     {
-        //obtener los puestos de trabajo
-        $getJobs = DB::table('jobs')
+        //dd($id);
+        $getJobs = DB::table('jobs')->get();
+        
+        $getContractors = DB::table('contractors')
+            //->join('proyecto_empresa', 'contractors.idContractor', '=', 'proyecto_empresa.idContractor_project')
             ->get();
 
-        $getContractors = DB::table('contractors')
-        ->get();
+        $getNameDocuments = DB::table('documentType')->get();
+
+        $getUser_type = DB::table('user_type')->get();
         
         $getDocuments = DB::table('documents')
-        ->where('idWorker_workers', $id)
-        ->get();
-        //obtenemos la validación de documentos del trabajador
-        
+            ->leftjoin('documentType', 'documentType.idDocument', '=', 'documents.idDocument_documentType')
+            ->where('idWorker_workers', $id)
+            ->get();
 
-        //obtener datos del trabajor
         $worker = DB::table('workers')
             ->join('jobs', 'workers.idJob_jobs', '=', 'jobs.idJob')
             ->join('contractors', 'workers.idContractor_contractors', '=', 'contractors.idContractor')
-            ->where('workers.id', '=', $id)
+            ->join('users', 'workers.idUser_worker', '=', 'users.id')
+            ->leftjoin('proyecto_empresa', 'workers.idContractor_contractors', '=', 'proyecto_empresa.idContractor_project')
+            ->leftjoin('projects', 'proyecto_empresa.idProyecto', '=', 'projects.id')
+            ->where('workers.idWorker', '=', $id)
             ->first();
 
         
-        return view('fuerza-trabajo/editar-trabajador', [
-            'worker' => $worker,
-            'jobs' => $getJobs,
-            'contractors' => $getContractors,
-            'documents' => $getDocuments
-        ]);
+
+            $getProjects = DB::table('projects')
+                ->join('proyecto_empresa', 'projects.id', '=', 'proyecto_empresa.idProyecto')
+                ->where('idContractor_project','=',$worker->idContractor_contractors)
+                ->get();
+
+            
+
+            $arrayWorker = array(
+                'worker' => $worker,
+                'jobs' => $getJobs,
+                'contractors' => $getContractors,
+                'documents' => $getDocuments,
+                'aDocuments' => $getNameDocuments,
+                'types' => $getUser_type,
+                'tusDocumentos' => $getDocuments->count(),
+                'totalDocumentos' => $getNameDocuments->count(),
+                'projects' => $getProjects
+            );
+
+        return view('fuerza-trabajo/editar-trabajador',  compact('arrayWorker'));
+        
     }
 
     /**
@@ -168,7 +232,29 @@ class WorkerController extends Controller
      */
     public function update(Request $request, Worker $worker)
     {
-        //
+
+        $worker = new Worker([
+            'idUser_worker'=> $worker->id,
+            'idJob_jobs' => $request->puesto,
+            'idContractor_contractors' => $request->contratista,
+            'name' => strtoupper($request->nombre),
+            'lastName' => strtoupper($request->apellido),
+            'curp' => strtoupper($request->curp),
+            'rfc' => strtoupper($request->rfc),
+            'nss' => strtoupper($request->nss),
+            'nrp' => strtoupper($request->nrp),
+            'personalPhone' => $request->telefonoPersonal,
+            'emergencyPhone' => $request->telefonoEmergencia,
+            'blodType' => strtoupper($request->tipoSangre),
+            'chronicDiseases' => strtoupper($request->enfermedades),
+            'alergies' => strtoupper($request->alergias),
+            'status' => 1,
+            'imgWorker' => $request->flImage,
+            'foldeName' => $request->folderName
+        ]);
+        
+        return redirect()->route('fuerza-trabajo.editar-trabajador.show', ['id' => $worker->id])->with('success', 'Usuario editado correctamente.');
+        
     }
 
     /**
@@ -182,47 +268,39 @@ class WorkerController extends Controller
         //
     }
 
-    public function storeDocuments(Request $request){
-        
-        //return $request->file('file')->store('docs');
-        /*$imageName = 'archivo.pdf';// Obtén el nombre de la imagen de alguna manera
-        
-        return $request->file('file')->storeAs(
-            "public/uploads/contratista/{$request->folderNameCont}/{$request->foldeNameWorker}",$imageName
-        );
-        */
-        // Verifica si se enviaron archivos
-if ($request->hasFile('file')) {
-    // Obtiene la colección de archivos
-    $files = $request->file('file');
+    public function storeDocuments(Request $request)
+    {
 
-    // Obtiene el total de archivos en la colección
-    $totalFiles = count($files);
-    // Obtén la carpeta base donde se guardarán los archivos
-    $baseFolder = "public/uploads/contratista/{$request->folderNameCont}/{$request->foldeNameWorker}";
-
-    // Iterar a través de los archivos
-    foreach ($files as $file) {
-        // Genera un nombre único para cada archivo, por ejemplo, usando un timestamp
-        $imageName = time() . '_' . $file->getClientOriginalName();
-
-        // Almacena el archivo en la carpeta base con el nombre único
-        $file->storeAs($baseFolder, $imageName);
-
-        $documents = new Documents([
-            'path' => $imageName,
-            'idWorker_workers' => $request->workerId,
-        ]);
-        $documents->save();
-        
+        if ($request->hasFile('file')) {
+            $files = $request->file('file');
+            $baseFolder = "public/uploads/contratista/{$request->folderNameCont}/{$request->foldeNameWorker}";
+            foreach ($files as $file) {
+                $imageName = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs($baseFolder, $imageName);
+                $documents = new Documents([
+                    'path' => $imageName,
+                    'idWorker_workers' => $request->workerId,
+                    'idDocument_documentType' => $request->documentType
+                ]);
+                $documents->save();
+            }
+        }
+        return redirect()->back()->with('success', 'Archivos subidos exitosamente');
     }
 
-    // Puedes utilizar $totalFiles en tu lógica si lo necesitas
-}
+    public function eliminar(Request $request,$id)
+    {
+        $documento = documents::find($id);
+        if ($documento) {
+            // Elimina el archivo del almacenamiento
+            $rutaArchivo = 'uploads/contratista/' . $request->folderContractor . '/' . $request->folderWorker . '/' . $request->path;
+            Storage::delete($rutaArchivo);
 
-        return redirect()->back()->with('success', 'Archivos subidos exitosamente');
-    
-       
+            // Elimina el registro de la base de datos
+            $documento->delete();
+        }
+
+        return redirect()->back()->with('success', 'El archivo ha sido eliminado con éxito.');
     }
     
 }
