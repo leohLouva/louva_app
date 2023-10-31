@@ -15,9 +15,11 @@ class UserController extends Controller
     //ver lista de usuarios
     public function index()
     {
-        //$user = User::all();
+
         $user = DB::table('users')
-                ->leftjoin('access_level', 'users.access_level', '=', 'access_level.idAccess')
+                ->leftJoin('workers', 'users.id', '=' , 'workers.idWorker')
+                ->leftjoin('user_type', 'users.idType_user_type', '=', 'user_type.idType')
+                ->where('workers.idContractor_contractors', '=' , 1 )
                 ->get();
         return view('usuarios/lista-usuarios', ['users' => $user]);
     }
@@ -31,7 +33,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request->all());
+        dd($request->all());
         // Validar los datos del formulario
         /*$validatedData = $request->validate([
             'name' => 'required|string|max:255',
