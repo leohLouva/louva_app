@@ -6,28 +6,31 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="" name="description" />
-        <meta content="" name="author" />
-        
+        <meta content="" name="louva" />
         <!--Jquery-->
         <script src="{{ asset("/assets/vendor/jquery/jquery.min.js") }}"></script>
-        
         <!-- App favicon -->
         <link rel="shortcut icon" href="{{ asset("/assets/images/favicon.ico") }}">
-
         @stack('styles') <!--Solo carga estilos donde se les da push (requeridos)-->
-        
         <!-- Theme Config Js -->
         <script src="{{ asset("/assets/js/hyper-config.js") }}"></script>
-
         <!-- App css -->
         <link href="{{ asset("/assets/css/app-modern.min.css") }}" rel="stylesheet" type="text/css" id="app-style" />
-
         <!-- Icons css -->
         <link href="{{ asset("/assets/css/icons.min.css") }}" rel="stylesheet" type="text/css" />
         <script src="{{ asset("/assets/js/axios.js") }}"></script>
-
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         @stack('js.app')
-        
+        <style>
+            @media print {
+                body * {
+                    visibility: hidden;
+                }
+                .printable-content, .printable-content * {
+                    visibility: visible;
+                }
+            }
+        </style>
     </head>  
     <body>
         
@@ -218,14 +221,19 @@
                                 <li>
                                     <a href="{{ route('agregar-trabajador.verAgregarTrabajador') }}" >Agregar nuevo </a>
                                 </li>
-                                
+                                <li>
+                                    <a href="{{ route('reporte-trabajadores.indexC') }}" >Gráficas por proyectos</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('reporte-trabajadores-puestos.indexC') }}" >Gráficas por puestos</a>
+                                </li>
                             </ul>
                         </div>
                     </li>
                     <li class="side-nav-item">
                         <a data-bs-toggle="collapse" href="#sidebarContractor" aria-expanded="false" aria-controls="sidebarContractor" class="side-nav-link">
                             <i class=" uil-constructor"></i>
-                            <span> Contratistas </span>
+                            <span> Empresas </span>
                             <span class="menu-arrow"></span>
                         </a>
                         <div class="collapse" id="sidebarContractor">
@@ -234,7 +242,7 @@
                                     <a href="{{ route('lista-contratistas.index') }}" >Ver </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('agregar-contratista.verAgregarContratista') }}" >Agregar nuevo </a>
+                                    <a href="{{ route('agregar-contratista.verAgregarContratista') }}" >Agregar nueva empresa </a>
                                 </li>
 
                             </ul>
@@ -1017,7 +1025,7 @@
             <div class="modal-content">
                 <div class="modal-body p-4">
                     <div class="text-center">
-                        <i class="" id="modalIcon"></i>
+                        <i class="ri-alert-line h1 text-warning"></i>
                         <h4 class="mt-2" id="modalTitle"></h4>
                         <p id="modalMessage"></p>
                     </div>
@@ -1025,14 +1033,15 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
-
     <!-- Vendor js -->
     <script src="{{ asset("/assets/js/vendor.min.js") }}"></script>
- 
     <script src="{{ asset("/assets/js/app.min.js") }}"></script>
-
     <!-- App js -->
+    <script>
+        function printContent() {
+            window.print();
+        }
+        </script>
     @stack('scriptDatatable')
     
     </body>
