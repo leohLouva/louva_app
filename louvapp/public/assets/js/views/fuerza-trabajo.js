@@ -1,33 +1,120 @@
-document.addEventListener("DOMContentLoaded", function() {
-    var contratista = document.getElementById("contratista");
-    var nombreInput = document.getElementById("idContractor");
-  
-    contratista.addEventListener("change", function() {
-        var selectedOption = contratista.options[contratista.selectedIndex].value;
-        nombreInput.value = selectedOption;
-        var elemento = document.getElementById("imgProfileTrabajador");
-        if (nombreInput.value == 0) {
-            elemento.style.display = "none";    
-        }else{
-            elemento.style.display = "block";
-        }
-        
-    });
-});
-
 function agregarTrabajador(){
+    
+    nombre = document.getElementById('nombre').value;
+    apellido = document.getElementById('apellido').value;
+    tipoUsuario = document.getElementById('tipoUsuario').value;
+    nombreUsuario = document.getElementById('nombreUsuario').value;
+    password = document.getElementById('password').value;
+    confirmPassword = document.getElementById('confirmPassword').value;
+    correo = document.getElementById('correo').value;
+    curp = document.getElementById('curp').value;
+    rfc = document.getElementById('rfc').value;
+    nss = document.getElementById('nss').value;
+    idProyecto = document.getElementById('idProyecto').value;
+    contratista = document.getElementById('contratista').value;
+    puesto = document.getElementById('puesto').value;
+    telefonoPersonal = document.getElementById('telefonoPersonal').value;
+    telefonoEmergencia = document.getElementById('telefonoEmergencia').value;
+    tipoSangre = document.getElementById('tipoSangre').value;
+    enfermedades = document.getElementById('enfermedades').value;
+    alergias = document.getElementById('alergias').value;
+    /*if (nombre.length < 1 || nombre.length <= 3) {
+        mostrarModal("El nombre del trabajador no puede estar vacio y debe tener más de 3 caracteres");        
+        return;
+    }
+    if (apellido.length < 1 || apellido.length <= 3) {
+        mostrarModal("El apellido del trabajador no puede estar vacio y debe tener más de 3 caracteres");        
+        return;
+    }
+    if (contratista == 0) {
+        mostrarModal("Debes elegir un contratista");        
+        return;
+    }
+    if (puesto == 0) {
+        mostrarModal("Debes elegir el puesto que desempeña el trabajador");        
+        return;
+    }
+    if (nss.length !== 11) {
+        mostrarModal("El número de seguro social no puede estar vacio y debe ser de 11 caracteres");        
+        return;
+    }
+   
+    if (telefonoPersonal.length < 1 || nombre.length <= 3) {
+        mostrarModal("El teléfono personal no puede estar vacio y debe tener más de 3 caracteres");        
+        return;
+    }
+    if (telefonoEmergencia.length < 1 || nombre.length <= 3) {
+        mostrarModal("El teléfono de emergenica no puede estar vacio y debe tener más de 3 caracteres");        
+        return;
+    }
+    if (tipoSangre.length < 1 || nombre.length <= 3) {
+        mostrarModal("Escribe el tipo de sangre");        
+        return;
+    }
+    if (enfermedades.length < 1) {
+        //enfermedades = 'N/A';
+    }
+    
+    if (alergias.length < 1) {
+        //alergias = 'N/A';
+    }*/
+    
+    var formData = {
+        nombre: nombre,
+        apellido: apellido,
+        tipoUsuario: tipoUsuario,
+        nombreUsuario: nombreUsuario,
+        password: password,
+        confirmPassword: confirmPassword,
+        correo: correo,
+        curp: curp,
+        rfc: rfc,
+        nss: nss,
+        idProyecto: idProyecto,
+        contratista: contratista,
+        puesto: puesto,
+        telefonoPersonal: telefonoPersonal,
+        telefonoEmergencia: telefonoEmergencia,
+        tipoSangre: tipoSangre,
+        enfermedades: enfermedades,
+        alergias: alergias
+    };
+    //document.getElementById("formTrabajador").submit();
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        $.ajax({
+            type: 'POST',
+            url: addingW,
+            data: {
+                data: formData,
+                _token: csrfToken
+            },
+            success: function (data) {
+                console.log(data.redirect);
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    mostrarModal("¡Todo bien!");
+                }
+            },
+            error: function (xhr, status, error) {
+                // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error al usuario
+                mostrarModal("Error en la solicitud AJAX: " + error);
+            }
+        });
+
+}
+
+function editarTrabajador(){
     nombre = document.getElementById("nombre").value;
     apellido = document.getElementById("apellido").value;
     contratista = document.getElementById("contratista").value;
     puesto = document.getElementById("puesto").value;
     nss = document.getElementById("nss").value;
-    nrp = document.getElementById("nrp").value;
     telefonoPersonal = document.getElementById("telefonoPersonal").value;
     telefonoEmergencia = document.getElementById("telefonoEmergencia").value;
     tipoSangre = document.getElementById("tipoSangre").value;
     enfermedades = document.getElementById("enfermedades").value;
     alergias = document.getElementById("alergias").value;
-    flImage = document.getElementById("flImage").value;
 
     if (nombre.length < 1 || nombre.length <= 3) {
         mostrarModal("El nombre del trabajador no puede estar vacio y debe tener más de 3 caracteres");        
@@ -49,10 +136,7 @@ function agregarTrabajador(){
         mostrarModal("El número de seguro social no puede estar vacio y debe ser de 11 caracteres");        
         return;
     }
-    if (nrp.length < 1 || nombre.length <= 3) {
-        mostrarModal("El número de registro patronal no puede estar vacio y debe tener más de 3 caracteres");        
-        return;
-    }
+   
     if (telefonoPersonal.length < 1 || nombre.length <= 3) {
         mostrarModal("El teléfono personal no puede estar vacio y debe tener más de 3 caracteres");        
         return;
@@ -75,14 +159,12 @@ function agregarTrabajador(){
         alergias.value = 'N/A';      
         
     }
-    if (flImage.length < 1 || flImage.length <= 3) {
-        mostrarModal("Hubo un problema con la imagen...");        
-        return;
-    }
 
-    document.getElementById("formTrabajador").submit();
+
+    document.getElementById("editForm").submit();
 
 }
+
 
 function printCard() {
     // Obtener el card que deseas imprimir por su id
@@ -129,3 +211,4 @@ function previewFiles() {
         }
     }
 }
+
