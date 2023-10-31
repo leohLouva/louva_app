@@ -17,13 +17,13 @@
         <div class="col-6">
             <div class="page-title-box">
                 <div class="page-title-left">
-                    <h4 class="page-title"> <i class="uil uil-constructor"></i> Lista de trabajadores</h4>
+                    <h4 class="page-title"> <i class="uil uil-constructor"></i> Lista de trabajadores (Total: {{ $totalTrabajadores }})</h4>
                 </div>
             </div>
         </div>
         <div class="col-6">
             <div class="page-title-right">
-                <a href="{{ route('credenciales-trabajadores.indexC') }}"type="button" class="btn btn-light" > Ver Cards </a>
+                
             </div>
         </div>
     </div>
@@ -39,10 +39,9 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Nombre Completo</th>
-                                        <th>Puesto</th>
                                         <th>Empresa</th>
+                                        <th>Puesto</th>
                                         <th>NSS</th>
-                                        <th>NRP</th>
                                         <th>Teléfono</th>
                                         <th>Tel Emergencia</th>
                                         <th>Sangre</th>
@@ -54,18 +53,17 @@
                                 <tbody>
                                     @foreach ($workers as $worker)
                                         <tr>
-                                            <td>{{$worker->idIntern_worker}}</td>
+                                            <td>{{$worker->idWorker}}</td>
                                             <td>{{$worker->lastName}} {{$worker->name}}</td>
-                                            <td>{{$worker->jobName}}</td>
                                             <td>{{$worker->contractorName}}</td>
+                                            <td>{{$worker->jobName}}</td>
                                             <td>{{$worker->nss}}</td>
-                                            <td>{{$worker->nrp}}</td>
                                             <td>{{$worker->personalPhone}}</td>
                                             <td>{{$worker->emergencyPhone}}</td>
                                             <td>{{$worker->blodType}}</td>
                                             <td>{{$worker->chronicDiseases}}</td>
                                             <td>{{$worker->alergies}}</td>
-                                            <td><a href="{{ route('fuerza-trabajo.editar-trabajador.show', ['id' => $worker->id]) }}" class="btn btn-outline-success rounded-pill"><i class="mdi mdi-account me-1"></i>Ver detalle</a></td>
+                                            <td><a href="{{ route('fuerza-trabajo.editar-trabajador.show', ['idWorker' => $worker->idWorker]) }}" class="btn btn-outline-success rounded-pill"><i class="mdi mdi-account me-1"></i>Ver detalle</a></td>
                                         </tr>
                                     @endforeach
                                 </tbody>

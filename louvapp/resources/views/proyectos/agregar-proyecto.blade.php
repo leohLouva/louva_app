@@ -154,6 +154,7 @@
 <!-- end page form-create-project -->
 <!-- Bootstrap Datepicker Plugin js -->
 <script src="{{ asset("/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js") }}"></script>
+
 <script>
     $(document).ready(function() {
         $('#estado').on('change', function() {
@@ -175,6 +176,7 @@
             }
         });
     });
+    
 </script> 
 
 

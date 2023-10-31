@@ -51,17 +51,32 @@ Route::middleware(['auth'])->group(function () {
     Route::get('contratista/lista-contratista', [App\Http\Controllers\ContractorController::class, 'index'])->name('lista-contratistas.index');
     Route::get('contratista/agregar-contratista', [App\Http\Controllers\ContractorController::class, 'verAgregarContratista'])->name('agregar-contratista.verAgregarContratista');
     Route::post('/addingContractor', [App\Http\Controllers\ContractorController::class, 'store']);
+    Route::get('/contratista/editar-contratista/{id}', [App\Http\Controllers\ContractorController::class, 'show'])->name('editar-contratista.show');
+    Route::post('/contratista/editando-contratista/{id}',[App\Http\Controllers\ContractorController::class,'update'])->name('editando-contratista.update');
+    Route::get('fuerza-trabajo/lista-trabajadores/{idContractor}', [App\Http\Controllers\ContractorController::class, 'indexFuerza'])->name('lista-trabajadores.indexFuerza');
 
     /***FUERZA DE TRABAJO */
     Route::get('fuerza-trabajo/lista-trabajadores', [App\Http\Controllers\WorkerController::class, 'index'])->name('lista-trabajadores.index');
-    Route::get('fuerza-trabajo/credenciales-trabajadores', [App\Http\Controllers\WorkerController::class, 'indexC'])->name('credenciales-trabajadores.indexC');
+    //Route::get('fuerza-trabajo/credenciales-trabajadores', [App\Http\Controllers\WorkerController::class, 'indexC'])->name('credenciales-trabajadores.indexC');
     Route::get('fuerza-trabajo/editar-trabajador/{idWorker}', [App\Http\Controllers\WorkerController::class, 'show'])->name('fuerza-trabajo.editar-trabajador.show');
     Route::get('fuerza-trabajo/agregar-trabajador', [App\Http\Controllers\WorkerController::class, 'verAgregarTrabajador'])->name('agregar-trabajador.verAgregarTrabajador');
-    Route::post('/addingWorker',[App\Http\Controllers\WorkerController::class,'store']);
+    Route::post('/addingWorker',[App\Http\Controllers\WorkerController::class,'store'])->name('addingWorker');;
     Route::post('/fuerza-trabajo/editar-trabajador/editing/{idWorker}',[App\Http\Controllers\WorkerController::class,'update'])->name('profile.update');
-
     Route::post('/validar-documentos', [App\Http\Controllers\DocumentsController::class, 'validateDocuments'])->name('validateDocuments');
+    //para escanear y checar entrada y salida del trabajador
+    Route::get('fuerza-trabajo/scanner/{date}/{id}', [App\Http\Controllers\ScannerController::class, 'show'])->name('scanner.show');
+    //Reporte gráfico
     
+    Route::post('registro-entrada/{idWorker}',[App\Http\Controllers\ScannerController::class,'checarEntrada'])->name('scanner.checarEntrada');
+    Route::post('registro-salida/{idWorker}',[App\Http\Controllers\ScannerController::class,'checarSalida'])->name('scanner.checarSalida');
+
+
+    Route::get('fuerza-trabajo/reporte-trabajadores', [App\Http\Controllers\WorkerController::class, 'indexC'])->name('reporte-trabajadores.indexC');
+    Route::get('fuerza-trabajo/reporte-trabajadores-puestos', [App\Http\Controllers\ProjectController::class, 'indexC'])->name('reporte-trabajadores-puestos.indexC');
+    Route::get('/proyecto/seleccionar', [App\Http\Controllers\ProjectController::class, 'showSelectionForm'])->name('proyecto.seleccionar');
+    Route::post('/proyecto/empresas', [App\Http\Controllers\ProjectController::class, 'graphicByProjects'])->name('proyecto.empresas');
+    Route::post('/proyecto/empresas/puestos', [App\Http\Controllers\ProjectController::class, 'graphicByJobs'])->name('proyecto.puestos');
+
     
 
 
@@ -76,5 +91,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pdfs', [App\Http\Controllers\WorkerController::class, 'storeDocuments']);
     //eliminarArchivo
     Route::delete('/eliminar-archivo/{id}',  [App\Http\Controllers\WorkerController::class, 'eliminar'])->name('eliminarArchivo');
+    
+    
+
 
 });
