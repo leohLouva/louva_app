@@ -123,6 +123,8 @@ class ProjectController extends Controller
         }
 
         public function update(Request $request, $idProject){
+            //dd($request->all());
+
             $oProject = new Project();
             $oProject = Project::findOrFail($idProject);
             
@@ -149,17 +151,7 @@ class ProjectController extends Controller
             
         }
 
-        public function createDirecrotory($request)
-        {
-            dd($request->all());
-            $path = public_path('upload/');
-
-            if(!File::isDirectory($path)){
-                File::makeDirectory($path, 0777, true, true);
-
-        // retry storing the file in newly created path.
-            }   
-        }
+       
         
         public function showSelectionForm()
         {

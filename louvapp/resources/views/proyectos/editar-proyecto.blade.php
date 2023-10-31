@@ -24,6 +24,7 @@
             <h4 class="header-title">Editar proyecto </h4>
         </div>
     </div>
+
     <div class="card">
         <div class="card-body">
             <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
@@ -102,7 +103,11 @@
                             </div>
                             
                         </div>
-                        <div class="col-4">                
+                   
+                        <div class="col-4">  
+                            
+                            <form action="/editingProject/{{ $projects->id }}" method="POST" id="editingProject">
+                                @csrf
                             <div class="mb-3">
                                 <label class="form-label">Nombre del proyecto</label>
                                 <input type="text" id="nombre" name="nombre" class="form-control" placeholder="" value="{{$projects->projectName}}" disabled>
@@ -142,7 +147,6 @@
                                 <input type="text" class="form-control" id="fechaInicio" name="fechaInicio" data-provide="datepicker" data-date-container="#datepicker1" data-date-format="d-M-yyyy" data-date-autoclose="true" value="{{$projects->fechaInicio}}" disabled>
                             </div>
                         </div>   
-
                         <div class="col-4">          
                             <div class="mb-3">
                                 <label class="form-label">Tipo de proyecto</label>
@@ -183,6 +187,7 @@
                                     <option value="{{$projects->location}}">{{$projects->municipio}}</option>
                                 </select>
                             </div> 
+                        
                             <div class="row">
                                 <div class="col-7">
                                     <input class="form-control" type="hidden" id="flImage" name="flImage" value="{{$projects->projectImage}}" disabled>
@@ -195,7 +200,9 @@
 
                                 </div>
                             </div>
-                        </div>         
+                        </form> 
+                        </div>   
+                      
                     </div>
                 </div>
                 <div class="tab-pane " id="lista-ingresos-ft">

@@ -44,9 +44,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('proyectos/agregar-proyecto', [App\Http\Controllers\ProjectController::class, 'verAgregarProyecto'])->name('agregar-proyecto.verAgregarProyecto');
 
     Route::post('/addingProject', [App\Http\Controllers\ProjectController::class, 'store']);
+    //Route::post('/editarProyecto', [App\Http\Controllers\ProjectController::class, 'update'])->name('project.update');
+
     Route::get('/proyectos/editar-proyecto/{id}', [App\Http\Controllers\ProjectController::class, 'show'])->name('editar-proyecto.show');
-    Route::post('/proyectos/editando-proyecto/{id}',[App\Http\Controllers\ProjectController::class,'update'])->name('editando-proyecto.update');
+    Route::post('/editingProject/{id}',[App\Http\Controllers\ProjectController::class,'update'])->name('editando-proyecto.update');
     Route::get('/municipios/{estadoId}', [App\Http\Controllers\MunicipioController::class,'obtenerMunicipiosPorEstado']);
+
     /***CONTRATISTAS */
     Route::get('contratista/lista-contratista', [App\Http\Controllers\ContractorController::class, 'index'])->name('lista-contratistas.index');
     Route::get('contratista/agregar-contratista', [App\Http\Controllers\ContractorController::class, 'verAgregarContratista'])->name('agregar-contratista.verAgregarContratista');
