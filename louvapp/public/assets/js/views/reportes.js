@@ -4,11 +4,7 @@ function getSelectdata(){
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
     var idProyecto = $('#idProyecto').val();
     var fechaRegistro = $('#fechaInicio').val();
-    var partesFecha = fechaRegistro.split("-");
-    var dia = partesFecha[0];
-    var mes = partesFecha[1];
-    var anio = partesFecha[2];
-    var fechaFormateada = anio + "-" + mes + "-" + dia;
+
     if (idProyecto == 0) {
         mostrarModal("Debes elegir un proyecto para mostrar las gráficas correspondientes");
         return;
@@ -20,7 +16,7 @@ function getSelectdata(){
             data: {
                 idProyecto: idProyecto,
 
-                fechaRegistro:fechaFormateada,
+                fechaRegistro:fechaRegistro,
                 _token: csrfToken
             },
             success: function (data) {
@@ -185,11 +181,7 @@ function graficaPorPuesto(){
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
     var idProyecto = $('#idProyecto').val();
     var fechaRegistro = $('#fechaInicio').val();
-    var partesFecha = fechaRegistro.split("-");
-    var dia = partesFecha[0];
-    var mes = partesFecha[1];
-    var anio = partesFecha[2];
-    var fechaFormateada = anio + "-" + mes + "-" + dia;
+  
     if (idProyecto == 0) {
         mostrarModal("Debes elegir un proyecto para mostrar las gráficas correspondientes");
         return;
@@ -201,7 +193,7 @@ function graficaPorPuesto(){
             data: {
                 idProyecto: idProyecto,
 
-                fechaRegistro:fechaFormateada,
+                fechaRegistro:fechaRegistro,
                 _token: csrfToken
             },
             success: function (data) {
