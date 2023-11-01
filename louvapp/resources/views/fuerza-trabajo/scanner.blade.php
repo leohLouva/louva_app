@@ -6,6 +6,7 @@
     <head>
         <meta charset="utf-8" />
         <title>Registro de entrada y salida</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
         <meta content="Coderthemes" name="author" />
@@ -50,7 +51,7 @@
                                             <div class="card rounded-0 shadow-none m-0">
                                                 <div class="card-body text-center">
                                                     <div class="row">
-                                                        <div class="col-6"><h4 class="mt-3 my-1">FECHA: <br> {{date("d-m-Y", strtotime($arrayWorker['date']))}}</h4></div>
+                                                        <div class="col-6"><h4 class="mt-3 my-1">FECHA: <br><span id="fechaDeCheck">{{date("d-m-Y", strtotime($arrayWorker['date']))}}</span></h4></div>
                                                         <div class="col-6"><h4 class="mt-3 my-1">HORA: <br>  <div id="clock"></div></h4></div>
                                                     </div>
                                                 </div>
@@ -67,80 +68,77 @@
                                             CURP: {{ strtoupper($arrayWorker['worker']->curp) }} <br>
                                             RFC: {{ strtoupper($arrayWorker['worker']->rfc) }} <br>
                                             NSS: {{ strtoupper($arrayWorker['worker']->nss) }}
-
                                         </div>
-                                        
                                     </div>
                                     <hr class="bg-dark-lighten my-3">
 
-                                        <input type="hidden" name="idWorker" id="idWorker" value="{{$arrayWorker['worker']->idWorker}}">
-                                        <form action="{{ route('scanner.checarEntrada', ['idWorker' => $arrayWorker['worker']->idWorker]) }}" method="POST" id="horaEntrada">
-                                            @csrf
-                                            <input type="hidden" name="idProject_project" id="idProject_project" value="{{$arrayWorker['worker']->idProyecto}}">
-                                            <input type="hidden" name="idContractor_contractors" id="idContractor_contractors" value="{{$arrayWorker['worker']->idContractor_contractors}}">
-                                            <input type="hidden" name="startTime" id="startTime" value="{{$today->format('Y-m-d H:i:s')}}">
-                                        </form>
-                                        <form action="{{ route('scanner.checarSalida', ['idWorker' => $arrayWorker['worker']->idWorker]) }}" id="horaSalida" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="endTime" id="endTime" value="{{$today->format('Y-m-d H:i:s')}}">
-                                        </form>
+                                        <input type="hidden" name="idWorker" id="idWorker" value="{{$arrayWorker['worker']->idWorker}}">    
+                                        <input type="hidden" name="idProject_project" id="idProject_project" value="{{$arrayWorker['worker']->idProyecto}}">
+                                        <input type="hidden" name="idContractor_contractors" id="idContractor_contractors" value="{{$arrayWorker['worker']->idContractor_contractors}}">
                                         
+                                        
+                                        <table class="table mb-0" id="tableAttendences" style="display: {{$arrayWorker['style']}}">
+                                            <thead>
+                                                <tr>
+                                                    <th><h6>HORA DE ENTRADA</h6></th>
+                                                    <th><h6>HORA DE SALIDA</h6></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <td>{{$arrayWorker['horaEntrada']}}</td>
+                                                <td>{{$arrayWorker['horaSalida']}}</td>
+                                            </tbody>
+                                        </table>
                                     <h4 class="mt-3 my-1">{{$arrayWorker['message']}}</h4>
                                     <div class="row mt-3">
                                         <div class="col-6">
-                                            <a onclick="registroDeTrabajador('in')" class="btn w-100 btn-success" {{$arrayWorker['style']}}  data-bs-placement="top">ENTRADA</a>
+                                            <a onclick="checarEntrada()" class="btn w-100 btn-success"  data-bs-placement="top">ENTRADA</a>
                                         </div>
                                         <div class="col-6">
-                                            <a onclick="registroDeTrabajador('out')"  class="btn w-100 btn-danger"  {{$arrayWorker['style']}} data-bs-placement="top">SALIDA</a>
+                                            <a onclick="checarSalida()"  class="btn w-100 btn-danger"  data-bs-placement="top">SALIDA</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row mt-3">
-                            <div class="col-12 text-center">
-                            </div> <!-- end col -->
-                        </div>
-                        <!-- end row -->
-
-                    </div> <!-- end col -->
+                    </div>
                 </div>
-                <!-- end row -->
             </div>
-            <!-- end container -->
         </div>
-        <!-- end page -->
 
         <footer class="footer footer-alt">
              <script>document.write(new Date().getFullYear())</script> ©  Louva Studio
         </footer>
-        <!-- Vendor js -->
-        <script src="{{ asset("/assets/js/vendor.min.js") }}"></script>
-        
-        <!-- App js -->
-        <script src="{{ asset("/assets/js/app.min.js") }}"></script>
+
+    <script>
+        var checarEntradaRoute = '{{ route('scanner.checarEntrada', ['idWorker' => $arrayWorker['worker']->idWorker]) }}';
+        var checarSalidaRoute = '{{ route('scanner.checarSalida', ['idWorker' => $arrayWorker['worker']->idWorker]) }}';
+    </script>
+
+    <!-- Vendor js -->
+    <script src="{{ asset("/assets/js/vendor.min.js") }}"></script>
+    
+    <!-- App js -->
+    <script src="{{ asset("/assets/js/app.min.js") }}"></script>
     </body>
     <script>
-        function updateClock() {
-            const clockElement = document.getElementById('clock');
-            const now = new Date();
-            now.setHours(now.getHours()); // Resta 1 hora a la hora actual
-            const hours = now.getHours().toString().padStart(2, '0');
-
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const seconds = now.getSeconds().toString().padStart(2, '0');
-            
-            const currentTime = `${hours}:${minutes}:${seconds}`;
-            clockElement.textContent = currentTime;
-        }
-        
         // Actualiza el reloj cada segundo
         setInterval(updateClock, 1000);
-        
         // Llama a la función para mostrar la hora actual de inmediato
         updateClock();
         </script>
-        
+        <!-- Info Alert Modal -->
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body p-4">
+                    <div class="text-center">
+                        <i class="ri-alert-line h1 text-warning"></i>
+                        <h4 class="mt-2" id="modalTitle"></h4>
+                        <p id="modalMessage"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </html>
-<!--route('fuerza-trabajo.editar-trabajador.show', ['idWorker' => $worker->idWorker])-->
