@@ -229,8 +229,8 @@
                                                 <td>{{$attendence_worker->contractorName}}</td>
                                                 <td>{{$attendence_worker->jobName}}</td>
                                                 <td>{{date("d-m-Y", strtotime($attendence_worker->date))}}</td>
-                                                <td>{{date("h:i A", strtotime($attendence_worker->startTime))}}</td>
-                                                <td>{{date("h:i A", strtotime($attendence_worker->endTime))}}</td>
+                                                <td>{{$attendence_worker->startTime}}</td>
+                                                <td>{{$attendence_worker->endTime}}</td>
                                                 <td><a href="{{ route('scanner.show', ['date' => $attendence_worker->date,'id' => $attendence_worker->idWorker]) }}" target="_blank">REGISTRO</a></td>
                                             </tr>
                                         @endforeach
@@ -292,6 +292,8 @@
             var fechaActual = new Date();
             var fechaFormateada = formatearFecha(fechaActual);
             $("#fechaInicioScript").val(fechaFormateada);
+
+           
         });
     </script>
 @endsection
@@ -311,4 +313,3 @@
     <script src="{{ asset("/assets/vendor/datatables.net-keytable/js/dataTables.keyTable.min.js") }}"></script>
     <script src="{{ asset("/assets/vendor/datatables.net-select/js/dataTables.select.min.js") }}"></script>
 @endpush
-       

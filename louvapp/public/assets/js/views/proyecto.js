@@ -254,22 +254,19 @@ function actualizarProyecto(){
 
 function formatearFecha(fecha) {
     var dia = fecha.getDate();
-    var mes = fecha.toLocaleString('default', { month: 'short' });
-    mes = mes.charAt(0).toUpperCase() + mes.slice(1); 
+    var mes = fecha.getMonth() + 1;
     var anio = fecha.getFullYear();
-    return dia + "-" + mes + "-" + anio;
+
+    fechaF = dia + "-" + mes + "-" + anio;
+    return fechaF;
 }
 
 function getGraphic(){
-    console.log("Aqui andamos");
+
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
     var idProyecto = $('#idProyecto').val();
     var fechaRegistro = $('#fechaInicioScript').val();
-    var partesFecha = fechaRegistro.split("-");
-    var dia = partesFecha[0];
-    var mes = partesFecha[1];
-    var anio = partesFecha[2];
-    var fechaFormateada = anio + "-" + mes + "-" + dia;
+    
     if (idProyecto == 0) {
         mostrarModal("Debes elegir un proyecto para mostrar las gráficas correspondientes");
         return;
@@ -280,10 +277,11 @@ function getGraphic(){
             url: proyectoEmpresasRoute,
             data: {
                 idProyecto: idProyecto,
-                fechaRegistro:fechaFormateada,
+                fechaRegistro:fechaRegistro,
                 _token: csrfToken
             },
             success: function (data) {
+                console.log(data)
                 var container = $('#contractorsContainer');
                 container.empty();
                 var row = $('<div class="row"></div> '); 

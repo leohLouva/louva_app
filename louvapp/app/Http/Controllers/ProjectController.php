@@ -188,16 +188,17 @@ class ProjectController extends Controller
         
         public function graphicByProjects(Request $request)
         {   
-            $dateToSearchAntes = $request->fechaRegistro;
-            $timestamp = strtotime($dateToSearchAntes);
-            $dateToSearch = date("Y-m-d", $timestamp);
+            
+            $fechaOriginal = $request->fechaRegistro;
+            $timestamp = strtotime($fechaOriginal);
+            $fechaFormateada = date("Y-m-d", $timestamp);
 
             $getWorkersbyDay = DB::table('attendences')
                 ->select('attendences.idContractor_contractors', 'c.contractorName AS empresa', DB::raw('COUNT(*) as cuenta_checkin'))
                 ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor')
                 ->join('workers', 'workers.idWorker', '=', 'attendences.idUser_worker')
                 ->join('jobs', 'jobs.idJob', '=', 'workers.idJob_jobs')
-                ->where('date', $dateToSearch)
+                ->where('date', $fechaFormateada)
                 ->where('attendences.idProject_project', $request->idProyecto)
                 ->groupBy('attendences.idContractor_contractors', 'c.contractorName')
                 ->get();
