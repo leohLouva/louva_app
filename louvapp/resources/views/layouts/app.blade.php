@@ -9,6 +9,8 @@
         <meta content="" name="louva" />
         <!--Jquery-->
         <script src="{{ asset("/assets/vendor/jquery/jquery.min.js") }}"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <!-- App favicon -->
         <link rel="shortcut icon" href="{{ asset("/assets/images/favicon.ico") }}">
         @stack('styles') <!--Solo carga estilos donde se les da push (requeridos)-->
@@ -1030,9 +1032,9 @@
                         <p id="modalMessage"></p>
                     </div>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+            </div>
+        </div>
+    </div>
     <!-- Vendor js -->
     <script src="{{ asset("/assets/js/vendor.min.js") }}"></script>
     <script src="{{ asset("/assets/js/app.min.js") }}"></script>
