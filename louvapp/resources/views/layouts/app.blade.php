@@ -224,7 +224,7 @@
                                     <a href="{{ route('agregar-trabajador.verAgregarTrabajador') }}" >AGREGAR NUEVO </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('reporte-trabajadores.indexC') }}" >GRÁFICAS POR PROYECTOS</a>
+                                    <a href="{{ route('reporte-trabajadores.indexC') }}" >GRÁFICAS POR OBRAS</a>
                                 </li>
                                 <li>
                                     <a href="{{ route('reporte-trabajadores-puestos.indexC') }}" >GRÁFICAS POR PUESTOS</a>

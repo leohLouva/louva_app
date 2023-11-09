@@ -78,13 +78,66 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                                <h4>CONTRATISTAS EN LA OBRA</h4>                                          
-                                                <ul class="list-group list-group-flush">
-                                                    @foreach ($contractorActives as $contractorActive)
-                                                        <li class="list-group-item">{{$contractorActive->idContractor}}-{{$contractorActive->contractorName}}</li>                                                
-                                                    @endforeach
-                                                </ul>
-
+                                            <table class="table table-dark mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Phone Number</th>
+                                                        <th>Date of Birth</th>
+                                                        <th>Active?</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Risa D. Pearson</td>
+                                                        <td>336-508-2157</td>
+                                                        <td>July 24, 1950</td>
+                                                        <td>
+                                                            <!-- Switch-->
+                                                            <div>
+                                                                <input type="checkbox" id="switch6" data-switch="success"/>
+                                                                <label for="switch6" data-on-label="Yes" data-off-label="No" class="mb-0 d-block"></label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Ann C. Thompson</td>
+                                                        <td>646-473-2057</td>
+                                                        <td>January 25, 1959</td>
+                                                        <td>
+                                                            <!-- Switch-->
+                                                            <div>
+                                                                <input type="checkbox" id="switch7" checked data-switch="success"/>
+                                                                <label for="switch7" data-on-label="Yes" data-off-label="No" class="mb-0 d-block"></label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Paul J. Friend</td>
+                                                        <td>281-308-0793</td>
+                                                        <td>September 1, 1939</td>
+                                                        <td>
+                                                            <!-- Switch-->
+                                                            <div>
+                                                                <input type="checkbox" id="switch8" data-switch="success"/>
+                                                                <label for="switch8" data-on-label="Yes" data-off-label="No" class="mb-0 d-block"></label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Sean C. Nguyen</td>
+                                                        <td>269-714-6825</td>
+                                                        <td>February 5, 1994</td>
+                                                        <td>
+                                                            <!-- Switch-->
+                                                            <div>
+                                                                <input type="checkbox" id="switch10" checked data-switch="success"/>
+                                                                <label for="switch10" data-on-label="Yes" data-off-label="No" class="mb-0 d-block"></label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div> 

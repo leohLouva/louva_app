@@ -117,8 +117,10 @@ class ProjectController extends Controller
                 ->where('users.idType_user_type', '=', 2)
                 ->get();
 
-            $getProgress = DB::table('progress_projects')
-                ->get();
+            $getContractorsActives = DB::table('proyecto_empresa')
+            ->join('contractors', 'proyecto_empresa.idContractor_project', '=', 'contractors.idContractor')
+            ->where('proyecto_empresa.idProyecto', '=', $id)
+            ->get();
 
             $attendences = DB::table('attendences')
                 ->join('workers', 'attendences.idUser_worker', '=', 'workers.idWorker')
@@ -139,11 +141,11 @@ class ProjectController extends Controller
                 'states' => $getStates,
                 'owners' => $getOwner,
                 'reponsables' => $getResponsable,
-                'progresss' => $getProgress,
                 'projects' => $project,
                 'attendences' => $attendences,
                 'project_types' => $getProjectType,
-                'systemConsts' => $getSystemConst
+                'systemConsts' => $getSystemConst,
+                'contractorActives' => $getContractorsActives
             ]);
             
 
