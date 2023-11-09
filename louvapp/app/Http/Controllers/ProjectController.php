@@ -19,9 +19,8 @@ class ProjectController extends Controller
         {
             //$project = Project::all(); 
             $project = DB::table('projects')
-            ->leftjoin('progress_projects', 'projects.progress', '=', 'progress_projects.idProgress')
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->get();
             return view('proyectos/lista-proyectos', ['projects' => $project]);
         }
 
@@ -36,14 +35,18 @@ class ProjectController extends Controller
                 ->join('workers', 'workers.idUser_worker', '=', 'users.id')
                 ->where('users.idType_user_type', '=', 2)
                 ->get();
-            $getProgress = DB::table('progress_projects')
+            $getProjectType = DB::table('project_type')
+                ->get();
+            
+            $getSystemConst = DB::table('construction_system')
                 ->get();
 
             return view('proyectos/agregar-proyecto', [
                 'states' => $getStates,
                 'owners' => $getOwner,
                 'reponsables' => $getResponsable,
-                'progresss' => $getProgress
+                'project_types' => $getProjectType,
+                'systemConsts' => $getSystemConst
             ]);
             
         }
@@ -51,21 +54,19 @@ class ProjectController extends Controller
         public function store(Request $request)
         {
 
-            $fechaInicio = date('Y-m-d', strtotime($request->fechaInicio));
-
+        try{
             
+            $fechaInicio = date('Y-m-d', strtotime($request->fechaInicio));
             $project = new Project([
-                'projectImage' => $request->flImage,
                 'projectName' => $request->nombre,
-                'telefono' => $request->telefono,
+                'projectImage' => $request->flImage,
                 'description' => $request->descripcion,
-                'progress' => $request->porcentaje,
                 'fechaInicio' => $fechaInicio,
                 'squareMeterSuperficial' => $request->mtsSuperficiales,
                 'squareMeterSotano' => $request->mtsSotano,
                 'projectType' => $request->tipoProyecto,
                 'address' => $request->direccion,
-                'location' => $request->locacion,
+                'location' => $request->location,
                 'state' => $request->estado,
                 'constructionSystem' => $request->sistemaConstruccion,
                 'idUser_projectManager' => $request->desarrollador,
@@ -73,8 +74,26 @@ class ProjectController extends Controller
                 'totalScheduledCost' => $request->totalCosto
             ]);
             
+
             $project->save();
-            return redirect()->route('editar-proyecto.show', ['id' => $project->id])->with('success', 'Proyecto agregado correctamente.');
+            
+            return redirect()->route('editar-proyecto.show', ['id' => $project->idProject])->with('success', 'Proyecto agregado correctamente.');
+
+            /*return response()->json([
+                //'redirect' => route('proyectos/editar-proyecto.show', ['idProject' => $project->idProject]),
+                'status' => '0',
+                'message' => 'EL PROYECTO SE AGREGÓ CORRECTAMENTE'
+            ]);*/
+
+        } catch (\Exception $e) {
+           //dd("hay un error en el insert " . $e); 
+           return response()->json([
+                //'redirect' => null,
+                'status' => '1',
+                'message' => 'ERROR: ' . $e
+            ]);
+
+        }
             
         }
 
@@ -83,11 +102,11 @@ class ProjectController extends Controller
             $project = DB::table('projects')
                 ->leftjoin('estados', 'projects.state', '=', 'estados.idEstado')
                 ->leftjoin('municipios', 'projects.location', '=', 'municipios.idMunicipio')
-                ->where('projects.id', $id)
+                ->where('projects.idProject', $id)
                 ->first();
-                
-            $getStates = DB::table('estados')->get();
             
+            $getStates = DB::table('estados')->get();
+                
             $getOwner = DB::table('users')
                 ->join('workers', 'workers.idUser_worker', '=', 'users.id')
                 ->where('users.idType_user_type', '=', 4)
@@ -109,6 +128,12 @@ class ProjectController extends Controller
                 ->where('attendences.idProject_project', $id)
                 ->orderBy('attendences.date', 'desc')
                 ->get();
+            
+            $getProjectType = DB::table('project_type')
+                ->get();
+            
+            $getSystemConst = DB::table('construction_system')
+                ->get();
 
             return view('proyectos/editar-proyecto', [
                 'states' => $getStates,
@@ -116,14 +141,15 @@ class ProjectController extends Controller
                 'reponsables' => $getResponsable,
                 'progresss' => $getProgress,
                 'projects' => $project,
-                'attendences' => $attendences
+                'attendences' => $attendences,
+                'project_types' => $getProjectType,
+                'systemConsts' => $getSystemConst
             ]);
             
 
         }
 
         public function update(Request $request, $idProject){
-            //dd($request->all());
 
             $oProject = new Project();
             $oProject = Project::findOrFail($idProject);
@@ -147,7 +173,7 @@ class ProjectController extends Controller
                 'updated_at' => now()
             ]);
             
-            return redirect()->route('editar-proyecto.show', ['id' => $oProject->id])->with('success', 'Proyecto editado correctamente.');
+            return redirect()->route('editar-proyecto.show', ['id' => $oProject->idProject])->with('success', 'Proyecto editado correctamente.');
             
         }
 
@@ -188,19 +214,24 @@ class ProjectController extends Controller
         
         public function graphicByProjects(Request $request)
         {   
-            
+
             $fechaOriginal = $request->fechaRegistro;
             $timestamp = strtotime($fechaOriginal);
             $fechaFormateada = date("Y-m-d", $timestamp);
 
             $getWorkersbyDay = DB::table('attendences')
-                ->select('attendences.idContractor_contractors', 'c.contractorName AS empresa', DB::raw('COUNT(*) as cuenta_checkin'))
-                ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor')
+                ->select('attendences.idContractor_contractors', 'c.contractorName AS empresa','ft_programado_empresa_proyectos.ft_programado', DB::raw('COUNT(*) as cuenta_checkin'))
+                ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor',)
                 ->join('workers', 'workers.idWorker', '=', 'attendences.idUser_worker')
                 ->join('jobs', 'jobs.idJob', '=', 'workers.idJob_jobs')
+                //->join('ft_programado_empresa_proyectos', 'attendences.idProject_project', '=', 'ft_programado_empresa_proyectos.idProject_FT_projects')
+                ->join('ft_programado_empresa_proyectos', function ($join) {
+                    $join->on('attendences.idProject_project', '=', 'ft_programado_empresa_proyectos.idProject_FT_projects')
+                         ->on('attendences.idContractor_contractors', '=', 'ft_programado_empresa_proyectos.idContractor_FT_contractors');
+                })
                 ->where('date', $fechaFormateada)
                 ->where('attendences.idProject_project', $request->idProyecto)
-                ->groupBy('attendences.idContractor_contractors', 'c.contractorName')
+                ->groupBy('attendences.idContractor_contractors', 'c.contractorName','ft_programado_empresa_proyectos.ft_programado')
                 ->get();
                 
             $totalCuentaCheckin = 0;
@@ -217,6 +248,7 @@ class ProjectController extends Controller
             //return response()->json($empresa);
         }
 
+        
         public function indexC()
         {
     

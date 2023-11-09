@@ -24,11 +24,10 @@
                     <label class="form-label">Fecha de inicio</label>
                     <input type="text" class="form-control" id="fechaInicio" name="fechaInicio"  autocomplete="off" data-provide="datepicker" data-date-container="#datepicker1" data-date-format="d-M-yyyy" data-date-autoclose="true">
                 </div>
-
                 <select class="form-control select2" data-toggle="select2" name="idProyecto" id="idProyecto">
                     <option value="0">Selecciona un proyecto</option>
                     @foreach ($jobs as $job)
-                        <option value="{{$job->id}}">{{$job->projectName}}</option>
+                        <option value="{{$job->idProject}}">{{$job->projectName}}</option>
                     @endforeach
                 </select>
                 <br>

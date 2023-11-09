@@ -30,7 +30,7 @@ class ScannerController extends Controller
             ->join('contractors', 'workers.idContractor_contractors', '=', 'contractors.idContractor')
             ->join('jobs', 'workers.idJob_jobs', '=', 'jobs.idJob')
             ->join('proyecto_empresa', 'proyecto_empresa.idContractor_project', '=', 'contractors.idContractor')
-            ->join('projects', 'projects.id', '=', 'proyecto_empresa.idProyecto')
+            ->join('projects', 'projects.idProject', '=', 'proyecto_empresa.idProyecto')
             ->where('workers.idWorker', '=', $id)
             ->first();
 

@@ -32,9 +32,9 @@
             </div>
 
             <select class="form-control select2" data-toggle="select2" name="idProyecto" id="idProyecto">
-                <option value="0">Selecciona un proyecto</option>
+                <option value="0">SELECCIONA UN PROYECTO</option>
                 @foreach ($projects as $project)
-                    <option value="{{$project->id}}">{{$project->projectName}}</option>
+                    <option value="{{$project->idProject}}">{{strtoupper($project->projectName)}}</option>
                 @endforeach
             </select>
             <br>

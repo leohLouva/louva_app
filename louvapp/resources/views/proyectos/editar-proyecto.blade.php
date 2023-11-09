@@ -21,7 +21,7 @@
         <div class="page-title-box">                                    
             <div class="page-title-right">
             </div>
-            <h4 class="header-title">Editar proyecto </h4>
+            <h4 class="header-title">INFORMACIÓN DEL PROYECTO </h4>
         </div>
     </div>
 
@@ -61,42 +61,19 @@
                                     </p>
                                     
                                     <div class="row">
-                                        <div class="col-md-5">
-                                            <h5>Teléfono:</h5>
-                                            <a href="tel:{{$projects->telefono}}">{{$projects->telefono}}</a>
-                                        </div>
+                                        <div class="col-md-5"></div>
                                         <div class="col-md-2"></div>
                                         <div class="col-md-5"></div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-5">
-                                            <h5>Fecha de inicio</h5>
-                                            <p>{{ \Carbon\Carbon::parse($projects->fechaInicio)->formatLocalized('%d - %B - %Y') }}</p>
+                                        <div class="col-md-6">
+                                            <h5>FECHA</h5>
+                                            <p>{{ $projects->fechaInicio }}</p>
                                         </div>
-                                        <div class="col-md-2">
-                                        </div>
-                                        <div class="col-md-5">
-                                            <h5>Costo total</h5>
-                                            <p>$ {{ number_format($projects->totalScheduledCost, 2, '.', ',') }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <h5>Tipo de proyecto:</h5>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label class="form-label">{{$projects->projectType}}</label>
-                                        </div>
-                                        <div class="col-md-5"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <h5>% de Avance</h5>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" style="width: {{  $projects->progress }}%;" aria-valuenow="{{ $projects->progress }}" aria-valuemin="0" aria-valuemax="100">{{ $projects->progress }}%</div>
-                                            </div>
+                                       
+                                        <div class="col-md-6">
+                                            <h5>COSTO TOTAL DEL PROYECTO</h5>
+                                            <p>$ {{ $projects->totalScheduledCost }}</p>
                                         </div>
                                     </div>
                                 </div> 
@@ -106,92 +83,95 @@
                    
                         <div class="col-4">  
                             
-                            <form action="/editingProject/{{ $projects->id }}" method="POST" id="editingProject">
+                            <form action="/editingProject/{{ $projects->idProject }}" method="POST" id="editingProject">
                                 @csrf
                             <div class="mb-3">
-                                <label class="form-label">Nombre del proyecto</label>
-                                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="" value="{{$projects->projectName}}" disabled>
+                                <label class="form-label">NOMBRE DEL PROYECTO</label>
+                                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="" value="{{$projects->projectName}}" oninput="convertirAMayusculas(this)" disabled>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Teléfono</label>
-                                <input type="text" id="telefono" name="telefono" class="form-control" placeholder="" value="{{$projects->telefono}}" disabled>
+                                <label class="form-label">DESCRIPCIÓN DEL PROYECTO</label>
+                                <textarea class="form-control" name="descripcion" id="descripcion" rows="5" placeholder="" maxlength="140" oninput="convertirAMayusculas(this)" disabled>{{$projects->description}}</textarea>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Descripción del proyecto</label>
-                                <textarea class="form-control" name="descripcion" id="descripcion" rows="5" placeholder="" maxlength="140" disabled>{{$projects->description}}</textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Nombre del desarrollador</label>
-                                <select class="form-control select2" data-toggle="select2" id="desarrollador" name="desarrollador" disabled>
-                                    <option value="0">Selecciona un Desarrollador</option>
+                                <label class="form-label">NOMBRE DEL DESARROLLADOR</label>
+                                <select class="form-control select2" data-toggle="select2" id="desarrollador" name="desarrollador" oninput="convertirAMayusculas(this)" disabled>
+                                    <option value="0">SELECCIONA UN DESARROLLADOR</option>
                                     @foreach ($owners as $owner)
-                                        <option value="{{$owner->idUser_worker}}"@if ($owner->idUser_worker == $projects->idUser_projectManager) selected @endif>{{$owner->name}} {{$owner->lastName}}</option>
+                                        <option value="{{$owner->idUser_worker}}"@if ($owner->idUser_worker == $projects->idUser_projectManager) selected @endif>{{strtoupper($owner->name)}} {{strtoupper($owner->lastName)}}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Nombre del Responsable de obra (DRO)</label>
-                                <select class="form-control select2" data-toggle="select2" id="responsableObra" name="responsableObra" disabled>
-                                    <option value="0">Selecciona a un responsable de obra</option>
+                                <label class="form-label">RESPONSABLE DE OBRA (DRO)</label>
+                                <select class="form-control select2" data-toggle="select2" id="responsableObra" name="responsableObra" oninput="convertirAMayusculas(this)" disabled>
+                                    <option value="0">SELECCIONA UN DRO</option>
                                     @foreach ($reponsables as $reponsable)
                                         <option value="{{$reponsable->id}}"@if ($reponsable->id == $projects->idUser_workManager) selected @endif>{{$reponsable->name}} {{$reponsable->lastName}}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="mb-3 position-relative">
-                                <label class="form-label">% del proyecto </label>
-                                <input class="form-control" type="text" name="porcentaje" id="porcentaje" value="{{$projects->progress}}" disabled>
-                            </div>
                             <div class="mb-3 position-relative" id="datepicker1">
-                                <label class="form-label">Fecha de inicio</label>
-                                <input type="text" class="form-control" id="fechaInicio" name="fechaInicio" data-provide="datepicker" data-date-container="#datepicker1" data-date-format="d-M-yyyy" data-date-autoclose="true" value="{{$projects->fechaInicio}}" disabled>
+                                <label class="form-label">FECHA DE INICIO</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="inputGroupPrepend"><i class="ri-calendar-2-fill"></i></span>
+                                    <input type="text" class="form-control" name="fechaInicio" id="fechaInicio" placeholder="" aria-describedby="inputGroupPrepend" data-provide="datepicker" data-date-container="#datepicker1" data-date-format="d-M-yyyy" data-date-autoclose="true"  value="{{$projects->fechaInicio}}" oninput="convertirAMayusculas(this)" disabled>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">TIPO DE PROYECTO</label>
+                                <select class="form-control select2" data-toggle="select2" id="tipoProyecto" name="tipoProyecto" oninput="convertirAMayusculas(this)" disabled>
+                                    <option value="0">SELECCIONA UN TIPO DE PROYECTO</option>
+                                    @foreach ($project_types as $project_type)
+                                        <option value="{{$project_type->idProject_type}}"@if ($projects->projectType == $project_type->idProject_type) selected @endif>{{$project_type->nameProject_type}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>   
                         <div class="col-4">          
                             <div class="mb-3">
-                                <label class="form-label">Tipo de proyecto</label>
-                                <input type="text" id="tipoProyecto" name="tipoProyecto" class="form-control" value="{{$projects->projectType}}" disabled>
+                                <label class="form-label">M<sup>2</sup> DE URBANIZACION</label>
+                                <input type="text" id="mtsSuperficiales" name="mtsSuperficiales" class="form-control" value="{{$projects->squareMeterSuperficial}}" oninput="convertirAMayusculas(this)" disabled>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">M<sup>2</sup> superficiales</label>
-                                <input type="text" id="mtsSuperficiales" name="mtsSuperficiales" class="form-control" value="{{$projects->squareMeterSuperficial}}" disabled>
+                                <label class="form-label">M<sup>2</sup> SÓTANO</label>
+                                <input type="text" id="mtsSotano" name="mtsSotano" class="form-control" value="{{$projects->squareMeterSotano}}" oninput="convertirAMayusculas(this)" disabled>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">M<sup>2</sup> sótano</label>
-                                <input type="text" id="mtsSotano" name="mtsSotano" class="form-control" value="{{$projects->squareMeterSotano}}" disabled>
+                                <label class="form-label">SISTEMA CONSTRUCTIVO ESTRUCTURAL</label>
+                                <select class="form-control select2" data-toggle="select2" id="sistemaConstruccion" name="sistemaConstruccion" oninput="convertirAMayusculas(this)" disabled>
+                                    <option value="0">SELECCIONA UNO DE LA LISTA </option>
+                                    @foreach ($systemConsts as $systemConst)
+                                        <option value="{{$systemConst->idConstruction_system}}"@if ($systemConst->idConstruction_system == $projects->constructionSystem) selected @endif>{{$systemConst->nameConstruction_system}}</option>
+                                    @endforeach
+                                </select>                                   
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Sistema de construcción</label>
-                                <input type="text" id="sistemaConstruccion" name="sistemaConstruccion" class="form-control" value="{{$projects->constructionSystem}}" disabled>
+                                <label class="form-label">TOTAL PROGRAMADO</label>
+                                <input type="text" id="totalCosto" name="totalCosto" class="form-control" value="{{$projects->totalScheduledCost}}" oninput="convertirAMayusculas(this)" disabled>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Total del costo programado</label>
-                                <input type="text" id="totalCosto" name="totalCosto" class="form-control" value="{{$projects->totalScheduledCost}}" disabled>
+                                <label class="form-label">DIRECCIÓN</label>
+                                <input type="text" id="direccion" name="direccion" class="form-control" value="{{$projects->address}}" oninput="convertirAMayusculas(this)" disabled>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Dirección</label>
-                                <input type="text" id="direccion" name="direccion" class="form-control" value="{{$projects->address}}" disabled>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Estado</label>
-                                <select class="form-control select2" data-toggle="select2" id="estado" name="estado" disabled>
-                                    <option value="0">Selecciona un estado</option>
+                                <label class="form-label">ESTADO</label>
+                                <select class="form-control select2" data-toggle="select2" id="estado" name="estado" oninput="convertirAMayusculas(this)" disabled>
+                                    <option value="0">SELECCIONA UN ESTADO</option>
                                     @foreach ($states as $state)
-                                        <option value="{{$state->idEstado}}"@if ($state->idEstado == $projects->state) selected @endif>{{$state->estado}}</option>
+                                        <option value="{{$state->idEstado}}"@if ($state->idEstado == $projects->state) selected @endif>{{strtoupper($state->estado)}}</option>
                                     @endforeach
                                 </select>
                             </div> 
                             <div class="mb-3">
-                                <label class="form-label">Locación</label>
-                                <select class="form-control select2" data-toggle="select2" id="municipio" name="municipio" disabled>
-                                    <option value="{{$projects->location}}">{{$projects->municipio}}</option>
-                                </select>
+                                <label class="form-label">LOCACIÓN</label>
+                                <input type="text" class="form-control" name="location" id="location" value="{{strtoupper($projects->municipio)}}" oninput="convertirAMayusculas(this)" disabled>
                             </div> 
                         
                             <div class="row">
                                 <div class="col-7">
-                                    <input class="form-control" type="hidden" id="flImage" name="flImage" value="{{$projects->projectImage}}" disabled>
-                                    <input class="form-control" type="hidden" name="folderName" id="folderName" value="NA" disabled>
+                                    <input class="form-control" type="hidden" id="flImage" name="flImage" value="{{$projects->projectImage}}" oninput="convertirAMayusculas(this)" disabled>
+                                    <input class="form-control" type="hidden" name="folderName" id="folderName" value="NA" oninput="convertirAMayusculas(this)" disabled>
                                     <button type="button" class="btn btn-primary" onclick="editarProyectoON()" id="on-btn" style="display: block;">Editar Proyecto</button>
                                     <button type="button" class="btn btn-primary" onclick="actualizarProyecto()" id="guardar-btn" style="display: none;">Guardar Proyecto</button>
                                 </div>             
@@ -245,7 +225,7 @@
                     <h4 class="header-title mb-4">Gráficas de asistencias</h4>
                     <div class="row">
                         <div class="col-6">
-                            <input type="hidden" id="idProyecto" value="{{$projects->id}}">
+                            <input type="hidden" id="idProyecto" value="{{$projects->idProject}}">
                             <div id="datepicker2">
                                 <input type="text" class="form-control" id="fechaInicioScript" name="fechaInicioScript"  autocomplete="off" data-provide="datepicker" data-date-container="#datepicker2" data-date-format="d-M-yyyy" data-date-autoclose="true" placeholder="Elige una fecha">
                             </div>
@@ -264,10 +244,13 @@
                     <script>
                         var proyectoEmpresasRoutePuestos = '{{ route('proyecto.puestos') }}';
                         var proyectoEmpresasRoute = '{{ route('proyecto.empresas') }}';
+                        var guardarFTProgramado = '{{ route('proyecto.empresas') }}';
                     </script>
                 </div>
             </div>
         </div>
+        <!-- Campo de entrada de texto para ingresar el dato -->
+
     </div>
 </div>
 

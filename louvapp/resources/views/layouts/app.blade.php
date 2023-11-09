@@ -212,22 +212,22 @@
                     <li class="side-nav-item">
                         <a data-bs-toggle="collapse" href="#sidebarProjects" aria-expanded="false" aria-controls="sidebarProjects" class="side-nav-link">
                             <i class="mdi mdi-account-hard-hat"></i>
-                            <span> Fuerza de trabajo </span>
+                            <span> FUERZA DE TRABAJO </span>
                             <span class="menu-arrow"></span>
                         </a>
                         <div class="collapse" id="sidebarProjects">
                             <ul class="side-nav-second-level">
                                 <li>
-                                    <a href="{{ route('lista-trabajadores.index') }}" >Ver </a>
+                                    <a href="{{ route('lista-trabajadores.index') }}" >VER </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('agregar-trabajador.verAgregarTrabajador') }}" >Agregar nuevo </a>
+                                    <a href="{{ route('agregar-trabajador.verAgregarTrabajador') }}" >AGREGAR NUEVO </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('reporte-trabajadores.indexC') }}" >Gráficas por proyectos</a>
+                                    <a href="{{ route('reporte-trabajadores.indexC') }}" >GRÁFICAS POR PROYECTOS</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('reporte-trabajadores-puestos.indexC') }}" >Gráficas por puestos</a>
+                                    <a href="{{ route('reporte-trabajadores-puestos.indexC') }}" >GRÁFICAS POR PUESTOS</a>
                                 </li>
                             </ul>
                         </div>
@@ -235,16 +235,16 @@
                     <li class="side-nav-item">
                         <a data-bs-toggle="collapse" href="#sidebarContractor" aria-expanded="false" aria-controls="sidebarContractor" class="side-nav-link">
                             <i class=" uil-constructor"></i>
-                            <span> Empresas </span>
+                            <span> EMPRESAS </span>
                             <span class="menu-arrow"></span>
                         </a>
                         <div class="collapse" id="sidebarContractor">
                             <ul class="side-nav-second-level">
                                 <li>
-                                    <a href="{{ route('lista-contratistas.index') }}" >Ver </a>
+                                    <a href="{{ route('lista-contratistas.index') }}" >VER </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('agregar-contratista.verAgregarContratista') }}" >Agregar nueva empresa </a>
+                                    <a href="{{ route('agregar-contratista.verAgregarContratista') }}" >AGREGAR</a>
                                 </li>
 
                             </ul>
@@ -253,16 +253,16 @@
                     <li class="side-nav-item">
                         <a data-bs-toggle="collapse" href="#sidebarProject" aria-expanded="false" aria-controls="sidebarProject" class="side-nav-link">
                             <i class="uil-briefcase"></i>
-                            <span> Proyectos </span>
+                            <span> OBRAS </span>
                             <span class="menu-arrow"></span>
                         </a>
                         <div class="collapse" id="sidebarProject">
                             <ul class="side-nav-second-level">
                                 <li>
-                                    <a href="{{ route('lista-proyectos.index') }}" >Ver</a>
+                                    <a href="{{ route('lista-proyectos.index') }}" >VER</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('agregar-proyecto.verAgregarProyecto') }}">Crear proyecto </a>
+                                    <a href="{{ route('agregar-proyecto.verAgregarProyecto') }}">AGREGAR</a>
                                 </li>
                             </ul>
                         </li>
@@ -278,7 +278,7 @@
                                     <a href="{{ route('lista-usuarios.index') }}" >Ver </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('agregar-usuario.verAgregarUsuario') }}">Agregar nuevo</a>
+                                    <a href="{{ route('agregar-usuario.verAgregarUsuario') }}">AGREGAR NUEVO</a>
                                 </li>
 
                             </ul>
@@ -303,7 +303,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-6">
-                            <script>document.write(new Date().getFullYear())</script> © Louva Studio 
+                            <script>document.write(new Date().getFullYear())</script> © BUBA.MX
                         </div>
                         <div class="col-md-6">
                             <!--<div class="text-md-end footer-links d-none d-md-block">

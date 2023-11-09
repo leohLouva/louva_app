@@ -183,14 +183,14 @@ class WorkerController extends Controller
             ->join('contractors', 'workers.idContractor_contractors', '=', 'contractors.idContractor')
             ->join('users', 'workers.idUser_worker', '=', 'users.id')
             ->leftjoin('proyecto_empresa', 'workers.idContractor_contractors', '=', 'proyecto_empresa.idContractor_project')
-            ->leftjoin('projects', 'proyecto_empresa.idProyecto', '=', 'projects.id')
+            ->leftjoin('projects', 'proyecto_empresa.idProyecto', '=', 'projects.idProject')
             ->where('workers.idWorker', '=', $id)
             ->first();
 
         
 
             $getProjects = DB::table('projects')
-                ->join('proyecto_empresa', 'projects.id', '=', 'proyecto_empresa.idProyecto')
+                ->join('proyecto_empresa', 'projects.idProject', '=', 'proyecto_empresa.idProyecto')
                 ->where('idContractor_project','=',$worker->idContractor_contractors)
                 ->get();
 

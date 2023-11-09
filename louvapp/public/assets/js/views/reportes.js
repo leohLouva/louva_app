@@ -24,12 +24,12 @@ function getSelectdata(){
                 container.empty();
                 var row = $('<div class="row"></div> '); 
                 var titleRow = $('<div class="row"></div>');
+                console.log("por proyecto");
                 console.log(data);
                 if (data.cuenta == 0) {
-                    console.log("entre a no hay accesos")
-                    mostrarModal("No hay accesos este día");
+                    mostrarModal("NO HAY ACCESOS ESTE DÍA");
                      
-                    var title = $('<div class="col-12"><h2>No hay accesos este día</h2></div>');
+                    var title = $('<div class="col-12"><h2>NO HAY ACCESOS ESTE DÍA</h2></div>');
                     titleRow.append(title);
                     container.append(titleRow);
 
@@ -55,7 +55,7 @@ function getSelectdata(){
                         row.append(card);
                         
                         var options = {
-                            series: [registro.cuenta_checkin],//],//[empresas.cuenta_checkin],
+                            series: [registro.cuenta_checkin],
                             chart: {
                                 type: "radialBar",
                                 offsetY: -20,
@@ -69,7 +69,7 @@ function getSelectdata(){
                                     endAngle: 90,
                                     track: {
                                         background: "rgba(255, 255, 255, 0.5)",
-                                        strokeWidth: "97%",
+                                        strokeWidth: "90%",
                                         margin: 5,
                                         dropShadow: {
                                             top: 2,
@@ -86,8 +86,9 @@ function getSelectdata(){
                                         value: {
                                             show: true,
                                             offsetY: -2,
-                                            fontSize: "22px",
+                                            fontSize: "30px",
                                             formatter: function (val) {
+
                                                 return val;
                                             }
                                         }
@@ -100,8 +101,8 @@ function getSelectdata(){
                                 }
                             },
                             legend: {
-                                show: true,
-                                showForSingleSeries: false,
+                                show: false,
+                                showForSingleSeries: true,
                                 showForNullSeries: true,
                                 showForZeroSeries: true,
                                 position: 'bottom',
@@ -122,18 +123,7 @@ function getSelectdata(){
                                     colors: undefined,
                                     useSeriesColors: false
                                 },
-                                markers: {
-                                    width: 12,
-                                    height: 12,
-                                    strokeWidth: 0,
-                                    strokeColor: '#fff',
-                                    fillColors: undefined,
-                                    radius: 12,
-                                    customHTML: undefined,
-                                    onClick: undefined,
-                                    offsetX: 0,
-                                    offsetY: 0
-                                },
+                                
                                 itemMargin: {
                                     horizontal: 5,
                                     vertical: 0
@@ -145,20 +135,19 @@ function getSelectdata(){
                                     highlightDataSeries: true
                                 },
                             },
-                            colors: ["#727cf5"],
+                            colors: ["#727cf5", "#ffffff"], //#
                             labels: [],
                             yaxis: {
                                 min: 0,
-                                max: 50,
-                              },
+                                max: 50,  // Establece el límite máximo en 50
+                            },
                         };
                         
                         (chart = new ApexCharts(document.querySelector("#" + chartId), options)).render();
                         $(".apexcharts-legend").text('');
-                        
                     });
     
-                    var title = $('<div class="col-12"><h2>Total de accesos '+data.cuenta+'</h2></div>');
+                    var title = $('<div class="col-12"><h2>TOTAL DE ACCESOS '+data.cuenta+'</h2></div>');
                     titleRow.append(title);
                     container.append(titleRow);
                 }
@@ -203,15 +192,12 @@ function graficaPorPuesto(){
                 var titleRow = $('<div class="row"></div>');
                 console.log(data);
                 if (data.cuenta == 0) {
-                    console.log("entre a no hay accesos")
-                    mostrarModal("No hay accesos este día");
-                     
-                    var title = $('<div class="col-12"><h2>No hay accesos este día</h2></div>');
+                    mostrarModal("NO HAY ACCESOS ESTE DÍA");
+                    var title = $('<div class="col-12"><h3>NO HAY ACCESOS ESTE DÍA</h3></div>');
                     titleRow.append(title);
                     container.append(titleRow);
 
                 }else{
-                    console.log("entre a hacer la grafica");
                     data.registro.forEach(function (registro, index) {
                         container.append(row);
                         var chartId = "semi-workers-" + idProyecto + "-" + index;
@@ -292,7 +278,7 @@ function graficaPorPuesto(){
                         
                     });
     
-                    var title = $('<div class="col-12"><h2>Total de accesos '+data.cuenta+'</h2></div>');
+                    var title = $('<div class="col-12"><h2>TOTAL DE ACCESOS '+data.cuenta+'</h2></div>');
                     titleRow.append(title);
                     container.append(titleRow);
                 }

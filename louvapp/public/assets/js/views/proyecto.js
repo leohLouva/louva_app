@@ -1,103 +1,183 @@
-$(document).ready(function() {
-    $('#estado').on('change', function() {
-        var estadoId = $(this).val();
-        if (estadoId > 0) {
-            $.ajax({
-                url: '/municipios/' + estadoId,
-                type: 'GET',
-                success: function(data) {
-                    var locacionSelect = $('#municipio');
-                    locacionSelect.empty(); 
-                    $.each(data, function(key, value) {
-                        locacionSelect.append('<option value="' + value.idMunicipio + '">' + value.municipio + '</option>');
-                    });
-                }
-            });
-        }
-    });
-});
+var charts = {};
+var chart; // Declara la variable en un ámbito más amplio
+
+function convertirAMayusculas(input) {
+    input.value = input.value.toUpperCase();
+}
+
+function getLocation(){
+    var estadoId = document.getElementById("estado").value;
+            if (estadoId > 0) {
+                $.ajax({
+                    url: '/municipios/' + estadoId,
+                    type: 'GET',
+                    success: function(data) {
+                        var locacionSelect = $('#location');
+                        locacionSelect.empty(); 
+                        $.each(data, function(key, value) {
+                            locacionSelect.append('<option value="' + value.idMunicipio + '">' + value.municipio.toUpperCase()  + '</option>');
+                        });
+                    }
+                });
+            }
+}
+
 function agregarProyecto(){    
-    nombre =document.getElementById("nombre").value;
+    alert("AGREGAR PROYECTO");
+
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    nombre = document.getElementById("nombre").value;
     if (nombre.length < 1 || nombre.length <= 3) {
-        mostrarModal("El nombre del proyecto no puede estar vacio y debe tener más de 3 caracteres");        
+        mostrarModal("EL NOMBRE DEL PROYECTO NO PUEDE ESTAR VACIO Y DEBE TENER MÁS DE 3 CARACTERES");        
         return;
     }
-    telefono =document.getElementById("telefono").value;
-    if (telefono.length < 1 || telefono.length <= 3) {
-        mostrarModal("El teléfono no puede estar vacio");        
-        return;
-    }
-    descripcion =document.getElementById("descripcion").value;
+   
+    descripcion = document.getElementById("descripcion").value;
     if (descripcion.length < 1 || descripcion.length <= 3) {
-        mostrarModal("La descripción del proyecto no puede estar vacio y debe tener más de 10 caracteres");        
+        mostrarModal("LA DESCRIPCIÓN DEL PROYECTO NO PUEDE ESTAR VACIO Y DEBE TENER MÁS DE 10 CARACTERES");        
         return;
     }
-    desarrollador =document.getElementById("desarrollador").value;
+    desarrollador = document.getElementById("desarrollador").value;
     if (desarrollador == 0) {
-        mostrarModal("Debes elegir 1 desarrollador para el proyecto");        
+        mostrarModal("DEBES ELEGIR 1 DESARROLLADOR PARA EL PROYECTO");        
         return;
     }
-    responsableObra =document.getElementById("responsableObra").value;
+    responsableObra = document.getElementById("responsableObra").value;
     if (responsableObra == 0) {
-        mostrarModal("Debes elegir 1 responsable de obra para el proyecto");        
+        mostrarModal("DEBES ELEGIR 1 RESPONSABLE DE OBRA PARA EL PROYECTO");        
         return;
     }
 
-    fechaInicio =document.getElementById("fechaInicio").value;
+    fechaInicio = document.getElementById("fechaInicio").value;
     if (fechaInicio.length < 1 || fechaInicio.length <= 3) {
-        mostrarModal("El proyecto debe tener una fecha de inicio");        
+        mostrarModal("EL PROYECTO DEBE TENER UNA FECHA DE INICIO");        
         return;
     }
     
-    flImage =document.getElementById("flImage").value;
+    flImage = document.getElementById("flImage").value;
     if (flImage.length < 1 || flImage.length <= 3) {
-        mostrarModal("Debes elegir una imágen del proyecto");        
+        mostrarModal("DEBES ELEGIR UNA IMÁGEN DEL PROYECTO");        
         return;
     }
     
-    tipoProyecto =document.getElementById("tipoProyecto").value;
-    if (tipoProyecto.length < 1 || tipoProyecto.length <= 3) {
-        mostrarModal("El tipo del proyecto no puede estar vacio y debe tener más de 3 caracteres");        
+    tipoProyecto = document.getElementById("tipoProyecto").value;
+    if (tipoProyecto == 0) {
+        mostrarModal("DEBES ELEGIR UN TIPO DE PROYECTO");        
         return;
     }
-  
-    sistemaConstruccion =document.getElementById("sistemaConstruccion").value;
-    if (sistemaConstruccion.length < 1 || sistemaConstruccion.length <= 3) {
-        mostrarModal("El proyecto debe tener 1 sistema de construcción");        
+    mtsSuperficiales = document.getElementById("mtsSuperficiales").value;
+    if (mtsSuperficiales.length < 1) {
+        mostrarModal("AGREGA METROS CUADRADOS SUPERFICIALES PARA EL PROYECTO");        
         return;
     }
-    totalCosto =document.getElementById("totalCosto").value;
+    mtsSotano = document.getElementById("mtsSotano").value;
+    if (mtsSotano.length < 1 ) {
+        mostrarModal("AGREGA METROS CUADRADOS DE SÓTANO PARA EL PROYECTO");        
+        return;
+    }
+    sistemaConstruccion = document.getElementById("sistemaConstruccion").value;
+    if (sistemaConstruccion == 0) {
+        mostrarModal("ELIGE UN SISTEMA DE CONSTRUCCIÓN");        
+        return;
+    }
+    totalCosto = document.getElementById("totalCosto").value;
     if (totalCosto.length < 1 || totalCosto.length <= 3) {
-        mostrarModal("El costo total  del proyecto no puede estar vacio y debe tener más de 3 caracteres");        
+        mostrarModal("EL COSTO TOTAL  DEL PROYECTO NO PUEDE ESTAR VACIO Y DEBE TENER MÁS DE 3 CARACTERES");        
         return;
     }
-    direccion =document.getElementById("direccion").value;
+    
+    direccion = document.getElementById("direccion").value;
     if (direccion.length < 1 || direccion.length <= 3) {
-        mostrarModal("Escribe la direccción del proyecto");        
+        mostrarModal("ESCRIBE LA DIRECCCIÓN DEL PROYECTO");        
         return;
     }
 
-    estado =document.getElementById("estado").value;
+    estado = document.getElementById("estado").value;
     if (nombre.length == 0 ) {
-        mostrarModal("Elige un estado donde se esta desarrollando el proyecto");        
+        mostrarModal("ELIGE UN ESTADO DONDE SE ESTA DESARROLLANDO EL PROYECTO");        
         return;
     }
-    document.getElementById("projectForm").submit();
+    
+    location = document.getElementById("location").value;
+    if (nombre.length == 0 ) {
+        mostrarModal("ELIGE UN MUNICIPIO DONDE SE ESTA DESARROLLANDO EL PROYECTO");        
+        return;
+    }
+
+    var formData = {
+        nombre:nombre,
+        descripcion:descripcion,
+        desarrollador:desarrollador,
+        responsableObra:responsableObra,
+        fechaInicio:fechaInicio,
+        flImage:flImage,
+        tipoProyecto:tipoProyecto,
+        mtsSuperficiales:mtsSuperficiales,
+        mtsSotano:mtsSotano,
+        sistemaConstruccion:sistemaConstruccion,
+        totalCosto:totalCosto,
+        direccion:direccion,
+        estado:estado,
+        location:location
+    };
+
+        
+        document.getElementById("addingProyecto").submit();
+        /*fetch('addingProject', {
+            method: 'POST', // O el método HTTP que estás utilizando
+            body: new FormData(this), // Esto envía los datos del formulario
+        })
+        .then(response => response.json()) // Parsea la respuesta JSON
+        .then(data => {
+            console.log(data);
+            // Maneja la respuesta JSON
+            if (data.status === '0') {
+                alert(data.message); // Muestra un mensaje de éxito
+                // Aquí puedes redirigir a otra página si es necesario
+            } else {
+                alert('Hubo un problema al agregar el proyecto.');
+            }
+        })
+        .catch(error => {
+            console.error('Error al enviar el formulario:', error);
+        });*/
+
+
+        //return;
+        /*$.ajax({
+            type: 'POST',
+            url: addingProject,
+            data: {
+                data: formData,
+                _token: csrfToken
+            },
+            success: function (data) {
+                console.log(data.status);
+
+                /*if (data.status == 0) {
+                    mostrarModal("TODO SE AGREGÓ SUPER BIEN")
+                    //window.location.href = data.redirect;
+                } else {
+                    mostrarModal("ERROR EN LA SOLICITUD AL AGREGAR PROYECTO NUEVO: " + data.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error al usuario
+                mostrarModal("Error en la solicitud AJAX: " + error);
+            }
+        });*/
 }
 
 function editarProyectoON(){
     nombre =document.getElementById("nombre");
     nombre.disabled = false;
-    telefono =document.getElementById("telefono");
-    telefono.disabled = false;
     descripcion =document.getElementById("descripcion");
     descripcion.disabled = false;
     desarrollador =document.getElementById("desarrollador");
     desarrollador.disabled = false;
     responsableObra =document.getElementById("responsableObra");
     responsableObra.disabled = false;
-    porcentaje =document.getElementById("porcentaje");
-    porcentaje.disabled = false;
     fechaInicio =document.getElementById("fechaInicio");
     fechaInicio.disabled = false;
     flImage =document.getElementById("flImage");
@@ -116,7 +196,7 @@ function editarProyectoON(){
     direccion.disabled = false;
     estado =document.getElementById("estado");
     estado.disabled = false;
-    municipio =document.getElementById("municipio");
+    municipio =document.getElementById("location");
     municipio.disabled = false;
     
     guardar =document.getElementById("guardar-btn");
@@ -130,37 +210,34 @@ function editarProyectoON(){
 }
 function editarProyectoOFF(){
     nombre =document.getElementById("nombre");
-    nombre.disabled = false;
-    telefono =document.getElementById("telefono");
-    telefono.disabled = false;
+    nombre.disabled = true;
     descripcion =document.getElementById("descripcion");
-    descripcion.disabled = false;
+    descripcion.disabled = true;
     desarrollador =document.getElementById("desarrollador");
-    desarrollador.disabled = false;
+    desarrollador.disabled = true;
     responsableObra =document.getElementById("responsableObra");
-    responsableObra.disabled = false;
-    porcentaje =document.getElementById("porcentaje");
-    porcentaje.disabled = false;
+    responsableObra.disabled = true;
+    
     fechaInicio =document.getElementById("fechaInicio");
-    fechaInicio.disabled = false;
+    fechaInicio.disabled = true;
     flImage =document.getElementById("flImage");
-    flImage.disabled = false;
+    flImage.disabled = true;
     tipoProyecto =document.getElementById("tipoProyecto");
-    tipoProyecto.disabled = false;
+    tipoProyecto.disabled = true;
     mtsSuperficiales =document.getElementById("mtsSuperficiales");
-    mtsSuperficiales.disabled = false;    
+    mtsSuperficiales.disabled = true;    
     mtsSotano =document.getElementById("mtsSotano");
-    mtsSotano.disabled = false;
+    mtsSotano.disabled = true;
     sistemaConstruccion =document.getElementById("sistemaConstruccion");
-    sistemaConstruccion.disabled = false;
+    sistemaConstruccion.disabled = true;
     totalCosto =document.getElementById("totalCosto");
-    totalCosto.disabled = false;
+    totalCosto.disabled = true;
     direccion =document.getElementById("direccion");
-    direccion.disabled = false;
+    direccion.disabled = true;
     estado =document.getElementById("estado");
-    estado.disabled = false;
-    municipio =document.getElementById("municipio");
-    municipio.disabled = false;
+    estado.disabled = true;
+    municipio =document.getElementById("location");
+    municipio.disabled = true;
     
     guardar =document.getElementById("guardar-btn");
     guardar.style.display = 'none';
@@ -174,11 +251,6 @@ function actualizarProyecto(){
     nombre =document.getElementById("nombre");
     if (nombre.length < 1 || nombre.length <= 3) {
         mostrarModal("El nombre del proyecto no puede estar vacio y debe tener más de 3 caracteres");        
-        return;
-    }
-    telefono =document.getElementById("telefono");
-    if (telefono.length < 1 || telefono.length <= 3) {
-        mostrarModal("El teléfono del proyecto no puede estar vacio y debe tener más de 3 caracteres");        
         return;
     }
     descripcion =document.getElementById("descripcion");
@@ -196,18 +268,12 @@ function actualizarProyecto(){
         mostrarModal("Elige 1 responsable de obra");        
         return;
     }
-    porcentaje =document.getElementById("porcentaje");
-    if (porcentaje.length < 1 ) {
-        mostrarModal("Escribe el porcentaje de avance del proyecto");        
-        return;
-    }
     fechaInicio =document.getElementById("fechaInicio");
     if (fechaInicio.length < 1 || fechaInicio.length <= 3) {
         mostrarModal("No puedes dejar la fecha de incio del proyecto en blanco");        
         return;
     }
     flImage =document.getElementById("flImage");
-    
     tipoProyecto =document.getElementById("tipoProyecto");
     if (tipoProyecto.length < 1 || tipoProyecto.length <= 3) {
         mostrarModal("Escribe que tipo de proyecto es");        
@@ -243,7 +309,7 @@ function actualizarProyecto(){
         mostrarModal("Elige en que estado de la república esta se desarrolla el proyectos");        
         return;
     }
-    municipio =document.getElementById("municipio");
+    municipio =document.getElementById("location");
     if (municipio.length == 0) {
         mostrarModal("Elige el municipio donde se desarrolla el proyecto");        
         return;
@@ -251,7 +317,6 @@ function actualizarProyecto(){
     
     document.getElementById("editingProject").submit();
 }
-
 function formatearFecha(fecha) {
     var dia = fecha.getDate();
     var mes = fecha.getMonth() + 1;
@@ -260,7 +325,6 @@ function formatearFecha(fecha) {
     fechaF = dia + "-" + mes + "-" + anio;
     return fechaF;
 }
-
 function getGraphic(){
 
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -268,8 +332,10 @@ function getGraphic(){
     var fechaRegistro = $('#fechaInicioScript').val();
     
     if (idProyecto == 0) {
-        mostrarModal("Debes elegir un proyecto para mostrar las gráficas correspondientes");
+        mostrarModal("DEBES ELEGIR UN PROYECTO PARA MOSTRAR LAS GRÁFICAS CORRESPONDIENTES");
         return;
+    }else{
+        
     }
 
         $.ajax({
@@ -281,32 +347,39 @@ function getGraphic(){
                 _token: csrfToken
             },
             success: function (data) {
-                console.log(data)
+                console.log(data);
                 var container = $('#contractorsContainer');
                 container.empty();
                 var row = $('<div class="row"></div> '); 
                 var titleRow = $('<div class="row"></div>');
-                console.log(data);
+                
                 if (data.cuenta == 0) {
-                    console.log("entre a no hay accesos")
-                    mostrarModal("No hay accesos este día");
-                     
-                    var title = $('<div class="col-12"><h2>No hay accesos este día</h2></div>');
+                   
+                    mostrarModal("NO HAY ACCESOS ESTE DÍA");
+
+                    var title = $('<div class="col-12"><h3><span class="badge badge-outline-warning">NO HAY ACCESOS ESTE DÍA</span></h3></div>');
                     titleRow.append(title);
                     container.append(titleRow);
 
                 }else{
-                    console.log("entre a hacer la grafica");
+                   
                     data.registro.forEach(function (registro, index) {
                         container.append(row);
-                        var chartId = "semi-workers-" + idProyecto + "-" + index;
+                        var chartId = "semi-workers-" + index;
                         var card = $(
-                            '<div class="col-6">' +
+                            '<div class="col-4">' +
+                                
                                 '<div class="card">' +
+                                '<div class="card-header">'+
+                                    '<div class="row"><div class="col-12">'+
+                                    '<input type="text" id="valorProgramado'+chartId+'" placeholder="" class="form-control"><br>'+
+                                    '<button id="agregarDato" onclick="agregarDato('+index+','+registro.cuenta_checkin+')" class="btn btn-outline-primary">CAMBIAR FT PROGRAMADO</button>'+
+                                    '</div></div>'+
+                                '</div>'+
                                     '<div class="card-body">' +
-                                        '<div dir="ltr">' +
-                                            '<div id="' + chartId + '" class="apex-charts" data-colors="#727cf5"></div>' +
-                                        '</div>' +
+                                    '<div dir="ltr">' +
+                                        '<div id="' + chartId + '" class="apex-charts" data-colors="#727cf5"></div>' +
+                                    '</div>' +
                                     '</div>' +
                                     '<div class="d-flex justify-content-between align-items-center card-body py-2 border-top border-light">' +
                                         '<span class="badge badge-lg bg-light text-secondary rounded-pill me-1">' + registro.empresa + '</span>' +
@@ -315,14 +388,18 @@ function getGraphic(){
                             '</div>');
     
                         row.append(card);
-                        
+                        if (registro.ft_programado == null) {
+                            var ft_programado = 10;
+                        }else{
+                            var ft_programado = registro.ft_programado;   
+                        }
                         var options = {
-                            series: [registro.cuenta_checkin],//],//[empresas.cuenta_checkin],
+                            series: [registro.cuenta_checkin,ft_programado],
                             chart: {
                                 type: "radialBar",
                                 offsetY: -20,
                                 sparkline: {
-                                    enabled: false,
+                                    enabled: true,
                                 }
                             },
                             plotOptions: {
@@ -331,7 +408,7 @@ function getGraphic(){
                                     endAngle: 90,
                                     track: {
                                         background: "rgba(255, 255, 255, 0.5)",
-                                        strokeWidth: "97%",
+                                        strokeWidth: "90%",
                                         margin: 5,
                                         dropShadow: {
                                             top: 2,
@@ -348,8 +425,9 @@ function getGraphic(){
                                         value: {
                                             show: true,
                                             offsetY: -2,
-                                            fontSize: "22px",
+                                            fontSize: "30px",
                                             formatter: function (val) {
+
                                                 return val;
                                             }
                                         }
@@ -363,7 +441,7 @@ function getGraphic(){
                             },
                             legend: {
                                 show: true,
-                                showForSingleSeries: false,
+                                showForSingleSeries: true,
                                 showForNullSeries: true,
                                 showForZeroSeries: true,
                                 position: 'bottom',
@@ -407,29 +485,67 @@ function getGraphic(){
                                     highlightDataSeries: true
                                 },
                             },
-                            colors: ["#727cf5"],
-                            labels: [],
+                            colors: ["#727cf5", "#ffffff"], //#
+                            labels: ['FT REAL: '+registro.cuenta_checkin,'FT PROGRAMADA: '+registro.ft_programado],
                             yaxis: {
                                 min: 0,
-                                max: 50,
-                              },
+                                max: 50,  // Establece el límite máximo en 50
+                            },
                         };
-
-                        (chart = new ApexCharts(document.querySelector("#" + chartId), options)).render();
-                        $(".apexcharts-legend").text('');
+                        
+                        //(chart = new ApexCharts(document.querySelector("#" + chartId), options)).render();
+                        charts[chartId] = new ApexCharts(document.querySelector("#" + chartId), options);
+                        charts[chartId].render();
+                        //$(".apexcharts-legend").text('FUERZA DE TRABAJO');
                         
                     });
-    
-                    var title = $('<div class="col-12"><h2>Total de accesos '+data.cuenta+'</h2></div>');
+                    
+                    var title = $('<div class="col-12"><h2>TOTAL DE ACCESOS: '+data.cuenta+'</h2></div>');
+                    
                     titleRow.append(title);
                     container.append(titleRow);
                 }
-                
-               
             }
         });
 
 }
+
+function agregarDato(param,ftReal) {
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    var chartId = "semi-workers-" + param;
+    programado = document.getElementById("valorProgramado"+chartId).value;
+
+    
+    /*$.ajax({
+        type: 'POST',
+        url: guardarFTProgramado,
+        data: {
+            idProyecto: idProyecto,
+            ft_programado:programado,
+            _token: csrfToken
+        },
+        success: function (data) {
+            console.log("se agregó el dato");
+            
+        }
+    });*/
+    
+    if (charts[chartId]) {
+        charts[chartId].updateOptions({
+          series: [ftReal, programado],                           
+          labels: ['FT REAL: '+ftReal,'FT PROGRAMADA: '+programado]
+
+        });
+        //$(".apexcharts-legend").text('FUERZA DE TRABAJO '+programado);
+
+    }else{
+        console.error("hubo un error checale antes de continuar");
+    }
+
+
+  }
+  
+
 
 function graficaPorPuestoEnProyecto(){
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -441,7 +557,7 @@ function graficaPorPuestoEnProyecto(){
     var anio = partesFecha[2];
     var fechaFormateada = anio + "-" + mes + "-" + dia;
     if (idProyecto == 0) {
-        mostrarModal("Debes elegir un proyecto para mostrar las gráficas correspondientes");
+        mostrarModal("DEBES ELEGIR UN PROYECTO PARA MOSTRAR LAS GRÁFICAS CORRESPONDIENTES");
         return;
     }
     $.ajax({
@@ -457,12 +573,11 @@ function graficaPorPuestoEnProyecto(){
             container.empty();
             var row = $('<div class="row"></div> '); 
             var titleRow = $('<div class="row"></div>');
-            console.log(data);
+            
             if (data.cuenta == 0) {
-                console.log("entre a no hay accesos")
-                mostrarModal("No hay accesos este día");
+                mostrarModal("NO HAY ACCESOS ESTE DÍA");
                     
-                var title = $('<div class="col-12"><h2>No hay accesos este día</h2></div>');
+                var title = $('<div class="col-12"><h2>NO HAY ACCESOS ESTE DÍA</h2></div>');
                 titleRow.append(title);
                 container.append(titleRow);
 
@@ -488,7 +603,6 @@ function graficaPorPuestoEnProyecto(){
                         '</div>');
                     
                     row.append(card);
-                    console.log(registro.puesto + " cuenta " + registro.cuenta_checkin);
                     $("#"+chartId+"text").text(registro.cuenta_checkin + ' de ' + data.cuenta);
                     var options = {
                         series: [registro.cuenta_checkin],//],//[empresas.cuenta_checkin],
@@ -517,7 +631,7 @@ function graficaPorPuestoEnProyecto(){
                                 },
                                 dataLabels: {
                                     name: {
-                                        show: false
+                                        show: true
                                     },
                                     value: {
                                         show: true,
@@ -547,8 +661,9 @@ function graficaPorPuestoEnProyecto(){
                     
                     
                 });
+                var title = $('<div class="col-12"><h2>TOTAL DE ACCESOS: '+data.cuenta+'</h2></div>');
 
-                var title = $('<div class="col-12"><h2>Total de accesos '+data.cuenta+'</h2></div>');
+
                 titleRow.append(title);
                 container.append(titleRow);
             }

@@ -17,7 +17,7 @@
         <div class="col-6">
             <div class="page-title-box">
                 <div class="page-title-left">
-                    <h4 class="page-title"> <i class="uil uil-constructor"></i> Lista de trabajadores (Total: {{ $totalTrabajadores }})</h4>
+                    <h4 class="page-title"> <i class="uil uil-constructor"></i> LISTA DE TRABAJADORES (TOTAL ACTUAL: {{ $totalTrabajadores }})</h4>
                 </div>
             </div>
         </div>
@@ -37,33 +37,31 @@
                             <table id="fixed-header-datatable" class="table w-100 nowrap">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Nombre Completo</th>
-                                        <th>Empresa</th>
-                                        <th>Puesto</th>
+                                        <th>NOMBRE DEL TRABAJADOR</th>
+                                        <th>EMPRESA</th>
+                                        <th>PUESTO</th>
                                         <th>NSS</th>
-                                        <th>Teléfono</th>
-                                        <th>Tel Emergencia</th>
-                                        <th>Sangre</th>
-                                        <th>E. Crónicas</th>
-                                        <th>Alergias</th>
-                                        <th></th>
+                                        <th>TELÉFONO</th>
+                                        <th>TEL. EMERGENCIA</th>
+                                        <th>SANGRE</th>
+                                        <th>E. CRÓNICAS</th>
+                                        <th>ALERGIAS</th>
+                                        <th>DETALLE</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($workers as $worker)
                                         <tr>
-                                            <td>{{$worker->idWorker}}</td>
-                                            <td>{{$worker->lastName}} {{$worker->name}}</td>
-                                            <td>{{$worker->contractorName}}</td>
-                                            <td>{{$worker->jobName}}</td>
-                                            <td>{{$worker->nss}}</td>
-                                            <td>{{$worker->personalPhone}}</td>
-                                            <td>{{$worker->emergencyPhone}}</td>
-                                            <td>{{$worker->blodType}}</td>
-                                            <td>{{$worker->chronicDiseases}}</td>
-                                            <td>{{$worker->alergies}}</td>
-                                            <td><a href="{{ route('fuerza-trabajo.editar-trabajador.show', ['idWorker' => $worker->idWorker]) }}" class="btn btn-outline-success rounded-pill"><i class="mdi mdi-account me-1"></i>Ver detalle</a></td>
+                                            <td>{{strtoupper($worker->lastName)}} {{strtoupper($worker->name)}}</td>
+                                            <td>{{strtoupper($worker->contractorName)}}</td>
+                                            <td>{{strtoupper($worker->jobName)}}</td>
+                                            <td>{{strtoupper($worker->nss)}}</td>
+                                            <td>{{strtoupper($worker->personalPhone)}}</td>
+                                            <td>{{strtoupper($worker->emergencyPhone)}}</td>
+                                            <td>{{strtoupper($worker->blodType)}}</td>
+                                            <td>{{strtoupper($worker->chronicDiseases)}}</td>
+                                            <td>{{strtoupper($worker->alergies)}}</td>
+                                            <td><a href="{{ route('fuerza-trabajo.editar-trabajador.show', ['idWorker' => $worker->idWorker]) }}" class="btn btn-outline-success rounded-pill"><i class="mdi mdi-account me-1"></i>VER DETALLE</a></td>
                                         </tr>
                                     @endforeach
                                 </tbody>

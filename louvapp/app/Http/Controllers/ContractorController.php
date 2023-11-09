@@ -128,19 +128,24 @@ class ContractorController extends Controller
     public function show($id){
         //$contractor = Contractor::find($id);
         $contractor = DB::table('contractors')
-        ->leftjoin('estados', 'contractors.idEstado_estado', '=', 'estados.idEstado')
-        ->leftjoin('municipios', 'contractors.idMunicipio_municipio', '=', 'municipios.idMunicipio')
-        ->where('contractors.idContractor', $id)
-        ->first();
+            ->leftjoin('estados', 'contractors.idEstado_estado', '=', 'estados.idEstado')
+            ->leftjoin('municipios', 'contractors.idMunicipio_municipio', '=', 'municipios.idMunicipio')
+            ->join('proyecto_empresa', 'proyecto_empresa.idContractor_project', '=', 'contractors.idContractor')
+            ->where('contractors.idContractor', $id)
+            ->first();
 
         $getProjects = DB::table('projects')->get();
 
         $getStates = DB::table('estados')->get();
 
+        $getProject_contractors = DB::table('proyecto_empresa')
+            ->get();
+        
         return view('contratistas/editar-contratista', [
             'contractor' => $contractor,
             'projects' => $getProjects,
-            'states' => $getStates
+            'states' => $getStates,
+            'project_empresa' => $getProject_contractors
         ]);
 
     }

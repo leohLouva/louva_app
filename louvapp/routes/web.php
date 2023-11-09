@@ -43,7 +43,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('proyectos/lista-proyectos', [App\Http\Controllers\ProjectController::class, 'index'])->name('lista-proyectos.index');
     Route::get('proyectos/agregar-proyecto', [App\Http\Controllers\ProjectController::class, 'verAgregarProyecto'])->name('agregar-proyecto.verAgregarProyecto');
 
-    Route::post('/addingProject', [App\Http\Controllers\ProjectController::class, 'store']);
+    Route::post('addingProject', [App\Http\Controllers\ProjectController::class, 'store'])->name('addingProject');
+    Route::post('addingProyecto', [App\Http\Controllers\ProjectController::class, 'store'])->name('addingProject');
     //Route::post('/editarProyecto', [App\Http\Controllers\ProjectController::class, 'update'])->name('project.update');
 
     Route::get('/proyectos/editar-proyecto/{id}', [App\Http\Controllers\ProjectController::class, 'show'])->name('editar-proyecto.show');
@@ -63,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
     //Route::get('fuerza-trabajo/credenciales-trabajadores', [App\Http\Controllers\WorkerController::class, 'indexC'])->name('credenciales-trabajadores.indexC');
     Route::get('fuerza-trabajo/editar-trabajador/{idWorker}', [App\Http\Controllers\WorkerController::class, 'show'])->name('fuerza-trabajo.editar-trabajador.show');
     Route::get('fuerza-trabajo/agregar-trabajador', [App\Http\Controllers\WorkerController::class, 'verAgregarTrabajador'])->name('agregar-trabajador.verAgregarTrabajador');
-    Route::post('/addingWorker',[App\Http\Controllers\WorkerController::class,'store'])->name('addingWorker');;
+    Route::post('/addingWorker',[App\Http\Controllers\WorkerController::class,'store'])->name('addingWorker');
     Route::post('/fuerza-trabajo/editar-trabajador/editing/{idWorker}',[App\Http\Controllers\WorkerController::class,'update'])->name('profile.update');
     Route::post('/validar-documentos', [App\Http\Controllers\DocumentsController::class, 'validateDocuments'])->name('validateDocuments');
     //para escanear y checar entrada y salida del trabajador
@@ -81,8 +82,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/proyecto/empresas/puestos', [App\Http\Controllers\ProjectController::class, 'graphicByJobs'])->name('proyecto.puestos');
 
     
-
-
     //IMAGENES
     //almacenar imagen de usuario
     Route::post('/image', [App\Http\Controllers\ImageController::class, 'storeUser'])->name('imagenes.storeUser');

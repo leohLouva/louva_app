@@ -16,16 +16,13 @@ class Project extends Model
      *
      * @var array<int, string>
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'idProject';
     
     protected $fillable = [
-        'projectImage',
         'projectName',
-        'telefono',
+        'projectImage',
         'description',
-        'progress',
         'fechaInicio',
-        'urlPowerBi',
         'projectType',
         'squareMeterSuperficial',
         'squareMeterSotano',

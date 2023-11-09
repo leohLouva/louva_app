@@ -145,7 +145,8 @@ Dropzone.autoDiscover = false;
     
                  });
     }
-    
+
+   
     
     
     

@@ -18,7 +18,7 @@
             <div class="page-title-right">
                 
             </div>
-            <h4 class="page-title">Crear Nuevo Proyecto</h4>
+            <h4 class="page-title">AGREGAR NUEVA OBRA </h4>
         </div>
     </div>
 </div>
@@ -29,8 +29,8 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">            
-                <p class="text-muted font-14">Tamaño de imagen recomendado 800x400 (px).</p>
-                <label class="form-label">Imagen del proyecto</label>
+                <p class="text-muted font-14">EL TAMAÑO DE IMAGEN RECOMENDADO 800x400 (px).</p>
+                <label class="form-label">IMAGEN DEL PROYECTO</label>
                 <input type="hidden" name="hdnType" value="proyecto">
                 <form action="{{ route('imagenes.storeProject')}}" method="post" enctype="multipart/form-data" class="dropzone" id="dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
                     @csrf
@@ -39,7 +39,7 @@
                     </div>
                     <div class="dz-message needsclick">
                         <i class="h3 text-muted ri-upload-cloud-2-line"></i>
-                        <h4>Suelta los archivos aquí o haz clic para cargarlos.</h4>
+                        <h4>SUELTA EL ARCHIVO AQUI O ARRASTRA PARA CARGARLOS</h4>
                     </div>
                 </form>
                 <div class="dropzone-previews mt-3" id="file-previews"></div>
@@ -53,53 +53,50 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-body">           
-                <form action="/addingProject" method="POST" id="projectForm">
+                <form action="/addingProyecto" method="POST" id="addingProyecto">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label">Nombre del proyecto</label>
-                        <input type="text" id="nombre" name="nombre" class="form-control" placeholder="">
+                        <label class="form-label">TÍTULO DEL PROYECTO</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control" placeholder="" oninput="convertirAMayusculas(this)">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">DESCRIPCIÓN DEL PROYECTO</label>
+                        <textarea class="form-control" name="descripcion" id="descripcion" rows="5" placeholder="" maxlength="140" oninput="convertirAMayusculas(this)"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Teléfono</label>
-                        <input type="text" id="telefono" name="telefono" class="form-control" placeholder="">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Descripción del proyecto</label>
-                        <textarea class="form-control" name="descripcion" id="descripcion" rows="5" placeholder="" maxlength="140"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nombre del desarrollador</label>
+                        <label class="form-label">NOMBRE DEL DESARROLLADOR</label>
                         <select class="form-control select2" data-toggle="select2" id="desarrollador" name="desarrollador">
-                            <option value="0">Selecciona un Desarrollador</option>
+                            <option value="0">SELECCIONA UN DESARROLLADOR</option>
                             @foreach ($owners as $ownser)
-                                <option value="{{$ownser->id}}">{{$ownser->name}} {{$ownser->lastName}}</option>
+                                <option value="{{$ownser->id}}">{{ strtoupper($ownser->name)}} {{ strtoupper($ownser->lastName)}}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Nombre del Responsable de obra (DRO)</label>
+                        <label class="form-label">RESPONSABLE DE OBRA (DRO)</label>
                         <select class="form-control select2" data-toggle="select2" id="responsableObra" name="responsableObra">
-                            <option value="0">Selecciona un Desarrollador</option>
+                            <option value="0">SELECCIONA UN DRO</option>
                             @foreach ($reponsables as $reponsable)
-                                <option value="{{$reponsable->id}}">{{$reponsable->name}} {{$reponsable->lastName}}</option>
+                                <option value="{{$reponsable->id}}">{{  strtoupper($reponsable->name)}} {{ strtoupper($reponsable->lastName)}}</option>
                             @endforeach
                         </select>
-                    </div>
-                    <div class="mb-3 position-relative">
-                        <label class="form-label">% del proyecto </label>
-                        <input class="form-control" type="text" name="porcentaje" id="porcentaje" value="">
                     </div>
                     <div class="mb-3 position-relative" id="datepicker1">
-                        <label class="form-label">Fecha de inicio</label>
-                        <input type="text" class="form-control" id="fechaInicio" name="fechaInicio" data-provide="datepicker" data-date-container="#datepicker1" data-date-format="d-M-yyyy" data-date-autoclose="true">
+                        <label class="form-label">FECHA DE INICIO DEL PROYECTO</label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="inputGroupPrepend"><i class="ri-calendar-2-fill"></i></span>
+                            <input type="text" class="form-control" name="fechaInicio" id="fechaInicio" placeholder="" aria-describedby="inputGroupPrepend" data-provide="datepicker" data-date-container="#datepicker1" data-date-format="d-M-yyyy" data-date-autoclose="true">
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <input class="form-control" type="hidden" id="flImage" name="flImage" value="">
-                        <input class="form-control" type="hidden" name="folderName" id="folderName" value="NA">
-
-                        <button type="button" class="btn btn-primary" onclick="agregarProyecto()" >
-                            Crear Proyecto
-                        </button>
+                        <label class="form-label">TIPO DE PROYECTO</label>
+                        <select class="form-control select2" data-toggle="select2" id="tipoProyecto" name="tipoProyecto">
+                            <option value="0">SELECCIONA UN TIPO DE PROYECTO</option>
+                            @foreach ($project_types as $project_type)
+                                <option value="{{$project_type->idProject_type}}">{{$project_type->nameProject_type}}</option>
+                            @endforeach
+                        </select>
                     </div>
             </div>
         </div>
@@ -108,45 +105,57 @@
         <div class="card">
             <div class="card-body">            
                     <div class="mb-3">
-                        <label class="form-label">Tipo de proyecto</label>
-                        <input type="text" id="tipoProyecto" name="tipoProyecto" class="form-control" placeholder="">
+                        <label class="form-label">M<sup>2</sup> DE URBANIZACION</label>
+                        <input type="number" id="mtsSuperficiales" name="mtsSuperficiales" class="form-control" placeholder="">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">M<sup>2</sup> superficiales</label>
-                        <input type="text" id="mtsSuperficiales" name="mtsSuperficiales" class="form-control" placeholder="">
+                        <label class="form-label">M<sup>2</sup> SÓTANO</label>
+                        <input type="number" id="mtsSotano" name="mtsSotano" class="form-control" placeholder="">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">M<sup>2</sup> sótano</label>
-                        <input type="text" id="mtsSotano" name="mtsSotano" class="form-control" placeholder="">
+                        <label class="form-label">SISTEMA CONSTRUCTIVO ESTRUCTURAL</label>
+                        <select class="form-control select2" data-toggle="select2" id="sistemaConstruccion" name="sistemaConstruccion">
+                            <option value="0">SELECCIONA UNO DE LA LISTA </option>
+                            @foreach ($systemConsts as $systemConst)
+                                <option value="{{$systemConst->idConstruction_system}}">{{$systemConst->nameConstruction_system}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Sistema de construcción</label>
-                        <input type="text" id="sistemaConstruccion" name="sistemaConstruccion" class="form-control" placeholder="">
+                        <label class="form-label">COSTO TOTAL DE OBRA APROXIMADO</label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="inputGroupPrepend">$</span>
+                            <input type="text" class="form-control" name="totalCosto" id="totalCosto" placeholder="" aria-describedby="inputGroupPrepend">
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Total del costo programado</label>
-                        <input type="text" id="totalCosto" name="totalCosto" class="form-control" placeholder="">
+                        <label class="form-label">DIRECCIÓN</label>
+                        <input type="text" id="direccion" name="direccion" class="form-control" placeholder="DIRECCION CALLE, NUMERO COLONIA" oninput="convertirAMayusculas(this)">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Dirección</label>
-                        <input type="text" id="direccion" name="direccion" class="form-control" placeholder="">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Estado</label>
-                        <select class="form-control select2" data-toggle="select2" id="estado" name="estado">
-                            <option value="0">Selecciona un estado</option>
+                        <label class="form-label">ESTADO</label>
+                        <select class="form-control select2" data-toggle="select2" id="estado" name="estado" onchange="getLocation()">
+                            <option value="0">SELECCIONA UN ESTADO</option>
                             @foreach ($states as $state)
-                                <option value="{{$state->idEstado}}">{{$state->estado}}</option>
+                                <option value="{{$state->idEstado}}">{{strtoupper($state->estado)}}</option>
                             @endforeach
                         </select>
                     </div>  
                     <div class="mb-3">
-                        <label class="form-label">Locación</label>
-                        <select class="form-control select2" data-toggle="select2" id="locacion" name="locacion">
-                            <option value="0">Elige un municipio según el estado</option>
+                        <label class="form-label">LOCACIÓN</label>
+                        <select class="form-control select2" data-toggle="select2" id="location" name="location">
+                            <option value="0">ELIGE UN MUNICIPIO</option>
                         </select>
-                    </div>          
-                </form>
+                    </div>   
+               
+                    <div class="mb-3">
+                        <input class="form-control" type="hidden" id="flImage" name="flImage" value="">
+                        <input class="form-control" type="hidden" name="folderName" id="folderName" value="NA">
+                    </form>
+                        <button type="button" class="btn btn-primary" onclick="agregarProyecto()" >
+                            CREAR PROYECTO
+                        </button>
+                    </div>
             </div>
         </div>
     </div> <!-- end col-->
@@ -154,31 +163,9 @@
 <!-- end page form-create-project -->
 <!-- Bootstrap Datepicker Plugin js -->
 <script src="{{ asset("/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js") }}"></script>
-
 <script>
-    $(document).ready(function() {
-        $('#estado').on('change', function() {
-            var estadoId = $(this).val();
-            if (estadoId > 0) {
-                $.ajax({
-                    url: '/municipios/' + estadoId,
-                    type: 'GET',
-                    success: function(data) {
-                        var locacionSelect = $('#locacion');
-                        locacionSelect.empty(); 
-                        console.log(data);
-                        $.each(data, function(key, value) {
-                            console.log(value);
-                            locacionSelect.append('<option value="' + value.idMunicipio + '">' + value.municipio + '</option>');
-                        });
-                    }
-                });
-            }
-        });
-    });
-    
-</script> 
-
+    var addingProject = '{{ route('addingProject') }}';
+</script>
 
 
 

@@ -55,7 +55,7 @@
             </div> <!-- end card -->
             
             <div style="display: block;">
-                <p class="text-muted font-14">El tamaño de imagen recomendado 800x400 (px).</p>
+                <p class="text-muted font-14">EL TAMAÑO DE IMAGEN RECOMENDADO 800x400 (px).</p>
                 <form action="{{ route('imagenes.storeUser')}}" method="post" enctype="multipart/form-data" class="dropzone" id="dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
                     @csrf
                     <input type="hidden" name="typeOfView" value="usuarios">

@@ -25,7 +25,7 @@
             <div class="card-body">            
                 <div class="tab-content">
                     <div class="tab-pane show active" id="custom-styles-preview">
-                        <p class="text-muted font-14">Tamaño de imagen recomendado 800x400 (px).</p>
+                        <p class="text-muted font-14">EL TAMAÑO DE IMAGEN RECOMENDADO 800x400 (px).</p>
                         <form action="{{ route('imagenes.storeUser')}}" method="post" enctype="multipart/form-data" class="dropzone" id="dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
                             @csrf
                             <input type="hidden" name="typeOfView" value="usuarios">
@@ -36,7 +36,7 @@
 
                                 <div class="dz-message needsclick">
                                     <i class="h3 text-muted ri-upload-cloud-2-line"></i>
-                                    <h4>Suelta los archivos aquí o haz clic para cargarlos.</h4>
+                                    <h4>ARRASTRA Y SUELTA LOS ARCHIVOS AQUÍ O HAZ CLIC PARA CARGARLOS.</h4>
                                 </div>
                         </form>                                                    
                         <!-- Preview -->
