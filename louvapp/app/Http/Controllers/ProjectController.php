@@ -55,7 +55,7 @@ class ProjectController extends Controller
         {
 
         try{
-            
+
             $fechaInicio = date('Y-m-d', strtotime($request->fechaInicio));
             $project = new Project([
                 'projectName' => $request->nombre,
