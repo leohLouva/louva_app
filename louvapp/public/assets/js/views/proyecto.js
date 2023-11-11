@@ -23,7 +23,7 @@ function getLocation(){
 }
 
 function agregarProyecto(){    
-
+    console.log("ya modifique aqiu");
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
     nombre = document.getElementById("nombre").value;
