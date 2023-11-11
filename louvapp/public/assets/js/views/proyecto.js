@@ -23,7 +23,6 @@ function getLocation(){
 }
 
 function agregarProyecto(){    
-    alert("AGREGAR PROYECTO");
 
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
@@ -55,11 +54,7 @@ function agregarProyecto(){
         return;
     }
     
-    flImage = document.getElementById("flImage").value;
-    if (flImage.length < 1 || flImage.length <= 3) {
-        mostrarModal("DEBES ELEGIR UNA IMÁGEN DEL PROYECTO");        
-        return;
-    }
+    flImage = null; //document.getElementById("flImage").value;
     
     tipoProyecto = document.getElementById("tipoProyecto").value;
     if (tipoProyecto == 0) {
@@ -273,7 +268,7 @@ function actualizarProyecto(){
         mostrarModal("No puedes dejar la fecha de incio del proyecto en blanco");        
         return;
     }
-    flImage =document.getElementById("flImage");
+    flImage = null; //document.getElementById("flImage");
     tipoProyecto =document.getElementById("tipoProyecto");
     if (tipoProyecto.length < 1 || tipoProyecto.length <= 3) {
         mostrarModal("Escribe que tipo de proyecto es");        
