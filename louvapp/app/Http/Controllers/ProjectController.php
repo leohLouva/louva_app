@@ -231,7 +231,7 @@ class ProjectController extends Controller
             ->where('contractors.idContractor', $request->idEmpresa)
             ->first();
 
-            $dateToSearch = "2023-10-24"; // La fecha que deseas buscar
+            $dateToSearch = "2023-10-24"; 
 
             $getWorkersbyDay = DB::table('attendences')
                 ->join('users', 'users.idUser', '=', 'attendences.idUser_worker')
@@ -336,7 +336,11 @@ class ProjectController extends Controller
 
             $projects = Project::join('estados', 'projects.state', '=', 'estados.idEstado')
             ->join('municipios', 'projects.location', '=', 'municipios.idMunicipio')
+            ->join('project_type', 'projects.projectType', '=', 'project_type.idProject_type')
+            ->join('construction_system', 'projects.constructionSystem', '=', 'construction_system.idConstruction_system')
             ->where('projectName', 'LIKE', "%$q%")
+            ->orWhere('construction_system.nameConstruction_system', 'LIKE', "%$q%")
+            ->orWhere('project_type.nameProject_type', 'LIKE', "%$q%")
             ->orWhere('estados.estado', 'LIKE', "%$q%")
             ->orWhere('municipios.municipio', 'LIKE', "%$q%")
             ->paginate(5);
