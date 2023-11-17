@@ -11,6 +11,19 @@
         </div>
     </div>
 </div>
+<div class="row mb-2">
+    <div class="col-sm-7">
+
+    </div>
+    <div class="col-sm-5">
+        <form action="{{ route('empresas.buscar') }}" method="GET">
+            <div class="input-group">
+                <input type="text" class="form-control" name="q" id="buscarO" placeholder="BUSCAR EMPRESAS..." oninput="this.value = this.value.toUpperCase()">
+                <button class="btn btn-primary" type="button" onclick="buscarObras()">BUSCAR</button>
+            </div>
+        </form>
+    </div>
+</div> 
 <div class="row">
     @foreach ($contractors as $contractor)
         <div class="col-md-6 col-xxl-3">
@@ -47,10 +60,30 @@
                 </div>
             </div>
         </div>
-@endforeach
-            
+    @endforeach
 </div>
 
+<div class="col-md-12">
+    <nav aria-label="...">
+        <ul class="pagination mb-0">
+            <li class="page-item {{ $contractors->currentPage() == 1 ? 'disabled' : '' }}">
+                <a class="page-link" href="{{ $contractors->previousPageUrl() }}" tabindex="-1" aria-disabled="true">ANTERIOR</a>
+            </li>
 
+            @for ($i = 1; $i <= $contractors->lastPage(); $i++)
+                <li class="page-item {{ $contractors->currentPage() == $i ? 'active' : '' }}">
+                    <a class="page-link" href="{{ $contractors->url($i) }}">{{ $i }}</a>
+                </li>
+            @endfor
+
+            <li class="page-item {{ $contractors->currentPage() == $contractors->lastPage() ? 'disabled' : '' }}">
+                <a class="page-link" href="{{ $contractors->nextPageUrl() }}">SIGUIENTE</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="mt-2">
+        MOSTRANDO {{ $contractors->firstItem() }} A {{ $contractors->lastItem() }} DE {{ $contractors->total() }} CONTRATISTAS.
+    </div>
+</div>
 
 @endsection

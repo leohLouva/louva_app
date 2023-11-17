@@ -17,25 +17,23 @@ class ContractorController extends Controller
     public function index()
     {
 
+        $perPage = 8;
         $contractor = DB::table('contractors')
-        ->get();
-        $getProjects = DB::table('projects')->get();
-
-
-
+                ->orderBy('created_at', 'desc')
+                ->paginate($perPage);
+   
         return view('contratistas/lista-contratista', [
-            'contractors' => $contractor,
-            'projects' => $getProjects
+            'contractors' => $contractor
         ]);
     }
 
     public function indexFuerza($id)
     {
 
-        $worker = DB::table('workers')
-            ->join('jobs', 'workers.idJob_jobs', '=', 'jobs.idJob')
-            ->join('contractors', 'workers.idContractor_contractors', '=', 'contractors.idContractor')
-            ->where('workers.idContractor_contractors','=',$id)
+        $worker = DB::table('users')
+            ->join('jobs', 'users.idJob_jobs', '=', 'jobs.idJob')
+            ->join('contractors', 'users.idContractor_contractors', '=', 'contractors.idContractor')
+            ->where('users.idContractor_contractors','=',$id)
             ->get();
             
             $totalTrabajadores = $worker->count();
@@ -73,16 +71,17 @@ class ContractorController extends Controller
             'domicilioContractor' => $request->domicilio,
             'codigoPostalContractor' => $request->cp,
             'idEstado_estado' => $request->estado,
-            'idMunicipio_municipio' => $request->municipio,
-            'folderName' => $request->folderName,
+            'idMunicipio_municipio' => $request->location,
             'img_contractor' => $request->flImage
         ]);
         $contractor->save();
 
         $project = new Worker_project([
-            'idContractor_project' => $contractor->id,
+            'idContractor_project' => $contractor->idContractor,
             'idProyecto' => $request->idProyecto
         ]);
+
+
         $project->save();
         
 
@@ -105,7 +104,6 @@ class ContractorController extends Controller
             'codigoPostalContractor' => $request->cp,
             'idEstado_estado' => $request->estado,
             'idMunicipio_municipio' => $request->municipio,
-            'folderName' => $request->folderName,
             'img_contractor' => $request->flImage
         ]);
 
@@ -140,20 +138,40 @@ class ContractorController extends Controller
 
         $getProject_contractors = DB::table('proyecto_empresa')
             ->get();
-        
+        $getMunicipio = DB::table('municipios')
+            ->join('estados_municipios', 'estados_municipios.municipios_id', '=', 'municipios.idMunicipio')
+            ->where('estados_municipios.estados_id', '=', $contractor->idEstado_estado)
+            ->get();
+             
         return view('contratistas/editar-contratista', [
             'contractor' => $contractor,
             'projects' => $getProjects,
             'states' => $getStates,
+            'locations' => $getMunicipio,
             'project_empresa' => $getProject_contractors
         ]);
 
     }
+    public function buscarEmpresa(Request $request)
+        {
+            $q = $request->input('q');
+
+            $contractors = Contractor::join('estados', 'contractors.idEstado_estado', '=', 'estados.idEstado')
+            ->join('municipios', 'contractors.idMunicipio_municipio', '=', 'municipios.idMunicipio')
+            ->where('contractorName', 'LIKE', "%$q%")
+            ->orWhere('estados.estado', 'LIKE', "%$q%")
+            ->orWhere('municipios.municipio', 'LIKE', "%$q%")
+            ->paginate(5);
+
+            //return view('tus-obras-partial', compact('projects'))->render();
+            return view('contratistas/lista-contratista', ['contractors' => $contractors]);
+        
+            /*return response()->json([
+                'redirect' =>  route('fuerza-trabajo.editar-trabajador.show', ['idUser' => $user->idUser])
+                'status' => '1',
+                'message' => 'DOCUMENTO ALMACENADO CON ÉXITO',
+                'projects' => $projects
+            ]);*/
+        }
 }
-/*
 
-
-     
-   
-
-*/

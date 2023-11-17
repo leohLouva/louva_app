@@ -29,7 +29,6 @@ class Contractor extends Model
         'codigoPostalContractor',
         'idEstado_estado',
         'idMunicipio_municipio',
-        'folderName',
         'img_contractor'
     ];
 }

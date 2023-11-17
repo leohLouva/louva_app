@@ -68,8 +68,8 @@
                         <label class="form-label">NOMBRE DEL DESARROLLADOR</label>
                         <select class="form-control select2" data-toggle="select2" id="desarrollador" name="desarrollador">
                             <option value="0">SELECCIONA UN DESARROLLADOR</option>
-                            @foreach ($owners as $ownser)
-                                <option value="{{$ownser->id}}">{{ strtoupper($ownser->name)}} {{ strtoupper($ownser->lastName)}}</option>
+                            @foreach ($owners as $owner)
+                                <option value="{{$owner->idUser}}">{{ strtoupper($owner->name)}} {{ strtoupper($owner->lastName)}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -78,7 +78,7 @@
                         <select class="form-control select2" data-toggle="select2" id="responsableObra" name="responsableObra">
                             <option value="0">SELECCIONA UN DRO</option>
                             @foreach ($reponsables as $reponsable)
-                                <option value="{{$reponsable->id}}">{{  strtoupper($reponsable->name)}} {{ strtoupper($reponsable->lastName)}}</option>
+                                <option value="{{$reponsable->idUser}}">{{  strtoupper($reponsable->name)}} {{ strtoupper($reponsable->lastName)}}</option>
                             @endforeach
                         </select>
                     </div>

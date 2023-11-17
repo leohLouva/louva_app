@@ -6,9 +6,9 @@ Dropzone.autoDiscover = false;
     
     const dropzone = new Dropzone("#dropzone",{
         dictDefaultMessage:"Sube aquí tu imagen",
-        acceptedFiles:".png,.jpg,.jpeg,.gif,application/pdf",
-        addRemoveLinks: true, //permite al usuario remover la imagen
-        dictRemoveFile:"",
+        acceptedFiles:".png,.jpg,.jpeg,.gif",
+        addRemoveLinks: true, 
+        dictRemoveFile:"Borrar",
         maxFiles:15,
         parallelUploads:10,
         uploadMultiple:false,
@@ -20,7 +20,7 @@ Dropzone.autoDiscover = false;
                 console.log("Flimage ya tiene dato");
                 
             }else{
-                console.log("entra el else de init")   
+                console.log("FLIMAGE no tiene datossssss")   
             }
     
         }
@@ -28,8 +28,14 @@ Dropzone.autoDiscover = false;
 
     dropzone.on('success', function(file,response){
 
-        console.log(response.message);
-        document.querySelector('[id="folderName"]').value = response.folderName;
+        mostrarModal('BIEN HECHO!',response.message,'1');
+        setTimeout(function () {
+            if(response.redirect == '0'){
+
+            }else{
+                window.location.href = response.redirect;
+            }
+        }, 2000);
         document.querySelector('[name="flImage"]').value = response.imagen;
     });
     
@@ -55,112 +61,6 @@ Dropzone.autoDiscover = false;
     }
     
     
-    // var waitingDialog = waitingDialog || (function ($) {
-    //     'use strict';
-    
-    // 	// Creating modal dialog's DOM
-    // 	var $dialog = $(
-    // 		'<div class="modal " data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">' +
-    // 		'<div class="modal-dialog modal-m">' +
-    // 		'<div class="modal-content">' +
-    // 			'<div class="modal-header"><h3 id="titleDialog" style="margin:0;"></h3></div>' +
-    // 			'<div class="modal-body">' +
-    // 				'<div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>' +
-    // 			'</div>' +
-    // 		'</div></div></div>');
-    
-    // 	return {
-    // 		/**
-    // 		 * Opens our dialog
-    // 		 * @param message Custom message
-    // 		 * @param options Custom options:
-    // 		 * 				  options.dialogSize - bootstrap postfix for dialog size, e.g. "sm", "m";
-    // 		 * 				  options.progressType - bootstrap postfix for progress bar type, e.g. "success", "warning".
-    // 		 */
-    // 		show: function (message, options) {
-    // 			// Assigning defaults
-    // 			if (typeof options === 'undefined') {
-    // 				options = {};
-    // 			}
-    // 			if (typeof message === 'undefined') {
-    // 				message = 'Processing';
-    // 			}
-    // 			var settings = $.extend({
-    // 				dialogSize: 'm',
-    // 				progressType: '',
-    // 				onHide: null // This callback runs after the dialog was hidden
-    // 			}, options);
-    
-    // 			// Configuring dialog
-    // 			$dialog.find('.modal-dialog').attr('class', 'modal-dialog').addClass('modal-' + settings.dialogSize);
-    // 			$dialog.find('.progress-bar').attr('class', 'progress-bar');
-    // 			if (settings.progressType) {
-    // 				$dialog.find('.progress-bar').addClass('progress-bar-' + settings.progressType);
-    // 			}
-    // 			$dialog.find('h3').text(message);
-    // 			// Adding callbacks
-    // 			if (typeof settings.onHide === 'function') {
-    // 				$dialog.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
-    // 					settings.onHide.call($dialog);
-    // 				});
-    // 			}
-    // 			// Opening dialog
-    // 			$dialog.modal();
-    // 		},
-    // 		/**
-    // 		 * Closes dialog
-    // 		 */
-    // 		hide: function () {
-    // 			$dialog.modal('hide');
-    // 		}
-    // 	};
-    
-    // })(jQuery);
-    function showDialog(title,txtMessage,type) {
-      switch (type) {
-        case undefined:
-          type = BootstrapDialog.TYPE_DEFAULT;
-          break;
-        case "primary":
-          type = BootstrapDialog.TYPE_PRIMARY;
-          break;
-        case "warning":
-          type = BootstrapDialog.TYPE_WARNING;
-          break;
-        default:
-        type = BootstrapDialog.TYPE_PRIMARY;
-    
-          break;
-    
-      }
-    
-      if(title == undefined || title == "") { title = "SAM Manager"; }
-      if(txtMessage == undefined || txtMessage == "") { txtMessage = "Something wrong happened, contact an admin.";}
-    
-      //alert(title + " "+message +" "+ type);
-      BootstrapDialog.show({
-                     type: type,
-                     title: title,
-                     message: txtMessage,
-    
-                 });
-    }
-
-   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     function formatAMPM(date) {
         var hours = date.getHours();
         var minutes = date.getMinutes();
@@ -171,4 +71,6 @@ Dropzone.autoDiscover = false;
         var strTime = hours + ':' + minutes + ' ' + ampm;
         return strTime;
       }
+      
+
       

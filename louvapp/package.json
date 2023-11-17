@@ -13,12 +13,12 @@
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
         "sass": "^1.56.1",
-        "vite": "^4.0.0"
+        "vite": "^4.5.0"
     },
     "dependencies": {
         "apexcharts": "^3.42.0",
         "dropzone": "^6.0.0-beta.2",
-        "quagga": "^0.12.1",
+        "quagga": "^0.6.16",
         "tailwindcss": "^3.3.3"
     }
 }

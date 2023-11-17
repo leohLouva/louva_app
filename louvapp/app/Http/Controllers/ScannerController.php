@@ -14,35 +14,30 @@ class ScannerController extends Controller
     {
 
         $fechaFormateada = date("Y-m-d", strtotime($date));
+
+        $worker = DB::table('users')
+            //->join('worker_status_incidentes', 'users.status', '=', 'worker_status_incidentes.idWorker_status')
+            ->join('contractors', 'users.idContractor_contractors', '=', 'contractors.idContractor')
+            ->join('jobs', 'users.idJob_jobs', '=', 'jobs.idJob')
+            //->join('proyecto_empresa', 'proyecto_empresa.idContractor_project', '=', 'users.idContractor_contractors')
+            ->join('projects', 'projects.idProject', '=', 'users.idProject_user')
+            ->where('users.idUser', '=', $id)
+            ->get();
+
         $getJobs = DB::table('jobs')->get();
+        
         $getContractors = DB::table('contractors')->get();
+
         $getNameDocuments = DB::table('documentType')->get();
+        
         $getUser_type = DB::table('user_type')->get();
        
-        $getDocuments = DB::table('documents')
-            ->leftjoin('documentType', 'documentType.idDocument', '=', 'documents.idDocument_documentType')
-            ->where('idWorker_workers', $id)
-            ->get();
-        
-        $worker = DB::table('workers')
-            ->join('users', 'workers.idUser_worker', '=', 'users.id')
-            ->join('worker_status_incidentes', 'workers.status', '=', 'worker_status_incidentes.idWorker_status')
-            ->join('contractors', 'workers.idContractor_contractors', '=', 'contractors.idContractor')
-            ->join('jobs', 'workers.idJob_jobs', '=', 'jobs.idJob')
-            ->join('proyecto_empresa', 'proyecto_empresa.idContractor_project', '=', 'contractors.idContractor')
-            ->join('projects', 'projects.idProject', '=', 'proyecto_empresa.idProyecto')
-            ->where('workers.idWorker', '=', $id)
-            ->first();
 
-        //$date1 = $date->format('Y-m-d');
-        //checaremos que no exista registro de entrada de el día en curso
         $check = DB::table('attendences')
             ->where('attendences.idUser_worker', $id)
             ->whereDate('date', $fechaFormateada)
             ->first(); 
 
-
-        //checamos la fecha de la cual harás el registro
 
         if($check == NULL){//usuario no ha registrado entrada ni salida
             $arrayWorker = array(
@@ -69,7 +64,7 @@ class ScannerController extends Controller
                     'message' =>  '',
                     'horaEntrada' => $check->startTime,
                     'horaSalida' => 'SIN SALIDA REGISTRADA',
-                    'style' => ''// 'style=display:block'
+                    'style' => ''
                 );
             }else{
                 $arrayWorker = array(
@@ -79,7 +74,7 @@ class ScannerController extends Controller
                     'contractors' => $getContractors,
                     'types' => $getUser_type,
                     'message' =>  '',
-                    'style' => '',// 'style=display:none'
+                    'style' => '',
                     'horaEntrada' => $check->startTime,
                     'horaSalida' => $check->endTime,
                 );

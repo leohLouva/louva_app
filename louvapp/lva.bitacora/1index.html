@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+
+    <!-- App favicon -->
+    <link rel="icon" href="https://louvastudio.com/wp-content/uploads/2019/08/cropped-favicon-louva-new-32x32.png" sizes="32x32">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <!-- Or for RTL support -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!--Recaptcha v2-->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://apis.google.com/js/client.js"></script>
+
+
+    <title>Louva | Bitacora de trabajo</title>
+    <script>		
+        window.addEventListener("keypress", function(event){
+        if (event.keyCode == 13){
+            event.preventDefault();
+        }
+        }, false);
+    </script>
+    <style>
+        body {
+            background-color: #313a46; /* Cambia el color de fondo según tus preferencias */
+        }
+    
+        .logo-img {
+            background-image: url('https://louvastudio.com/wp-content/uploads/2019/08/whitelogo-louva.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            height: 190px; /* Ajusta la altura según tus necesidades */
+            background-color: #313a46;
+        }
+
+       
+
+        form label,
+        form select,
+        form input[type="text"],
+        form button {
+            color: white;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container mt-5">
+        
+        <div class="row">
+            <div class="col-12 logo-img">
+                
+            </div>
+        </div>
+        <h2 class="text-center" style="color: whitesmoke;">LVA Bitacora de trabajo</h2>
+
+        <div class="row">
+            <div class="col-4"></span> </div>
+            <div class="col-4 text-center">
+                <button type="button" class="btn btn-primary btn-circle" onclick="duplicateForm()">
+                    <i class="fas fa-plus"></i>
+                </button>
+                
+            </div>
+            <div class="col-4"></div>
+        </div>
+
+        <form id="form_bitacora" method="post" action="https://script.google.com/a/macros/louvastudio.com/s/AKfycbxifWWmnOwi10zW6bltILwR195w-FnzmulAc1tCEit9FfgTI8Mcht2Dogd63SgLuiwy/exec">
+            <div class="row" id="form_to_bitacora_1">
+
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="proyecto">Proyecto: <span id="miContenedor">1</span></label>
+                        <select class="form-select" id="proyecto" name="proyecto[]" data-placeholder="Elige de la lista">
+                            <option value="0">Elige una opción del menú</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoria">Categoria:</label>
+                        <select class="form-select" id="categoria" name="categoria[]" data-placeholder="Elige de la lista">
+                            <option value="0">Elige una opción del menú</option>
+    
+                        </select>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="porcentaje">Porcentaje de Trabajo:</label>
+                        <input type="number" class="form-control" id="porcentaje" name="porcentaje[]" min="0" max="100">
+                    </div>
+                </div>
+                <div class="col-4"></div>
+            </div>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4">                   
+                     <div class="form-group">
+                        <!--<div class="g-recaptcha" data-sitekey="6Lc6ZosoAAAAAAICroTNEOXqYiYUvKnuQQDFjDvT"></div>-->
+                    </div>
+                </div>
+                <div class="col-4"></div>
+            </div>
+        </form>
+
+        <div class="row" >
+            <div class="col-4"></div>
+            <div class="col-4">                
+                <button type="button" class="btn btn-primary" id="btnEnviar" onclick="enviarForm()">Enviar</button>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <br><br>
+        <div class="row" >
+            <span id="porcentajeTotal" class="badge badge-secondary"></span>
+            <table class="table table-dark" id="historial" style="display: none;" >
+                <thead>
+                    <tr>
+                    <th scope="col">Proyecto</th>
+                    <th scope="col">Categoria</th>
+                    <th scope="col">Porcentaje</th>
+                    </tr>
+                </thead>
+                
+            </table>
+        </div>
+    </div>
+
+  <!-- Modal -->
+<div class="modal fade" id="modalMsj" tabindex="-1" aria-labelledby="modalMsjLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalMsjLabel" style="color: red;">Cuidado!!!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <p id="msj"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!--Jquery-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="functions.js"></script>
+    <script>
+    </script>
+</body>
+</html>

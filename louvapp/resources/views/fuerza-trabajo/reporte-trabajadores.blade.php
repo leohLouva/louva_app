@@ -38,7 +38,7 @@
                 @endforeach
             </select>
             <br>
-            <button class="btn btn-primary" type="button" onclick="getSelectdata()" >Mostrar graficas</button>
+            <button class="btn btn-primary" type="button" onclick="getGraphicByProyect()" >Mostrar graficas</button>
 
         </div>
         <div class="col-8">

@@ -1,18 +1,8 @@
     
-    /*$( '#proyecto' ).select2( {
-        theme: 'bootstrap-5'
-    } );
-    $( '#categoria' ).select2( {
-        theme: 'bootstrap-5'
-    } );*/
 
-    function getValueSelectPro(){
-        proyecto = $("#proyecto").val();
-    }
+    function getValueSelectPro(){ proyecto = $("#proyecto").val(); }
 
-    function getValueSelectCat(){
-        categoria = $("#categoria").val();
-    }
+    function getValueSelectCat(){ categoria = $("#categoria").val(); }
 
     function mostrarModal(errorMsj) {
         var paragraph = document.getElementById("msj");

@@ -16,11 +16,15 @@ class Documents extends Model
      *
      * @var array<int, string>
      */
+
+    protected $primaryKey = 'idDocument';
+    
     protected $fillable = [
         'id',
         'path',
         'idWorker_workers',
-        'idDocument_documentType',
+        'typeOfDocument',
+        'validated'
         
     ];
 

@@ -8,6 +8,22 @@ function convertirAMayusculas(input) {
     input.value = input.value.toUpperCase();
 }
 
+function getLocation(){
+    var estadoId = document.getElementById("estado").value;
+            if (estadoId > 0) {
+                $.ajax({
+                    url: '/municipios/' + estadoId,
+                    type: 'GET',
+                    success: function(data) {
+                        var locacionSelect = $('#location');
+                        locacionSelect.empty(); 
+                        $.each(data, function(key, value) {
+                            locacionSelect.append('<option value="' + value.idMunicipio + '">' + value.municipio.toUpperCase()  + '</option>');
+                        });
+                    }
+                });
+            }
+}
 
 function actualizarContractor(){
     nombreEmpresa = document.getElementById("nombreEmpresa").value;
@@ -53,8 +69,8 @@ function actualizarContractor(){
     if (estado.length < 1) {
         
     }
-    municipio = document.getElementById("municipio").value;
-    if (municipio.length < 1) {
+    location = document.getElementById("location").value;
+    if (location.length < 1) {
         
     }
     
@@ -83,8 +99,8 @@ function editarContractorON(){
     cp.disabled = false;
     estado = document.getElementById("estado");
     estado.disabled = false;
-    municipio = document.getElementById("municipio");
-    municipio.disabled = false;
+    location = document.getElementById("location");
+    location.disabled = false;
     folderName = document.getElementById("folderName");
     folderName.disabled = false;
     flImage = document.getElementById("flImage");
@@ -119,8 +135,8 @@ function editarContractorOFF(){
     cp.disabled = true;
     estado = document.getElementById("estado");
     estado.disabled = true;
-    municipio = document.getElementById("municipio");
-    municipio.disabled = true;
+    location = document.getElementById("location");
+    location.disabled = true;
     folderName = document.getElementById("folderName");
     folderName.disabled = true;
     flImage = document.getElementById("flImage");

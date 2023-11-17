@@ -31,11 +31,11 @@
                 <div class="card-body">            
                     <div class="mb-3">
                         <label class="form-label">NOMBRE DEL CONTRATISTA</label>
-                        <input type="text" class="form-control" name="nombreEmpresa" id="nombreEmpresa" oninput="convertirAMayusculas(this)">
+                        <input type="text" class="form-control" name="nombreEmpresa" id="nombreEmpresa" oninput="this.value = this.value.toUpperCase()">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">REGISTRO FEDERAL DEL CONTRIBUYENTE</label>
-                        <input type="text" class="form-control" name="rfc" id="rfc" >
+                        <input type="text" class="form-control" name="rfc" id="rfc" oninput="this.value = this.value.toUpperCase()" >
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="validationCustomUsername">EMAIL</label>
@@ -47,7 +47,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="validationCustom03">TELÉFONO</label>
-                        <input type="text" class="form-control" name="telefono" id="telefono" oninput="convertirAMayusculas(this)">
+                        <input type="text" class="form-control" name="telefono" id="telefono" oninput="this.value = this.value.toUpperCase()">
                         
                     </div>
                     <div class="mb-3">
@@ -56,7 +56,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">ACTIVIDAD</label>
-                        <input type="text" class="form-control" name="actividad" id="actividad" oninput="convertirAMayusculas(this)">
+                        <input type="text" class="form-control" name="actividad" id="actividad" oninput="this.value = this.value.toUpperCase()">
                     </div>
                 </div>
             </div>
@@ -75,29 +75,31 @@
                     </div>       
                     <div class="mb-3">
                         <label class="form-label">DOMICILIO</label>
-                        <input type="text" class="form-control" name="domicilio" id="domicilio" oninput="convertirAMayusculas(this)">
+                        <input type="text" class="form-control" name="domicilio" id="domicilio" oninput="this.value = this.value.toUpperCase()">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">CÓDIGO POSTAL</label>
-                        <input type="text" class="form-control" name="cp" id="cp" oninput="convertirAMayusculas(this)">
+                        <input type="text" class="form-control" name="cp" id="cp" oninput="this.value = this.value.toUpperCase()">
                     </div>
                     <div class="mb-3">    
                         <label class="form-label">ESTADO</label>
-                        <select class="form-control select2" data-toggle="select2" id="estado" name="estado" oninput="convertirAMayusculas(this)">
+                        
+                        <select class="form-control select2" data-toggle="select2" id="estado" name="estado" onchange="getLocation()" oninput="convertirAMayusculas(this)">
+
                             <option value="0">SELECCIONA UN ESTADO</option>
                             @foreach ($states as $state)
-                                <option value="{{$state->idEstado}}">{{$state->estado}}</option>
+                                <option value="{{$state->idEstado}}">{{strtoupper($state->estado)}}</option>
                             @endforeach
                         </select>
                     </div> 
                     <div class="mb-3">
                         <label class="form-label">MUNICIPIO</label>
-                        <select class="form-control select2" data-toggle="select2" id="municipio" name="municipio" oninput="convertirAMayusculas(this)">
+                        <select class="form-control select2" data-toggle="select2" id="location" name="location" >
                             <option value="0">ELIGE UN MUNICIPIO SEGÚN EL ESTADO</option>
                         </select>
                     </div> 
                     <div class="mb-3">
-                        <input type="hidden" class="form-control" id="folderName" name="folderName" value="">
+
                         <input type="hidden" class="form-control" name="flImage" id="flImage" value="">
                         
                     </div>
@@ -137,32 +139,6 @@
         </div>
     </div>
 </div>
-<script>
-    $('#estado').on('change', function() {
-            var estadoId = $(this).val();
-            if (estadoId > 0) {
-                $.ajax({
-                    url: '/municipios/' + estadoId,
-                    type: 'GET',
-                    success: function(data) {
-                        var locacionSelect = $('#municipio');
-                        locacionSelect.empty(); 
-                        console.log(data);
-                        $.each(data, function(key, value) {
-                            console.log(value);
-                            locacionSelect.append('<option value="' + value.idMunicipio + '">' + value.municipio + '</option>');
-                        });
-                    }
-                });
-            }
-        });
-    document.getElementById("nombreEmpresa").oninput = () => {
 
-        const input = document.getElementById('nombreEmpresa');
-        const output = document.getElementById('nombreEmpresaF');
-
-  output.value = input.value;
-};
-</script>
 
 @endsection

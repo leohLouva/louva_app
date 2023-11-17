@@ -21,7 +21,7 @@
         <div class="page-title-box">                                    
             <div class="page-title-right">
             </div>
-            <h4 class="header-title">INFORMACIÓN DEL PROYECTO </h4>
+            <h4 class="header-title">DETALLES DE LA OBRA </h4>
         </div>
     </div>
 
@@ -49,7 +49,7 @@
                     <div class="row">
                         <div class="col-4">
                             <div class="d-flex justify-content-center align-items-center">
-                                <img class="card-img-top" src="{{ asset("uploads/proyectos/$projects->projectImage") }}" alt="project image cap" style="max-width: 250px; max-height: 250px;">
+                                <img class="card-img-top" src="{{ asset("uploads/obras/$projects->projectImage") }}" alt="project image cap" style="max-width: 250px; max-height: 250px;">
                             </div>
                             <div class="card">
                                 <div class="card-body">
@@ -57,7 +57,7 @@
                                         <a href="#" class="text-success stretched-link">{{ $projects->projectName}}</a>
                                     </h5>
                                     <p class="card-text">
-                                        {{$projects->description}}
+                                        {{strtoupper($projects->description)}}
                                     </p>
                                     
                                     <div class="row">
@@ -68,7 +68,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <h5>FECHA</h5>
-                                            <p>{{ $projects->fechaInicio }}</p>
+                                            <p>{{  date('d-m-Y', strtotime($projects->fechaInicio))}}</p>
                                         </div>
                                        
                                         <div class="col-md-6">
@@ -76,70 +76,7 @@
                                             <p>$ {{ $projects->totalScheduledCost }}</p>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <table class="table table-dark mb-0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Phone Number</th>
-                                                        <th>Date of Birth</th>
-                                                        <th>Active?</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Risa D. Pearson</td>
-                                                        <td>336-508-2157</td>
-                                                        <td>July 24, 1950</td>
-                                                        <td>
-                                                            <!-- Switch-->
-                                                            <div>
-                                                                <input type="checkbox" id="switch6" data-switch="success"/>
-                                                                <label for="switch6" data-on-label="Yes" data-off-label="No" class="mb-0 d-block"></label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Ann C. Thompson</td>
-                                                        <td>646-473-2057</td>
-                                                        <td>January 25, 1959</td>
-                                                        <td>
-                                                            <!-- Switch-->
-                                                            <div>
-                                                                <input type="checkbox" id="switch7" checked data-switch="success"/>
-                                                                <label for="switch7" data-on-label="Yes" data-off-label="No" class="mb-0 d-block"></label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Paul J. Friend</td>
-                                                        <td>281-308-0793</td>
-                                                        <td>September 1, 1939</td>
-                                                        <td>
-                                                            <!-- Switch-->
-                                                            <div>
-                                                                <input type="checkbox" id="switch8" data-switch="success"/>
-                                                                <label for="switch8" data-on-label="Yes" data-off-label="No" class="mb-0 d-block"></label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Sean C. Nguyen</td>
-                                                        <td>269-714-6825</td>
-                                                        <td>February 5, 1994</td>
-                                                        <td>
-                                                            <!-- Switch-->
-                                                            <div>
-                                                                <input type="checkbox" id="switch10" checked data-switch="success"/>
-                                                                <label for="switch10" data-on-label="Yes" data-off-label="No" class="mb-0 d-block"></label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                                    
                                 </div> 
                             </div>
                             
@@ -150,19 +87,19 @@
                             <form action="/editingProject/{{ $projects->idProject }}" method="POST" id="editingProject">
                                 @csrf
                             <div class="mb-3">
-                                <label class="form-label">NOMBRE DEL PROYECTO</label>
+                                <label class="form-label">OBRA</label>
                                 <input type="text" id="nombre" name="nombre" class="form-control" placeholder="" value="{{$projects->projectName}}" oninput="convertirAMayusculas(this)" disabled>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">DESCRIPCIÓN DEL PROYECTO</label>
-                                <textarea class="form-control" name="descripcion" id="descripcion" rows="5" placeholder="" maxlength="140" oninput="convertirAMayusculas(this)" disabled>{{$projects->description}}</textarea>
+                                <label class="form-label">DESCRIPCIÓN</label>
+                                <textarea class="form-control" name="descripcion" id="descripcion" rows="5" placeholder="" maxlength="140" oninput="convertirAMayusculas(this)" disabled>{{strtoupper($projects->description)}}</textarea>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">NOMBRE DEL DESARROLLADOR</label>
                                 <select class="form-control select2" data-toggle="select2" id="desarrollador" name="desarrollador" oninput="convertirAMayusculas(this)" disabled>
                                     <option value="0">SELECCIONA UN DESARROLLADOR</option>
                                     @foreach ($owners as $owner)
-                                        <option value="{{$owner->idUser_worker}}"@if ($owner->idUser_worker == $projects->idUser_projectManager) selected @endif>{{strtoupper($owner->name)}} {{strtoupper($owner->lastName)}}</option>
+                                        <option value="{{$owner->idUser}}"@if ($owner->idUser == $projects->idUser_projectManager) selected @endif>{{strtoupper($owner->name)}} {{strtoupper($owner->lastName)}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -171,7 +108,7 @@
                                 <select class="form-control select2" data-toggle="select2" id="responsableObra" name="responsableObra" oninput="convertirAMayusculas(this)" disabled>
                                     <option value="0">SELECCIONA UN DRO</option>
                                     @foreach ($reponsables as $reponsable)
-                                        <option value="{{$reponsable->id}}"@if ($reponsable->id == $projects->idUser_workManager) selected @endif>{{$reponsable->name}} {{$reponsable->lastName}}</option>
+                                        <option value="{{$reponsable->idUser}}"@if ($reponsable->idUser == $projects->idUser_workManager) selected @endif>{{$reponsable->name}} {{$reponsable->lastName}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -179,13 +116,13 @@
                                 <label class="form-label">FECHA DE INICIO</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="inputGroupPrepend"><i class="ri-calendar-2-fill"></i></span>
-                                    <input type="text" class="form-control" name="fechaInicio" id="fechaInicio" placeholder="" aria-describedby="inputGroupPrepend" data-provide="datepicker" data-date-container="#datepicker1" data-date-format="d-M-yyyy" data-date-autoclose="true"  value="{{$projects->fechaInicio}}" oninput="convertirAMayusculas(this)" disabled>
+                                    <input type="text" class="form-control" name="fechaInicio" id="fechaInicio" placeholder="" aria-describedby="inputGroupPrepend" data-provide="datepicker" data-date-container="#datepicker1" data-date-format="d-M-yyyy" data-date-autoclose="true"  value="{{ date('d-m-Y', strtotime($projects->fechaInicio))}}" oninput="convertirAMayusculas(this)" disabled>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">TIPO DE PROYECTO</label>
+                                <label class="form-label">TIPO</label>
                                 <select class="form-control select2" data-toggle="select2" id="tipoProyecto" name="tipoProyecto" oninput="convertirAMayusculas(this)" disabled>
-                                    <option value="0">SELECCIONA UN TIPO DE PROYECTO</option>
+                                    <option value="0">SELECCIONA UN TIPO</option>
                                     @foreach ($project_types as $project_type)
                                         <option value="{{$project_type->idProject_type}}"@if ($projects->projectType == $project_type->idProject_type) selected @endif>{{$project_type->nameProject_type}}</option>
                                     @endforeach
@@ -216,28 +153,33 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">DIRECCIÓN</label>
-                                <input type="text" id="direccion" name="direccion" class="form-control" value="{{$projects->address}}" oninput="convertirAMayusculas(this)" disabled>
+                                <input type="text" id="direccion" name="direccion" class="form-control" value="{{strtoupper($projects->address)}}" disabled oninput="this.value = this.value.toUpperCase()">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">ESTADO</label>
-                                <select class="form-control select2" data-toggle="select2" id="estado" name="estado" oninput="convertirAMayusculas(this)" disabled>
+                                <select class="form-control select2" data-toggle="select2" id="estado" name="estado" onchange="getLocation()" oninput="convertirAMayusculas(this)" disabled>
                                     <option value="0">SELECCIONA UN ESTADO</option>
                                     @foreach ($states as $state)
                                         <option value="{{$state->idEstado}}"@if ($state->idEstado == $projects->state) selected @endif>{{strtoupper($state->estado)}}</option>
                                     @endforeach
                                 </select>
                             </div> 
+
                             <div class="mb-3">
                                 <label class="form-label">LOCACIÓN</label>
-                                <input type="text" class="form-control" name="location" id="location" value="{{strtoupper($projects->municipio)}}" oninput="convertirAMayusculas(this)" disabled>
+                                <select class="form-control select2" data-toggle="select2" id="location" name="location" oninput="convertirAMayusculas(this)"  disabled>
+                                    @foreach ($locations as $location)
+                                        <option value="{{$location->idMunicipio}}"@if ($location->idMunicipio == $projects->location) selected @endif>{{strtoupper($location->municipio)}}</option>
+                                    @endforeach
+                                </select>
                             </div> 
                         
                             <div class="row">
                                 <div class="col-7">
                                     <input class="form-control" type="hidden" id="flImage" name="flImage" value="{{$projects->projectImage}}" oninput="convertirAMayusculas(this)" disabled>
                                     <input class="form-control" type="hidden" name="folderName" id="folderName" value="NA" oninput="convertirAMayusculas(this)" disabled>
-                                    <button type="button" class="btn btn-primary" onclick="editarProyectoON()" id="on-btn" style="display: block;">Editar Proyecto</button>
-                                    <button type="button" class="btn btn-primary" onclick="actualizarProyecto()" id="guardar-btn" style="display: none;">Guardar Proyecto</button>
+                                    <button type="button" class="btn btn-primary" onclick="editarProyectoON()" id="on-btn" style="display: block;">Editar</button>
+                                    <button type="button" class="btn btn-primary" onclick="actualizarProyecto()" id="guardar-btn" style="display: none;">Guardar</button>
                                 </div>             
                                 <div class="col-5">
                                     <button type="button" class="btn btn-danger" onclick="editarProyectoOFF()" id="off-btn" style="display: none;">Cancelar</button>
@@ -275,7 +217,7 @@
                                                 <td>{{date("d-m-Y", strtotime($attendence_worker->date))}}</td>
                                                 <td>{{$attendence_worker->startTime}}</td>
                                                 <td>{{$attendence_worker->endTime}}</td>
-                                                <td><a href="{{ route('scanner.show', ['date' => $attendence_worker->date,'id' => $attendence_worker->idWorker]) }}" target="_blank">REGISTRO</a></td>
+                                                <td><a href="{{ route('scanner.show', ['date' => $attendence_worker->date,'id' => $attendence_worker->idUser]) }}" target="_blank">REGISTRO</a></td>
                                             </tr>
                                         @endforeach
                                         </tbody>
@@ -291,14 +233,14 @@
                         <div class="col-6">
                             <input type="hidden" id="idProyecto" value="{{$projects->idProject}}">
                             <div id="datepicker2">
-                                <input type="text" class="form-control" id="fechaInicioScript" name="fechaInicioScript"  autocomplete="off" data-provide="datepicker" data-date-container="#datepicker2" data-date-format="d-M-yyyy" data-date-autoclose="true" placeholder="Elige una fecha">
+                                <input type="text" class="form-control" id="fechaInicioScript" name="fechaInicioScript"  autocomplete="off" data-provide="datepicker" data-date-container="#datepicker2" data-date-format="d-M-yyyy" data-date-autoclose="true" placeholder="ELIGE UNA FECHA" value="{{ date('d-m-Y', strtotime($projects->fechaInicio))}}">
                             </div>
                         </div>
                         <div class="col-3">
-                            <button class="btn btn-primary" type="button" onclick="getGraphic()" >Filtrar por empresas</button>
+                            <button class="btn btn-primary" type="button" onclick="getGraphic()" >FILTRAR POR EMPRESA</button>
                         </div>
                         <div class="col-3">
-                            <button class="btn btn-primary" type="button" onclick="graficaPorPuestoEnProyecto()" >Filtrar por puestos</button>
+                            <button class="btn btn-primary" type="button" onclick="graficaPorPuestoEnProyecto()" >FILTRAR POR PUESTOS</button>
                         </div>
                     </div>
                     <div class="row">
@@ -334,16 +276,7 @@
     <script src="{{ asset("/assets/vendor/daterangepicker/moment.min.js") }}"></script>
     <script src="{{ asset("/assets/vendor/daterangepicker/daterangepicker.js") }}"></script>
 
-    <script>
-        $(document).ready(function() {
-            var 
-            Actual = new Date();
-            var fechaFormateada = formatearFecha(fechaActual);
-            $("#fechaInicioScript").val(fechaFormateada);
 
-           
-        });
-    </script>
 @endsection
 @push('scriptDatatable')
     <!-- Datatables js -->

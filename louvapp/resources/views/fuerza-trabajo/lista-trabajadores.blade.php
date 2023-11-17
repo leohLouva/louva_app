@@ -37,6 +37,7 @@
                             <table id="fixed-header-datatable" class="table w-100 nowrap">
                                 <thead>
                                     <tr>
+                                        <th>ID</th>
                                         <th>NOMBRE DEL TRABAJADOR</th>
                                         <th>EMPRESA</th>
                                         <th>PUESTO</th>
@@ -52,6 +53,7 @@
                                 <tbody>
                                     @foreach ($workers as $worker)
                                         <tr>
+                                            <td>{{$worker->idUser}}</td>
                                             <td>{{strtoupper($worker->lastName)}} {{strtoupper($worker->name)}}</td>
                                             <td>{{strtoupper($worker->contractorName)}}</td>
                                             <td>{{strtoupper($worker->jobName)}}</td>
@@ -61,7 +63,7 @@
                                             <td>{{strtoupper($worker->blodType)}}</td>
                                             <td>{{strtoupper($worker->chronicDiseases)}}</td>
                                             <td>{{strtoupper($worker->alergies)}}</td>
-                                            <td><a href="{{ route('fuerza-trabajo.editar-trabajador.show', ['idWorker' => $worker->idWorker]) }}" class="btn btn-outline-success rounded-pill"><i class="mdi mdi-account me-1"></i>VER DETALLE</a></td>
+                                            <td><a href="{{ route('fuerza-trabajo.editar-trabajador.show', ['idUser' => $worker->idUser]) }}" class="btn btn-outline-success rounded-pill" target="_blank"><i class="mdi mdi-account me-1"></i>VER DETALLE</a></td>
                                         </tr>
                                     @endforeach
                                 </tbody>

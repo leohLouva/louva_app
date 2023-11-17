@@ -9,30 +9,36 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\File;
+use Illuminate\Support\Str;
 use App\ProyectoEmpresa;
 use App\Attendence;
+use Intervention\Image\Facades\Image;
+
 
 class ProjectController extends Controller
 {
         //ver lista de usuarios
         public function index()
         {
-            //$project = Project::all(); 
-            $project = DB::table('projects')
-            ->orderBy('created_at', 'desc')
-            ->get();
-            return view('proyectos/lista-proyectos', ['projects' => $project]);
+            $perPage = 4;
+            $projects = DB::table('projects')
+                ->join('estados', 'projects.state', '=', 'estados.idEstado')
+                ->join('municipios', 'projects.location', '=', 'municipios.idMunicipio')
+                ->orderBy('created_at', 'desc')
+                ->paginate($perPage);
+
+            return view('obras/lista-obras', ['projects' => $projects]);
         }
 
         public function verAgregarProyecto()
         {
             $getStates = DB::table('estados')->get();
+
             $getOwner = DB::table('users')
-                ->join('workers', 'workers.idUser_worker', '=', 'users.id')
                 ->where('users.idType_user_type', '=', 4)
                 ->get();
+
             $getResponsable = DB::table('users')
-                ->join('workers', 'workers.idUser_worker', '=', 'users.id')
                 ->where('users.idType_user_type', '=', 2)
                 ->get();
             $getProjectType = DB::table('project_type')
@@ -41,7 +47,7 @@ class ProjectController extends Controller
             $getSystemConst = DB::table('construction_system')
                 ->get();
 
-            return view('proyectos/agregar-proyecto', [
+            return view('obras/agregar-proyecto', [
                 'states' => $getStates,
                 'owners' => $getOwner,
                 'reponsables' => $getResponsable,
@@ -97,6 +103,31 @@ class ProjectController extends Controller
             
         }
 
+        public function storeProject(Request $request)
+        {
+            try{
+                $imageFile = $request->file('file');
+                $imageName = Str::uuid() . "." . $imageFile->extension();
+                $imageServer = Image::make($imageFile);
+                $imageServer->fit(1000,1000);
+
+                $imagePath = public_path('uploads/obras') . '/' . $imageName;
+                $imageServer->save($imagePath);
+                return response()->json([
+                    'status' => '1',
+                    'message' => 'Imágen almacenada con éxito',
+                    'imagen' => $imageName,
+                    'redirect' => '0'
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => 'Error',
+                    'message' => $e->getMessage()
+                ]);
+            }
+    
+        }
+
         public function show($id){
 
             $project = DB::table('projects')
@@ -106,14 +137,17 @@ class ProjectController extends Controller
                 ->first();
             
             $getStates = DB::table('estados')->get();
-                
+             
+            $getMunicipio = DB::table('municipios')
+            ->join('estados_municipios', 'estados_municipios.municipios_id', '=', 'municipios.idMunicipio')
+            ->where('estados_municipios.estados_id', '=', $project->state)
+            ->get();
+             
             $getOwner = DB::table('users')
-                ->join('workers', 'workers.idUser_worker', '=', 'users.id')
                 ->where('users.idType_user_type', '=', 4)
                 ->get();
              
             $getResponsable = DB::table('users')
-                ->join('workers', 'workers.idUser_worker', '=', 'users.id')
                 ->where('users.idType_user_type', '=', 2)
                 ->get();
 
@@ -123,8 +157,8 @@ class ProjectController extends Controller
             ->get();
 
             $attendences = DB::table('attendences')
-                ->join('workers', 'attendences.idUser_worker', '=', 'workers.idWorker')
-                ->join('jobs', 'workers.idJob_jobs', '=', 'jobs.idJob')
+                ->join('users', 'attendences.idUser_worker', '=', 'users.idUser')
+                ->join('jobs', 'users.idJob_jobs', '=', 'jobs.idJob')
                 ->join('contractors', 'attendences.idContractor_contractors', '=', 'contractors.idContractor')
                 ->distinct()
                 ->where('attendences.idProject_project', $id)
@@ -137,8 +171,9 @@ class ProjectController extends Controller
             $getSystemConst = DB::table('construction_system')
                 ->get();
 
-            return view('proyectos/editar-proyecto', [
+            return view('obras/editar-proyecto', [
                 'states' => $getStates,
+                'locations' => $getMunicipio,
                 'owners' => $getOwner,
                 'reponsables' => $getResponsable,
                 'projects' => $project,
@@ -166,7 +201,7 @@ class ProjectController extends Controller
                 'squareMeterSotano' => $request->mtsSotano,
                 'projectType' => $request->tipoProyecto,
                 'address' => $request->direccion,
-                'location' => $request->municipio,
+                'location' => $request->location,
                 'state' => $request->estado,
                 'constructionSystem' => $request->sistemaConstruccion,
                 'idUser_projectManager' => $request->desarrollador,
@@ -186,8 +221,6 @@ class ProjectController extends Controller
             $contractors = DB::table('contractors')
             ->join('proyecto_empresa', 'contractors.idContractor', '=', 'proyecto_empresa.idContractor_project')
             ->get();
-
-            
             return view('select_project', ['contractors' => $contractors]);
         }
         
@@ -201,7 +234,7 @@ class ProjectController extends Controller
             $dateToSearch = "2023-10-24"; // La fecha que deseas buscar
 
             $getWorkersbyDay = DB::table('attendences')
-                ->join('workers', 'workers.idWorker', '=', 'attendences.idUser_worker')
+                ->join('users', 'users.idUser', '=', 'attendences.idUser_worker')
                 ->join('proyecto_empresa', 'proyecto_empresa.idProyecto', '=' , 'attendences.idProject_project')
                 ->where('date', $dateToSearch)
                 ->where('proyecto_empresa.idContractor_project', $request->idEmpresa)
@@ -224,8 +257,8 @@ class ProjectController extends Controller
             $getWorkersbyDay = DB::table('attendences')
                 ->select('attendences.idContractor_contractors', 'c.contractorName AS empresa','ft_programado_empresa_proyectos.ft_programado', DB::raw('COUNT(*) as cuenta_checkin'))
                 ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor',)
-                ->join('workers', 'workers.idWorker', '=', 'attendences.idUser_worker')
-                ->join('jobs', 'jobs.idJob', '=', 'workers.idJob_jobs')
+                ->join('users', 'users.idUser', '=', 'attendences.idUser_worker')
+                ->join('jobs', 'jobs.idJob', '=', 'users.idJob_jobs')
                 //->join('ft_programado_empresa_proyectos', 'attendences.idProject_project', '=', 'ft_programado_empresa_proyectos.idProject_FT_projects')
                 ->join('ft_programado_empresa_proyectos', function ($join) {
                     $join->on('attendences.idProject_project', '=', 'ft_programado_empresa_proyectos.idProject_FT_projects')
@@ -269,15 +302,6 @@ class ProjectController extends Controller
             $timestamp = strtotime($dateToSearchAntes);
             $dateToSearch = date("Y-m-d", $timestamp);
 
-            /*$getWorkersbyDay = DB::table('attendences')
-                ->select('attendences.idContractor_contractors', 'c.contractorName AS empresa', DB::raw('COUNT(*) as cuenta_checkin'))
-                ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor')
-                ->join('workers', 'workers.idWorker', '=', 'attendences.idUser_worker')
-                ->join('jobs', 'jobs.idJob', '=', 'workers.idJob_jobs')
-                ->where('date', $dateToSearch)
-                ->where('attendences.idProject_project', $request->idProyecto)
-                ->groupBy('attendences.idContractor_contractors', 'c.contractorName')
-                ->get();*/
                 $getGobsByDay = DB::table('attendences')
                 ->select(
                     'attendences.idContractor_contractors',
@@ -286,8 +310,8 @@ class ProjectController extends Controller
                     DB::raw('COUNT(*) as cuenta_checkin')
                 )
                 ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor')
-                ->join('workers', 'workers.idWorker', '=', 'attendences.idUser_worker')
-                ->join('jobs as j', 'j.idJob', '=', 'workers.idJob_jobs')
+                ->join('users', 'users.idUser', '=', 'attendences.idUser_worker')
+                ->join('jobs as j', 'j.idJob', '=', 'users.idJob_jobs')
                 ->where('date', $dateToSearch)
                 ->where('attendences.idProject_project', $request->idProyecto)
                 ->groupBy('attendences.idContractor_contractors', 'c.contractorName', 'j.jobName') // Agrupar también por el puesto
@@ -305,5 +329,28 @@ class ProjectController extends Controller
             ]);
 
         }
+
+        public function buscarProyectos(Request $request)
+        {
+            $q = $request->input('q');
+
+            $projects = Project::join('estados', 'projects.state', '=', 'estados.idEstado')
+            ->join('municipios', 'projects.location', '=', 'municipios.idMunicipio')
+            ->where('projectName', 'LIKE', "%$q%")
+            ->orWhere('estados.estado', 'LIKE', "%$q%")
+            ->orWhere('municipios.municipio', 'LIKE', "%$q%")
+            ->paginate(5);
+
+            //return view('tus-obras-partial', compact('projects'))->render();
+            return view('obras/lista-obras', ['projects' => $projects]);
+
+            /*return response()->json([
+                'redirect' =>  route('fuerza-trabajo.editar-trabajador.show', ['idUser' => $user->idUser])
+                'status' => '1',
+                'message' => 'DOCUMENTO ALMACENADO CON ÉXITO',
+                'projects' => $projects
+            ]);*/
+        }
+
 
 }

@@ -40,16 +40,19 @@ Route::middleware(['auth'])->group(function () {
 
     /****PROYECTOS****/
     //Ver Proyectos
-    Route::get('proyectos/lista-proyectos', [App\Http\Controllers\ProjectController::class, 'index'])->name('lista-proyectos.index');
+    Route::get('obras/lista-obras', [App\Http\Controllers\ProjectController::class, 'index'])->name('lista-obras.index');
+    Route::get('/listado-obras/buscar', [App\Http\Controllers\ProjectController::class, 'buscarProyectos'])->name('proyectos.buscar');
+
     Route::get('proyectos/agregar-proyecto', [App\Http\Controllers\ProjectController::class, 'verAgregarProyecto'])->name('agregar-proyecto.verAgregarProyecto');
 
     Route::post('addingProject', [App\Http\Controllers\ProjectController::class, 'store'])->name('addingProject');
     Route::post('addingProyecto', [App\Http\Controllers\ProjectController::class, 'store'])->name('addingProject');
     //Route::post('/editarProyecto', [App\Http\Controllers\ProjectController::class, 'update'])->name('project.update');
-
+    Route::get('/proyecto/{id}', [App\Http\Controllers\ProjectController::class, 'detalle'])->name('proyecto.detalle');
+    Route::post('/image/projectImage', [App\Http\Controllers\ProjectController::class, 'storeProject'])->name('imagenes.storeProject');
     Route::get('/proyectos/editar-proyecto/{id}', [App\Http\Controllers\ProjectController::class, 'show'])->name('editar-proyecto.show');
     Route::post('/editingProject/{id}',[App\Http\Controllers\ProjectController::class,'update'])->name('editando-proyecto.update');
-    Route::get('/municipios/{estadoId}', [App\Http\Controllers\MunicipioController::class,'obtenerMunicipiosPorEstado']);
+    Route::get('/municipios/{contratistaId}', [App\Http\Controllers\MunicipioController::class,'obtenerMunicipiosPorEstado']);
 
     /***CONTRATISTAS */
     Route::get('contratista/lista-contratista', [App\Http\Controllers\ContractorController::class, 'index'])->name('lista-contratistas.index');
@@ -57,22 +60,41 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/addingContractor', [App\Http\Controllers\ContractorController::class, 'store']);
     Route::get('/contratista/editar-contratista/{id}', [App\Http\Controllers\ContractorController::class, 'show'])->name('editar-contratista.show');
     Route::post('/contratista/editando-contratista/{id}',[App\Http\Controllers\ContractorController::class,'update'])->name('editando-contratista.update');
+    Route::get('/contratista/buscar', [App\Http\Controllers\ContractorController::class, 'buscarEmpresa'])->name('empresas.buscar');
+
     Route::get('fuerza-trabajo/lista-trabajadores/{idContractor}', [App\Http\Controllers\ContractorController::class, 'indexFuerza'])->name('lista-trabajadores.indexFuerza');
 
     /***FUERZA DE TRABAJO */
-    Route::get('fuerza-trabajo/lista-trabajadores', [App\Http\Controllers\WorkerController::class, 'index'])->name('lista-trabajadores.index');
-    //Route::get('fuerza-trabajo/credenciales-trabajadores', [App\Http\Controllers\WorkerController::class, 'indexC'])->name('credenciales-trabajadores.indexC');
-    Route::get('fuerza-trabajo/editar-trabajador/{idWorker}', [App\Http\Controllers\WorkerController::class, 'show'])->name('fuerza-trabajo.editar-trabajador.show');
+    Route::get('fuerza-trabajo/lista-trabajadores', [App\Http\Controllers\UserController::class, 'index'])->name('lista-trabajadores.index');
+    Route::get('fuerza-trabajo/editar-trabajador/{idUser}', [App\Http\Controllers\UserController::class, 'show'])->name('fuerza-trabajo.editar-trabajador.show');
     Route::get('fuerza-trabajo/agregar-trabajador', [App\Http\Controllers\WorkerController::class, 'verAgregarTrabajador'])->name('agregar-trabajador.verAgregarTrabajador');
-    Route::post('/addingWorker',[App\Http\Controllers\WorkerController::class,'store'])->name('addingWorker');
-    Route::post('/fuerza-trabajo/editar-trabajador/editing/{idWorker}',[App\Http\Controllers\WorkerController::class,'update'])->name('profile.update');
-    Route::post('/validar-documentos', [App\Http\Controllers\DocumentsController::class, 'validateDocuments'])->name('validateDocuments');
+    //obtiene los proyectos relacionados a la empresa
+    Route::get('/obteberProyectos/{contratistaId}', [App\Http\Controllers\UserController::class,'getProjects']);
+    //guarda usuario
+    Route::post('/addingWorker',[App\Http\Controllers\UserController::class,'store'])->name('addingWorker');
+    //edita usuario
+    Route::post('/editingWorker/{idUser}', [App\Http\Controllers\UserController::class, 'update'])->name('editingWorker');
+    //TABS DE obtener documentos
+    Route::get('/obtenerDocumentos/{idUser}', [App\Http\Controllers\UserController::class, 'obtenerDocumentos'])->name('obtenerDocumentos');
+    //eliminarArchivo
+    Route::delete('/eliminarArchivo/{idDocument}',  [App\Http\Controllers\UserController::class, 'eliminar'])->name('eliminarArchivo');
+    //Subir documentos
+    Route::post('/uploadDocumentation', [App\Http\Controllers\UserController::class, 'storeDocuments'])->name('uploadDocumentation');
+    //agregar imagen
+    Route::post('/image/worker', [App\Http\Controllers\UserController::class, 'storeImgProfileWorker'])->name('imagenes.storeImgProfileWorker');
+    //agregar imagen
+    Route::post('/image/edit/worker', [App\Http\Controllers\UserController::class, 'storeImgProfileWorkerUpdate'])->name('imagenes.storeImgProfileWorkerUpdate');
+    //valida documentos
+    Route::get('/validateDoc/{idUser}', [App\Http\Controllers\UserController::class, 'getValidateDocuments'])->name('validateDoc');
+    //actualizar validacion de documentos
+    Route::post('/actualizar-estado-documentos', [App\Http\Controllers\UserController::class, 'actualizarEstadoDocumentos'])->name('actualizarEstadoDocumentos');
+
     //para escanear y checar entrada y salida del trabajador
     Route::get('fuerza-trabajo/scanner/{date}/{id}', [App\Http\Controllers\ScannerController::class, 'show'])->name('scanner.show');
     //Reporte gráfico
     
-    Route::post('registro-entrada/{idWorker}',[App\Http\Controllers\ScannerController::class,'checarEntrada'])->name('scanner.checarEntrada');
-    Route::post('registro-salida/{idWorker}',[App\Http\Controllers\ScannerController::class,'checarSalida'])->name('scanner.checarSalida');
+    Route::post('registro-entrada/{idUser}',[App\Http\Controllers\ScannerController::class,'checarEntrada'])->name('scanner.checarEntrada');
+    Route::post('registro-salida/{idUser}',[App\Http\Controllers\ScannerController::class,'checarSalida'])->name('scanner.checarSalida');
 
 
     Route::get('fuerza-trabajo/reporte-trabajadores', [App\Http\Controllers\WorkerController::class, 'indexC'])->name('reporte-trabajadores.indexC');
@@ -86,15 +108,10 @@ Route::middleware(['auth'])->group(function () {
     //almacenar imagen de usuario
     Route::post('/image', [App\Http\Controllers\ImageController::class, 'storeUser'])->name('imagenes.storeUser');
     Route::post('/image', [App\Http\Controllers\ImageController::class, 'store'])->name('imagenes.store');
-    Route::post('/image/projectImage', [App\Http\Controllers\ImageController::class, 'storeProject'])->name('imagenes.storeProject');
     Route::post('/image/contractor', [App\Http\Controllers\ImageController::class, 'storeContractor'])->name('imagenes.storeContractor');
-    Route::post('/image/worker', [App\Http\Controllers\ImageController::class, 'storeImgProfileWorker'])->name('imagenes.storeImgProfileWorker');
-    //Subir documentos
-    Route::post('/pdfs', [App\Http\Controllers\WorkerController::class, 'storeDocuments']);
-    //eliminarArchivo
-    Route::delete('/eliminar-archivo/{id}',  [App\Http\Controllers\WorkerController::class, 'eliminar'])->name('eliminarArchivo');
     
-    
+    Route::get('/get-uploads-documents-content', [App\Http\Controllers\UserController::class, 'getUploadsDocumentsContent']);
+
 
 
 });

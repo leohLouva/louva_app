@@ -43,9 +43,9 @@
                                 </a>
                             </div>
                             <div class="card-body">
-                                <div class="ribbon ribbon-primary float-start"><i class="mdi mdi-account-hard-hat me-1"></i>{{$arrayWorker['worker']->statusName}}</div>
+                                <div class="ribbon ribbon-primary float-start"><i class="mdi mdi-account-hard-hat me-1"></i>{{$arrayWorker['worker'][0]->status}}</div>
                                 <div class="text-center">
-                                    <p>PROYECTO: {{ strtoupper($arrayWorker['worker']->projectName) }}</p>
+                                    <p>PROYECTO: {{ strtoupper($arrayWorker['worker'][0]->projectName) }}</p>
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="card rounded-0 shadow-none m-0">
@@ -59,22 +59,28 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <h4 class="mt-3 my-1">EMPRESA: {{ strtoupper($arrayWorker['worker']->contractorName) }} </h4>
+                                        <h4 class="">EMPRESA: {{ strtoupper($arrayWorker['worker'][0]->contractorName) }} </h4>
+                                        <h4 class="">PROYECTO: {{ strtoupper($arrayWorker['worker'][0]->projectName) }} </h4>
                                     </div>
-                                    <div class="text-center w-75 m-auto">
-                                        <img src="{{ asset("/uploads/empresa/{$arrayWorker['worker']->folderName}/{$arrayWorker['worker']->foldeName}/{$arrayWorker['worker']->imgWorker}") }}" height="150" alt="user-image" class="rounded-circle shadow">
-                                        <h4 class="mt-3 my-1">{{ strtoupper($arrayWorker['worker']->name) }} {{ strtoupper($arrayWorker['worker']->lastName) }} <i class="mdi mdi-check-decagram text-success"></i></h4>
+                                    <div class="text-center w-75 m-auto">                                        
+                                        @if($arrayWorker['worker'][0]->imgWorker)
+                                            <img src="{{ asset("/uploads/user_profile/{$arrayWorker['worker'][0]->imgWorker}") }}" height="150" alt="user-image" class="rounded-circle shadow">
+                                        @else
+                                            <img src="{{ asset('uploads/user_sample.png') }}" class="avatar-lg rounded-5" alt="Imagen de reemplazo">
+                                        @endif
+                                        
+                                        <h4 class="mt-3 my-1">{{ strtoupper($arrayWorker['worker'][0]->name) }} {{ strtoupper($arrayWorker['worker'][0]->lastName) }} <i class="mdi mdi-check-decagram text-success"></i></h4>
                                         <div class="border rounded p-2 mb-2">
-                                            CURP: {{ strtoupper($arrayWorker['worker']->curp) }} <br>
-                                            RFC: {{ strtoupper($arrayWorker['worker']->rfc) }} <br>
-                                            NSS: {{ strtoupper($arrayWorker['worker']->nss) }}
+                                            CURP: {{ strtoupper($arrayWorker['worker'][0]->curp) }} <br>
+                                            RFC: {{ strtoupper($arrayWorker['worker'][0]->rfc) }} <br>
+                                            NSS: {{ strtoupper($arrayWorker['worker'][0]->nss) }}
                                         </div>
                                     </div>
-                                    <hr class="bg-dark-lighten my-3">
+                                    <hr class="bg-dark-lighten">
 
-                                        <input type="hidden" name="idWorker" id="idWorker" value="{{$arrayWorker['worker']->idWorker}}">    
-                                        <input type="hidden" name="idProject_project" id="idProject_project" value="{{$arrayWorker['worker']->idProyecto}}">
-                                        <input type="hidden" name="idContractor_contractors" id="idContractor_contractors" value="{{$arrayWorker['worker']->idContractor_contractors}}">
+                                        <input type="hidden" name="idWorker" id="idWorker" value="{{$arrayWorker['worker'][0]->idUser}}">    
+                                        <input type="hidden" name="idProject_project" id="idProject_project" value="{{$arrayWorker['worker'][0]->idProject_user}}">
+                                        <input type="hidden" name="idContractor_contractors" id="idContractor_contractors" value="{{$arrayWorker['worker'][0]->idContractor_contractors}}">
                                         
                                         
                                         <table class="table mb-0" id="tableAttendences" style="display: {{$arrayWorker['style']}}">
@@ -111,8 +117,8 @@
         </footer>
 
     <script>
-        var checarEntradaRoute = '{{ route('scanner.checarEntrada', ['idWorker' => $arrayWorker['worker']->idWorker]) }}';
-        var checarSalidaRoute = '{{ route('scanner.checarSalida', ['idWorker' => $arrayWorker['worker']->idWorker]) }}';
+        var checarEntradaRoute = '{{ route('scanner.checarEntrada', ['idUser' => $arrayWorker['worker'][0]->idUser]) }}';
+        var checarSalidaRoute = '{{ route('scanner.checarSalida', ['idUser' => $arrayWorker['worker'][0]->idUser]) }}';
     </script>
 
     <!-- Vendor js -->

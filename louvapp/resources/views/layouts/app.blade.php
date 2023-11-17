@@ -118,21 +118,24 @@
                             <i class="ri-fullscreen-line font-22"></i>
                         </a>
                     </li>
+                    
                     <li class="dropdown">
                         <a class="nav-link dropdown-toggle arrow-none nav-user px-2" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                             <span class="account-user-avatar">
-                                <img src="{{ asset("/assets/images/users/avatar-1.jpg") }}" alt="user-image" width="32" class="rounded-circle">
+                                    @if(Auth::user()->imgWorker)
+                                        <img src="{{ asset('uploads/user_profile/' . Auth::user()->imgWorker) }}" alt="user-image" width="40" class="rounded-circle">
+                                    @else
+                                        <img src="{{ asset('uploads/user_sample.png') }}" alt="user-image-reemplazo" width="40" class="rounded-circle">
+                                    @endif
                             </span>
                             <span class="d-lg-flex flex-column gap-1 d-none">
-                                <h5 class="my-0"> {{ Auth::user()->userName }}</h5>
-                                <h6 class="my-0 fw-normal"></h6>
+                                <h6 class="text-overflow m-0">BIENVENIDO (A)</h6>
+                                <H6 class="my-0"> {{ Auth::user()->userName }}</H6>
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated profile-dropdown">
                             <!-- item-->
-                            <div class=" dropdown-header noti-title">
-                                <h6 class="text-overflow m-0">Bienvenido (a)</h6>
-                            </div>
+                            <!--<div class=" dropdown-header noti-title"></div>-->
 
                             <!--<a href="javascript:void(0);" class="dropdown-item">
                                 <i class="mdi mdi-account-circle me-1"></i>
@@ -204,7 +207,11 @@
                 <!-- Leftbar User -->
                 <div class="leftbar-user">
                     <a href="{{ url('/home') }}">
-                        <img src="{{ asset("/assets/images/users/avatar-1.jpg") }}" alt="user-image" height="42" class="rounded-circle shadow-sm">
+                        @if(Auth::user()->imgWorker)
+                            <img src="{{ asset('uploads/user_profile/' . Auth::user()->imgWorker) }}" alt="user-image" width="40" class="rounded-circle">
+                        @else
+                            <img src="{{ asset('uploads/user_sample.png') }}" alt="user-image-reemplazo" width="40" class="rounded-circle">
+                        @endif
                         <span class="leftbar-user-name mt-2">{{ Auth::user()->userName }}</span>
                     </a>
                 </div>
@@ -259,7 +266,7 @@
                         <div class="collapse" id="sidebarProject">
                             <ul class="side-nav-second-level">
                                 <li>
-                                    <a href="{{ route('lista-proyectos.index') }}" >VER</a>
+                                    <a href="{{ route('lista-obras.index') }}" >VER</a>
                                 </li>
                                 <li>
                                     <a href="{{ route('agregar-proyecto.verAgregarProyecto') }}">AGREGAR</a>
@@ -1008,29 +1015,47 @@
         </div>
     </div>
     <script>
-        function mostrarModal(message) {
-            // Obtén el modal y el elemento de mensaje dentro del modal
+        function mostrarModal(tittle, message, type) {
+
             var modal = document.getElementById("myModal");
             var modalMessage = document.getElementById("modalMessage");
-
-            // Establece el mensaje en el modal
+            var modalTitle = document.getElementById("modalTitle");
+            var miIcono = document.getElementById('modalType');
+            
+            modalTitle.textContent = tittle;
             modalMessage.textContent = message;
+            
+            if (type == 1) {
+                miIcono.classList.remove('text-warning'); // Elimina la clase actual
+                miIcono.classList.add('text-success');
+            }else{
+                miIcono.classList.remove('text-warning'); // Elimina la clase actual
+                miIcono.classList.add('text-warning');
 
+            }
+            
             // Muestra el modal
             $(modal).modal('show');
         }
+
+        
+
+
     </script>
     
     <!-- Info Alert Modal -->
-    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body p-4">
                     <div class="text-center">
-                        <i class="ri-alert-line h1 text-warning"></i>
+                        <i class="ri-alert-line h1 text-warning" id="modalType"></i>
                         <h4 class="mt-2" id="modalTitle"></h4>
                         <p id="modalMessage"></p>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

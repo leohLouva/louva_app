@@ -17,17 +17,30 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected $primaryKey = 'idUser';
+    
     protected $fillable = [
+        'idContractor_contractors',
+        'idProject_user',
+        'idJob_jobs',
         'idType_user_type',
+        'userName',
+        'password',
+        'email',
+        'isDisable',
         'name',
         'lastName',
-        'userName',
-        'email',
-        'password',
-        'access_level',
-        'isDisable',
-        'img_profile'
-        
+        'rfc',
+        'curp',
+        'nss',
+        'personalPhone',
+        'emergencyPhone',
+        'blodType',
+        'chronicDiseases',
+        'alergies',
+        'imgWorker',
+        'status'
     ];
 
     /**
