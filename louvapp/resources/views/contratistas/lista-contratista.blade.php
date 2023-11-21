@@ -44,7 +44,7 @@
                         @else
                             <img class="card-img-top" src="{{ asset("uploads/user.png") }}" alt="contractor image cap" style="max-width: 250px; max-height: 250px;">
                         @endif
-                        <h4 class="mt-3 my-1">{{$contractor->idContractor}} {{$contractor->contractorName}} <i class="mdi mdi-check-decagram text-success"></i></h4>
+                        <h4 class="mt-3 my-1">{{$contractor->contractorName}} <i class="mdi mdi-check-decagram text-success"></i></h4>
                         <p class="mb-0 text-muted"><i class="mdi mdi-email-outline me-1"></i>{{$contractor->emailContractor}}</p>
                         <hr class="bg-dark-lighten my-3">
                         

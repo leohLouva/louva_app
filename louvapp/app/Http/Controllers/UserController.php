@@ -420,4 +420,37 @@ class UserController extends Controller
         ], 500);
     }
 }
+    public function updatePassword(Request $request, $idUser){
+        
+    
+        try {
+            $user = User::findOrFail($idUser);
+            $user->update([
+                'password' => Hash::make($request->data['password']),
+            ]);
+            return response()->json([
+                'status' => '1',
+                'title' => 'ÉXITO',
+                'message' => 'LA CONTRASEÑA SE ACTUALIZÓ SATISFACTORIAMENTE',
+                'redirect' =>  route('fuerza-trabajo.editar-trabajador.show', ['idUser' => $idUser])
+            ]);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => '2',
+                'title' => 'ERROR',
+                'message' => 'USUARIO NO ENCONTRADO' . $e,
+                //'redirect' =>  route('fuerza-trabajo.editar-trabajador.show', ['idUser' => $user->idUser])
+            ]);
+        } catch (\Exception $e) {
+            
+            return response()->json([
+                'status' => '2',
+                'title' => 'ERROR',
+                'message' => 'HUBO UN ERROR AL ACTUALIZAR ' . $e,
+                //'redirect' =>  route('fuerza-trabajo.editar-trabajador.show', ['idUser' => $user->idUser])
+            ]);
+        }
+    
+    }
 }

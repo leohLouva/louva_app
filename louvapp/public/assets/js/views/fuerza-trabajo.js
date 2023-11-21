@@ -29,6 +29,7 @@ function agregarTrabajador(){
         mostrarModal("EL APELLIDO DEL TRABAJADOR NO PUEDE ESTAR VACIO Y DEBE TENER MÁS DE 3 CARACTERES");        
         return;
     }
+
     if (contratista == 0) {
         mostrarModal("DEBES ELEGIR UN CONTRATISTA");        
         return;
@@ -58,6 +59,16 @@ function agregarTrabajador(){
     if (flImage == '') {
         mostrarModal("AGREGA UNA FOTO DEL USUARIO");
         return;
+    }
+
+    if (password !== confirmPassword) {
+        mostrarModal('LAS CONTASEÑAS NO COINCIDEN');
+        return
+    }else{
+        if (apellido.length < 1 || apellido.length <= 3) {
+            mostrarModal("LA CONTRASEÑA NO PUEDE ESTAR VACIA");        
+            return;
+        }
     }
     
     
@@ -145,12 +156,15 @@ function editarUsuarioON(){
     enfermedades.disabled = false;
     alergias = document.getElementById("alergias");
     alergias.disabled = false;
+    changePass = document.getElementById("changePass");
+    changePass.disabled = false;
     guardar =document.getElementById("guardar-btn");
     guardar.style.display = 'block';
     on =document.getElementById("on-btn");
     on.style.display = 'none';
     off =document.getElementById("off-btn");
     off.style.display = 'block';
+    
     
     
 
@@ -207,7 +221,6 @@ function actualizarUsuario(){
     apellido = document.getElementById('apellido').value;
     tipoUsuario = document.getElementById('tipoUsuario').value;
     nombreUsuario = document.getElementById('nombreUsuario').value;
-    password = document.getElementById('password').value;
     correo = document.getElementById('correo').value;
     curp = document.getElementById('curp').value;
     rfc = document.getElementById('rfc').value;
@@ -261,7 +274,6 @@ function actualizarUsuario(){
         apellido: apellido,
         tipoUsuario: tipoUsuario,
         nombreUsuario: nombreUsuario,
-        password: password,
         correo: correo,
         curp: curp,
         rfc: rfc,
@@ -358,6 +370,7 @@ function uploadDocumentationWorker(){
     });
 }
 
+
 function eliminarDocumento(idUser){
 
         // Realiza una solicitud AJAX para obtener documentos asociados al usuario
@@ -370,7 +383,6 @@ function eliminarDocumento(idUser){
             success: function (data) {
                 console.log(data)
                 mostrarModal('ÉXITO!',data.message,data.status);
-                idUser
                 // Actualiza el contenido de la pestaña con los documentos recibidos
                 //$('# .card-body').html(data);
                 cargarDocumentos();
@@ -509,4 +521,71 @@ function validarDocumentos(){
             mostrarModal("Error en la solicitud AJAX: ", error );
         }
     });
+}
+
+
+function changePassword(){
+    var changePass = document.getElementById("changePass").checked;
+    if (changePass == true) {
+        $('#update-pass-modal').modal('show');
+
+    }else{
+        $('#update-pass-modal').modal('close');
+    }
+}
+
+function updatePassword(){
+    
+    password = document.getElementById('password').value;
+    var formData = {
+     password : password
+    };
+     //document.getElementById("myForm").submit();
+     var csrfToken = $('meta[name="csrf-token"]').attr('content');
+     $.ajax({
+        type: 'POST',
+        url: editPassword,
+        data: {
+            data: formData,
+            _token: csrfToken
+        },
+        success: function (data) {
+
+            if (data.status == 1) {
+                mostrarModal(data.title,data.message,data.status)
+                //$('#validate .card-body').html(data);
+                setTimeout(function () {
+                    window.location.href = data.redirect;
+                }, 2000);
+            }else{
+                mostrarModal("ERROR",data.message,data.status)
+            }
+        },
+        error: function (xhr, status, error) {
+            mostrarModal("Error en la solicitud AJAX: ", error );
+        }
+    });
+    
+}
+
+function validatePassword() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    console.log("password: " + password);
+    console.log("confirm " + confirmPassword);
+    btnUpdatePassword = document.getElementById("btnUpdatePassword");
+
+    if (password !== confirmPassword) {
+       mostrarModal('LAS CONTASEÑAS NO COINCIDEN');
+       btnUpdatePassword.style.display = 'none';
+       return
+   }else{
+       if (password.length < 1 || password.length <= 10) {
+           mostrarModal("LA CONTRASEÑA NO PUEDE ESTAR VACIA Y DEBE TENER AL MENOS 10 CARACTERES");  
+           btnUpdatePassword.style.display = 'none';
+           return;
+       }else{
+            btnUpdatePassword.style.display = 'block';
+       }
+   }
 }

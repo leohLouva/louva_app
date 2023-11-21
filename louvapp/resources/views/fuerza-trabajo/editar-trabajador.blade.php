@@ -90,12 +90,8 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">NOMBRE DE USUARIO: (PARA SISTEMA) </label>
+                            <label class="form-label">NOMBRE DE USUARIO (PARA SISTEMA) </label>
                             <input type="text" class="form-control" name="nombreUsuario" id="nombreUsuario" value="{{strtoupper($arrayWorker['worker'][0]->userName)}}" disabled oninput="this.value = this.value.toUpperCase()">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">PASSWORD</label>
-                            <input type="password" class="form-control" name="password" id="password" value="{{$arrayWorker['worker'][0]->password}}" disabled oninput="this.value = this.value.toUpperCase()">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">CURP</label>
@@ -111,12 +107,22 @@
                         </div>   
                         <div class="mb-3">
                             <label class="form-label">CORREO</label>
-                            <input type="text" class="form-control" name="correo" id="correo" value="{{strtolower($arrayWorker['worker'][0]->email)}}" disabled oninput="this.value = this.value.toUpperCase()">
+                            <input type="hidden" name="flImage" value="{{$arrayWorker['worker'][0]->imgWorker}}" disabled oninput="this.value = this.value.toUpperCase()"><br>
+                            <input type="hidden" name="qrCode" value="" disabled oninput="this.value = this.value.toUpperCase()">
+                            <div class="input-group">
+                                <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                <input type="text" class="form-control" name="correo" id="correo" value="{{strtolower($arrayWorker['worker'][0]->email)}}" disabled oninput="this.value = this.value.toUpperCase()">
+                            </div>
                         </div>
-                        <input type="hidden" name="flImage" value="{{$arrayWorker['worker'][0]->imgWorker}}" disabled oninput="this.value = this.value.toUpperCase()"><br>
-                        <input type="hidden" name="qrCode" value="" disabled oninput="this.value = this.value.toUpperCase()">
-
+                        <div class="mb-3">
+                            <label class="form-label">ACTUALIZAR PASSWORD </label>
+                            <input type="checkbox" id="changePass" data-switch="primary" onchange="changePassword()"  disabled/>
+                            <label for="changePass" data-on-label="SI" data-off-label="NO"></label><br>
+                        </div>
+                       
+                   
                         
+                                                                        
                     </div> 
                 </div> 
             </div>
@@ -305,11 +311,51 @@
         </div>
     </div>
 </div>
+<div id="update-pass-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/fuerza-trabajo/editar-trabajador/editPassword/{{$arrayWorker['worker'][0]->idUser}}" method="POST" name="actualizaPassword" id="actualizaPassword">
+                @csrf
+                <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">NUEVO PASSWORD</label>
+                            <div class="input-group input-group-merge">
+                                <div class="input-group-text" data-password="false">
+                                    <span class="password-eye"></span>
+                                </div>
+                                <input type="password" class="form-control" name="password" id="password" value=""  autocomplete="new-password" >
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">CONFIRMA NUEVO PASSWORD</label>
+                            <div class="input-group input-group-merge">
+                                <div class="input-group-text" data-password="false">
+                                    <span class="password-eye"></span>
+                                </div>
+                                <input type="password" id="confirmPassword" class="form-control" value="" onchange="validatePassword()" autocomplete="new-password1">
+                            </div>
+                        </div>  
+                        <div class="mv-3">
+                            <button type="button" id="btnUpdatePassword" class="btn btn-primary" onclick="updatePassword()" style="display:none;">ACTUALIZAR PASSWORD</button>
+                        </div>
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
     var idUser = {{ $arrayWorker['worker'][0]->idUser }};
     var editingW = '{{ route('editingWorker', ['idUser' => ':idUser']) }}'.replace(':idUser', idUser);
     var  obtenerDocumentos = '{{ route('obtenerDocumentos', ['idUser' => ':idUser']) }}'.replace(':idUser', idUser);
     var validateDoc = '{{ route('validateDoc', ['idUser' => ':idUser']) }}'.replace(':idUser', idUser);
     var actualiza  ='{{ route('actualizarEstadoDocumentos') }}';
+    var editPassword = '{{ route('editPassword', ['idUser' => ':idUser']) }}'.replace(':idUser', idUser);
+
+
+    var updatePassModal = document.getElementById('update-pass-modal');
+    updatePassModal.addEventListener('hidden.bs.modal', function () {
+        document.getElementById("changePass").checked = false;
+    });
 </script>
 @endsection

@@ -74,6 +74,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/addingWorker',[App\Http\Controllers\UserController::class,'store'])->name('addingWorker');
     //edita usuario
     Route::post('/editingWorker/{idUser}', [App\Http\Controllers\UserController::class, 'update'])->name('editingWorker');
+    //editar password
+    Route::post('/editPassword/{idUser}', [App\Http\Controllers\UserController::class, 'updatePassword'])->name('editPassword');
+    
     //TABS DE obtener documentos
     Route::get('/obtenerDocumentos/{idUser}', [App\Http\Controllers\UserController::class, 'obtenerDocumentos'])->name('obtenerDocumentos');
     //eliminarArchivo

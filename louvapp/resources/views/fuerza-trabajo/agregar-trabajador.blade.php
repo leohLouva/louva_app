@@ -87,7 +87,7 @@
                     <div class="mb-3">
                         <label class="form-label">CONFIRMA EL PASSWORD</label>
                         <div class="input-group input-group-merge">
-                            <input type="password" id="confirmPassword" class="form-control" >
+                            <input type="password" id="confirmPassword" class="form-control" onchange="validatePassword()">
                             <div class="input-group-text" data-password="false">
                                 <span class="password-eye"></span>
                             </div>
