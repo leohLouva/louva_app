@@ -13,7 +13,8 @@ class ScannerController extends Controller
     public function show($date,$id)
     {
 
-        $fechaFormateada = date("Y-m-d", strtotime($date));
+        if(auth()->user()->idType_user_type == 7){
+            $fechaFormateada = date("Y-m-d", strtotime($date));
 
         $worker = DB::table('users')
             //->join('worker_status_incidentes', 'users.status', '=', 'worker_status_incidentes.idWorker_status')
@@ -41,6 +42,7 @@ class ScannerController extends Controller
 
         if($check == NULL){//usuario no ha registrado entrada ni salida
             $arrayWorker = array(
+                'status' => 1,
                 'date' => $date,
                 'worker' => $worker,
                 'jobs' => $getJobs,
@@ -56,6 +58,7 @@ class ScannerController extends Controller
             if($check->endTime == NULL){//ahora vamos a chcar el registro de salida.  
                       
                 $arrayWorker = array(
+                    'status' => 1,
                     'date' => $date,
                     'worker' => $worker,
                     'jobs' => $getJobs,
@@ -68,6 +71,7 @@ class ScannerController extends Controller
                 );
             }else{
                 $arrayWorker = array(
+                    'status' => 1,
                     'date' => $date,
                     'worker' => $worker,
                     'jobs' => $getJobs,
@@ -81,6 +85,21 @@ class ScannerController extends Controller
             }   
         }
 
+        }else{
+            $arrayWorker = array(
+                'status' => 2,
+                'date' => NULL,
+                'worker' => NULL,
+                'jobs' => NULL,
+                'contractors' => NULL,
+                'types' => NULL,
+                'message' =>  'LO SIENTO MUCHO, TU NO PUEDES REALIZAR EL CHECK IN DE TUS COMPAÑEROS',
+                'style' => '',
+                'horaEntrada' => NULL,
+                'horaSalida' => NULL,
+            );
+        }
+        
         return view('fuerza-trabajo/scanner', compact('arrayWorker'));
     }
 
