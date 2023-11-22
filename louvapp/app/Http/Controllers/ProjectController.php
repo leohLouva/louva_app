@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use App\ProyectoEmpresa;
 use App\Attendence;
 use Intervention\Image\Facades\Image;
+use DateTime;
 
 
 class ProjectController extends Controller
@@ -186,8 +187,39 @@ class ProjectController extends Controller
 
         }
 
+        public function validarFormatoFecha($fecha, $formato = 'Y-m-d') {
+            $dateTime = DateTime::createFromFormat($formato, $fecha);
+            return $dateTime && $dateTime->format($formato) == $fecha;
+        }
+        
+        function validarFecha($fecha) {
+            $formatoEsperado = 'Y-m-d';
+        
+            echo $dateTime = DateTime::createFromFormat($formatoEsperado, $fecha);
+        
+            if ($dateTime && $dateTime->format($formatoEsperado) === $fecha) {
+                return true; // La fecha es válida y tiene el formato correcto
+            } else {
+                echo "aqui";
+                return false; // La fecha no es válida o no tiene el formato correcto
+            }
+        }
         public function update(Request $request, $idProject){
 
+            $fechaInicio = '12-Oct-2023';
+            $fechaInicio = DateTime::createFromFormat('d-M-Y', $fechaInicio);
+
+            if ($fechaInicio) {
+                $fechaInicio = $fechaInicio->format('Y-m-d');
+                
+                // Ahora $fechaInicio tiene el formato 'Y-m-d' y puedes usarlo en tu inserción Eloquent.
+                
+                
+            } else {
+                // Manejar el caso en que la conversión de la fecha no fue exitosa.
+                // Puedes lanzar una excepción, devolver un mensaje de error, etc.
+                echo "Error al convertir la fecha.";
+            }
             $oProject = new Project();
             $oProject = Project::findOrFail($idProject);
             
@@ -200,6 +232,7 @@ class ProjectController extends Controller
                 'squareMeterSuperficial' => $request->mtsSuperficiales,
                 'squareMeterSotano' => $request->mtsSotano,
                 'projectType' => $request->tipoProyecto,
+                'fechaInicio' => $fechaInicio,
                 'address' => $request->direccion,
                 'location' => $request->location,
                 'state' => $request->estado,
