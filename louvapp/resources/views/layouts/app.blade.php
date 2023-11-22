@@ -454,7 +454,7 @@
 
                                         <div id="topnav-color">
                                             <span class="d-flex h-100 flex-column">
-                                                <span class="bg-light-lighten d-flex p-1 align-items-center border-bottom border-opacity-25 border-primary border-opacity-25">
+                                                <span class="bg-light-lighten d-flex p-1 align-items-center border-bottom border-opacity-25 border-primary">
                                                     <span class="d-block p-1 bg-secondary-lighten rounded me-1"></span>
                                                     <span class="d-block border border-primary border-opacity-25 border-3 rounded ms-auto"></span>
                                                     <span class="d-block border border-primary border-opacity-25 border-3 rounded ms-1"></span>
@@ -695,10 +695,10 @@
                                         <span class="d-flex h-100 flex-column">
                                             <span class="bg-primary bg-gradient d-flex p-1 align-items-center border-bottom border-secondary border-opacity-25">
                                                 <span class="d-block p-1 bg-light opacity-25 rounded me-1"></span>
-                                                <span class="d-block border border-3 border opacity-25 rounded ms-auto"></span>
-                                                <span class="d-block border border-3 border opacity-25 rounded ms-1"></span>
-                                                <span class="d-block border border-3 border opacity-25 rounded ms-1"></span>
-                                                <span class="d-block border border-3 border opacity-25 rounded ms-1"></span>
+                                                <span class="d-block border-3 border opacity-25 rounded ms-auto"></span>
+                                                <span class="d-block border-3 border opacity-25 rounded ms-1"></span>
+                                                <span class="d-block border-3 border opacity-25 rounded ms-1"></span>
+                                                <span class="d-block border-3 border opacity-25 rounded ms-1"></span>
                                             </span>
                                             <span class="bg-light d-block p-1"></span>
                                         </span>

@@ -189,11 +189,34 @@ class UserController extends Controller
                 ->where('idWorker_workers', $id)
                 ->get();
 
-            $documentIds = $getDocumentsWorker->pluck('idDocument')->toArray();
+            $documentIds = $getDocumentsWorker->pluck('typeOfDocument')->toArray();
             
             $documentsNotInWorker = $getDocumentation->reject(function ($document) use ($documentIds) {
                 return in_array($document->idDocument_type, $documentIds);
             });
+
+            $totalDocumentTypes = DB::table('documentType')->count();
+            $validDocuments = DB::table('documents')
+            ->join('documentType', 'documentType.idDocument_type', '=', 'documents.typeOfDocument')
+            ->where('idWorker_workers', $id)
+            ->where('validated', true) // Ajusta esto según tu esquema de base de datos
+            ->get();
+        
+            // Contar documentos válidos
+            $countValidDocuments = count($validDocuments);
+            
+            // Verificar si todos los documentos están validados
+            if ($countValidDocuments == $totalDocumentTypes) {
+                // Todos los documentos están validados
+                $validated = 1;
+                $messageValidated = "TODOS TUS DOCUMENTOS ESTÁN VALIDADOS.";
+            } else {
+                // Al menos un documento no está validado
+                $validated = 0;
+                $messageValidated = "TIENES " . $countValidDocuments . " de " . $totalDocumentTypes . " DOCUMENTOS VALIDADOS";
+            }
+
+            
             
             $arrayWorker = array(
                 'worker' => $worker,
@@ -204,7 +227,10 @@ class UserController extends Controller
                 'types' => $getUser_type,
                 'tusDocumentos' => $getDocumentsWorker->count(),
                 'totalDocumentos' => $getDocumentation->count(),
-                'projects' => $getProjects
+                'projects' => $getProjects,
+                'validated' => $validated,
+                'messageValidated' => $messageValidated
+
             );
 
         return view('fuerza-trabajo/editar-trabajador',  compact('arrayWorker'));

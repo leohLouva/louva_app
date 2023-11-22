@@ -115,8 +115,8 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ACTUALIZAR PASSWORD </label>
-                            <input type="checkbox" id="changePass" data-switch="primary" onchange="changePassword()"  disabled/>
+                            <label class="form-label">ACTUALIZAR PASSWORD </label><br>
+                            <input class="form-control" type="checkbox" id="changePass" data-switch="primary" onchange="changePassword()"  disabled/>
                             <label for="changePass" data-on-label="SI" data-off-label="NO"></label><br>
                         </div>
                        
@@ -204,7 +204,16 @@
                                         <img src="{{ asset('uploads/user_sample.png') }}" class="avatar-lg rounded-5" alt="Imagen de reemplazo">
                                     @endif
                                 </div>
-                                <p class="mb-0 text-muted"><h5 class="mt-3 my-1">NOMBRE: {{$arrayWorker['worker'][0]->lastName}} {{$arrayWorker['worker'][0]->name}} <i class="mdi mdi-check-decagram text-success"></i></h5></P>
+                                <p class="mb-0 text-muted"><h5 class="mt-3 my-1">NOMBRE: {{$arrayWorker['worker'][0]->lastName}} {{$arrayWorker['worker'][0]->name}} 
+                                    @if ($arrayWorker['validated'] == 1)
+                                        <i class="mdi mdi-check-decagram text-success"></i>
+                                    @else
+                                        <br>
+                                        <div class="alert alert-warning bg-warning text-white border-0" role="alert">
+                                            <strong>ATENCIÓN - </strong> {{$arrayWorker['messageValidated']}}
+                                        </div>
+                                    @endif 
+                                </h5></P>
                             </div>
                             <p class="mb-0 text-muted"><h4 class="">{{$arrayWorker['worker'][0]->contractorName}}</h4></P>
                             <p class="mb-0 text-muted"><h4 class="">{{$arrayWorker['worker'][0]->projectName}}</h4></P>
