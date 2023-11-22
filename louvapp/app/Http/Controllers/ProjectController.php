@@ -20,7 +20,7 @@ class ProjectController extends Controller
         //ver lista de usuarios
         public function index()
         {
-            $perPage = 4;
+            $perPage = 10;
             $projects = DB::table('projects')
                 ->join('estados', 'projects.state', '=', 'estados.idEstado')
                 ->join('municipios', 'projects.location', '=', 'municipios.idMunicipio')
@@ -332,27 +332,27 @@ class ProjectController extends Controller
 
         public function buscarProyectos(Request $request)
         {
-            $q = $request->input('q');
+            $buscar = $request->input('q');
 
             $projects = Project::join('estados', 'projects.state', '=', 'estados.idEstado')
             ->join('municipios', 'projects.location', '=', 'municipios.idMunicipio')
             ->join('project_type', 'projects.projectType', '=', 'project_type.idProject_type')
             ->join('construction_system', 'projects.constructionSystem', '=', 'construction_system.idConstruction_system')
-            ->where('projectName', 'LIKE', "%$q%")
-            ->orWhere('construction_system.nameConstruction_system', 'LIKE', "%$q%")
-            ->orWhere('project_type.nameProject_type', 'LIKE', "%$q%")
-            ->orWhere('estados.estado', 'LIKE', "%$q%")
-            ->orWhere('municipios.municipio', 'LIKE', "%$q%")
-            ->paginate(5);
+            ->where('projectName', 'LIKE', "%$buscar%")
+            ->orWhere('construction_system.nameConstruction_system', 'LIKE', "%$buscar%")
+            ->orWhere('project_type.nameProject_type', 'LIKE', "%$buscar%")
+            ->orWhere('estados.estado', 'LIKE', "%$buscar%")
+            ->orWhere('municipios.municipio', 'LIKE', "%$buscar%")
+            ->paginate(10);
 
-            //return view('tus-obras-partial', compact('projects'))->render();
             return view('obras/lista-obras', ['projects' => $projects]);
 
             /*return response()->json([
-                'redirect' =>  route('fuerza-trabajo.editar-trabajador.show', ['idUser' => $user->idUser])
                 'status' => '1',
-                'message' => 'DOCUMENTO ALMACENADO CON ÉXITO',
-                'projects' => $projects
+                'message' => 'BUSQUEDA',
+                'projects' => $projects,
+                //'redirect' =>  view('obras/lista-obras', ['projects' => $projects]),
+                'redirect' => route('proyectos.buscar'),
             ]);*/
         }
 

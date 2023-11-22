@@ -571,8 +571,6 @@ function updatePassword(){
 function validatePassword() {
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
-    console.log("password: " + password);
-    console.log("confirm " + confirmPassword);
     btnUpdatePassword = document.getElementById("btnUpdatePassword");
 
     if (password !== confirmPassword) {

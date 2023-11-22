@@ -19,7 +19,8 @@
         <form action="{{ route('empresas.buscar') }}" method="GET">
             <div class="input-group">
                 <input type="text" class="form-control" name="q" id="buscarO" placeholder="BUSCAR EMPRESAS..." oninput="this.value = this.value.toUpperCase()">
-                <button class="btn btn-primary" type="button" onclick="buscarObras()">BUSCAR</button>
+                <button class="btn btn-primary" type="submit">BUSCAR</button>
+
             </div>
         </form>
     </div>
@@ -82,7 +83,7 @@
         </ul>
     </nav>
     <div class="mt-2">
-        MOSTRANDO {{ $contractors->firstItem() }} A {{ $contractors->lastItem() }} DE {{ $contractors->total() }} CONTRATISTAS.
+        MOSTRANDO {{ $contractors->firstItem() }} DE {{ $contractors->lastItem() }} DE {{ $contractors->total() }} CONTRATISTAS EN TOTAL.
     </div>
 </div>
 

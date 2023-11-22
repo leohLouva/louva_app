@@ -17,10 +17,10 @@
 <div class="row mb-2">
     <div class="col-sm-4">
         <!-- Agregar formulario de búsqueda -->
-        <form action="{{ route('proyectos.buscar') }}" method="GET">
+        <form action="{{ route('proyectos.buscar') }}" method="GET" id="listadoObras">
             <div class="input-group">
                 <input type="text" class="form-control" name="q" id="buscarO" placeholder="BUSCAR OBRAS..." oninput="this.value = this.value.toUpperCase()">
-                <button class="btn btn-primary" type="button" onclick="buscarObras()">BUSCAR</button>
+                <button class="btn btn-primary" type="submit">BUSCAR</button>
             </div>
         </form>
     </div>
@@ -31,6 +31,7 @@
         </div>
     </div>
 </div> 
+<div class="col-sm-8" id="searchResultsContainer"></div>
 
 <div class="row">
 
@@ -88,7 +89,7 @@
         </ul>
     </nav>
     <div class="mt-2">
-        MOSTRANDO {{ $projects->firstItem() }} A {{ $projects->lastItem() }} DE {{ $projects->total() }} OBRAS.
+        MOSTRANDO {{ $projects->firstItem() }} DE {{ $projects->lastItem() }} DE {{ $projects->total() }} OBRAS.
     </div>
 </div>
 

@@ -736,19 +736,19 @@ function buscarObras() {
         mostrarModal("Error","NO PUEDES BUSCAR CON CARACTERES VACIOS","2");
         return;
     }
- 
+    
         // Serializar el formulario correctamente
         var formData = buscarO;
         console.log(formData);
-
+        var baseRoute = document.getElementById("listadoObras").getAttribute("data-route");
         // Realizar la solicitud AJAX
         $.ajax({
-            url: "{{ route('proyectos.buscar') }}",
+            url: baseRoute,
             type: "GET",
             data: formData,
             success: function(response) {
-                console.log(response);
-                //$('#searchResults').html(response);
+                window.location.href = response;
+
             },
             error: function(error) {
                 console.error('Error en la búsqueda:', error);
