@@ -50,7 +50,7 @@
 
             <div class="card-body position-relative" id="listObras">
                 <h4 class="mt-0">
-                    <a href="{{ route('proyecto.detalle', ['id' => $project->idProject]) }}" class="text-title"> {{ $project->projectName}}</a>
+                    <a href="{{ route('editar-proyecto.show', ['id' => $project->idProject]) }}" class="text-title"> {{ $project->projectName}}</a>
                 </h4>
                 <p class="mb-3">
                     <i class="mdi mdi-google-maps"></i><b>UBICACION:</b> {{$project->municipio}}, {{$project->estado}} <br>
