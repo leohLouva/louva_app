@@ -40,8 +40,8 @@
                         </div>
                     </div>
                     <div class="text-center">
-                        @if ($contractor->img_contractor && $contractor->folderName)
-                            <img class="card-img-top" src="{{ asset("uploads/empresa/".$contractor->folderName."/".$contractor->img_contractor) }}" alt="contractor image cap{{$contractor->idContractor}}" style="max-width: 150px; max-height: 150px;">
+                        @if ($contractor->img_contractor)
+                            <img class="card-img-top" src="{{ asset("uploads/contractors/".$contractor->img_contractor) }}" alt="contractor image cap{{$contractor->idContractor}}" style="max-width: 150px; max-height: 150px;">
                         @else
                             <img class="card-img-top" src="{{ asset("uploads/user.png") }}" alt="contractor image cap" style="max-width: 250px; max-height: 250px;">
                         @endif

@@ -73,7 +73,9 @@
                                        
                                         <div class="col-md-6">
                                             <h5>COSTO TOTAL DE OBRA APROXIMADO</h5>
-                                            <p>$ {{ $projects->totalScheduledCost }}</p>
+                                            
+                                            <p>$ {{ number_format($projects->totalScheduledCost, 2, '.', ',') }}</p>
+
                                         </div>
                                     </div>
                                     

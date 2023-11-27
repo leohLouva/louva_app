@@ -105,7 +105,6 @@
                     </select>
                 </div> 
                 <div class="mb-3">
-                    <input type="hidden" class="form-control" id="folderName" name="folderName" value="{{$contractor->folderName}}">
                     <input type="hidden" class="form-control" name="flImage" id="flImage" value="{{$contractor->img_contractor}}">
                     
                 </div>
