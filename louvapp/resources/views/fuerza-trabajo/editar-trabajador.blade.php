@@ -250,7 +250,6 @@
                             <form action="{{ route('imagenes.storeImgProfileWorkerUpdate')}}" method="post" enctype="multipart/form-data" class="dropzone" id="dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
                                 @csrf
                                 <input type="hidden" class="form-control" type="text" name="idContractor" id="idContractor" value="{{$arrayWorker['worker'][0]->idContractor_contractors}}" >
-                                <input type="hidden" class="form-control" id="folderNameCont" name="folderNameCont" value="{{ $arrayWorker['worker'][0]->folderName }}">
                                 <input type="hidden" class="form-control" id="idWorker_" name="idWorker_" value="{{ $arrayWorker['worker'][0]->idUser }}">
         
                                 <div class="fallback">
