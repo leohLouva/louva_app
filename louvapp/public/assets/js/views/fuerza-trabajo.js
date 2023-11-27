@@ -1,3 +1,22 @@
+function verFormEditarTrabajador(ruta){
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    //window.location.href = data.redirect;
+    
+    $.ajax({
+        url: ruta,
+        type: 'GET',
+
+        success: function(response) {
+            console.log(response);
+            window.location.href = response.viewUrl;
+        },
+        error: function(error) {
+            mostrarModal('ERROR','ERROR AL REALIZAR LA PETICIÓN :' +error,'2' );
+        }
+    });
+    
+}
+
 function agregarTrabajador(){
     
     nombre = document.getElementById('nombre').value;
@@ -28,6 +47,15 @@ function agregarTrabajador(){
     if (apellido.length < 1 || apellido.length <= 3) {
         mostrarModal("EL APELLIDO DEL TRABAJADOR NO PUEDE ESTAR VACIO Y DEBE TENER MÁS DE 3 CARACTERES");        
         return;
+    }
+    if (password != confirmPassword) {
+        mostrarModal('LAS CONTASEÑAS NO COINCIDEN');
+        return
+    }else{
+        if (password.length < 1 || password.length <= 5 && confirmPassword.length < 1 || confirmPassword.length <= 5) {
+            mostrarModal("LA CONTRASEÑA NO PUEDE ESTAR VACIA Y DEBE TENER AL MENOS 5 CARACTERES");  
+            return;
+        }
     }
 
     if (contratista == 0) {
@@ -333,17 +361,18 @@ function uploadDocumentationWorker(){
     formData.append('typeOfDocument', typeOfDocument);
     formData.append('workerId', workerId);
     formData.append('contractorName', contractorName);
-    formData.append('file', fileInput.files[0]); // Asegúrate de que solo estás enviando el primer archivo si permites múltiples archivos
+    formData.append('file', fileInput.files[0]); 
 
 
     //document.getElementById("myForm").submit();
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    
     $.ajax({
         type: 'POST',
         url: uploadD,
         data: formData,
-        processData: false, // Evita que jQuery procese los datos
-        contentType: false, // No establezcas el tipo de contenido porque FormData lo hace automáticamente
+        processData: false, 
+        contentType: false, 
         headers: {
             'X-CSRF-TOKEN': csrfToken
         },
@@ -365,27 +394,32 @@ function uploadDocumentationWorker(){
             }
         },
         error: function (xhr, status, error) {
-            mostrarModal("Error en la solicitud AJAX: ", error );
+            mostrarModal("ERROR AL CARGAR EL DOCUMENTO: ", error );
         }
     });
 }
 
 
-function eliminarDocumento(idUser){
+function eliminarDocumento(idDocument){
 
-        // Realiza una solicitud AJAX para obtener documentos asociados al usuario
+        
         $.ajax({
-                type: 'DELETE',
-                url: eliminarArchivo,
+                type: 'POST',
+                //url: eliminarArchivo,
+                url: '/eliminarArchivo/' + idDocument,  
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
             success: function (data) {
                 console.log(data)
-                mostrarModal('ÉXITO!',data.message,data.status);
-                // Actualiza el contenido de la pestaña con los documentos recibidos
-                //$('# .card-body').html(data);
-                cargarDocumentos();
+                if (data.status == 1) {
+                    mostrarModal('ÉXITO!',data.message,data.status);
+                    cargarDocumentos();    
+                }else{
+                    mostrarModal('Error!',data.message,data.status);
+                    return;
+                }
+                
             },
             error: function (xhr, status, error) {
                 console.error('Error al cargar documentos: ', error);
@@ -511,6 +545,7 @@ function validarDocumentos(){
             if (data.status == 1) {
                 mostrarModal("ÉXITO","SE VALIDARON CORRECTAMENTE LOS DOCUMENTOS",data.status)
                 //$('#validate .card-body').html(data);
+                location.reload();
                 getValidarDocumentos();
             
             }else{
@@ -568,22 +603,131 @@ function updatePassword(){
     
 }
 
+function validatePasswordAdd() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    if (password === confirmPassword) {
+
+    }else{
+        mostrarModal("ERROR!","LOS PASSWORD DEBEN DE COINCIDIR",2);
+        document.getElementById("confirmPassword").value = "";
+    }
+}
 function validatePassword() {
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     btnUpdatePassword = document.getElementById("btnUpdatePassword");
 
-    if (password !== confirmPassword) {
+    if (password != confirmPassword) {
        mostrarModal('LAS CONTASEÑAS NO COINCIDEN');
        btnUpdatePassword.style.display = 'none';
        return
    }else{
-       if (password.length < 1 || password.length <= 10) {
-           mostrarModal("LA CONTRASEÑA NO PUEDE ESTAR VACIA Y DEBE TENER AL MENOS 10 CARACTERES");  
+       if (password.length < 1 || password.length <= 5) {
+           mostrarModal("LA CONTRASEÑA NO PUEDE ESTAR VACIA Y DEBE TENER AL MENOS 5 CARACTERES");  
            btnUpdatePassword.style.display = 'none';
            return;
        }else{
             btnUpdatePassword.style.display = 'block';
        }
    }
+}
+
+function verFTtrabajador(idUser){
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    //var table = $('#table_tf_personal').DataTable();
+    var existingTable = $("#table_tf_personal").DataTable();
+    if (existingTable) {
+        existingTable.destroy();
+    }
+    
+    var table = $("#table_tf_personal").DataTable({
+        "language": {
+            "sProcessing": "PROCESANDO...",
+            "sLengthMenu": "MOSTRANDO _MENU_",
+            "sZeroRecords": "SIN RESULTADOS",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "MOSTRANDO  _START_ al _END_ DE UN TOTAL DE _TOTAL_ ",
+            "sInfoEmpty": "MOSTRANDO 0 al 0 DE UN TOTAL de 0 ",
+            "sInfoFiltered": "(FILTRADO DE UN TOTAL DE _MAX_ )",
+            "sInfoPostFix": "",
+            "deferRender": true,
+            "sSearch": "BUSCAR:",
+            "sLoadingRecords": "OBTENIENDO INFORMACIÓN...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            },
+        },
+        "processing": true,
+        "serverSide": true,
+        "responsive": true,
+        /*"scrollY": parseInt($(window).height() * .80),
+        "scrollX": false,
+        "pageLength": 100,
+        "columnDefs": [
+            { "orderable": false, "targets": 6 }
+          ],
+        //"pagingType": "full_numbers",
+        "order": [  
+                    [0, "desc"]
+          ],*/
+        ajax: {
+            type: 'GET',
+            'headers': {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            'data': {
+                'action': 'verTablaFT',
+            },
+            'url': ftPersonal,
+            error: function (xhr, error, thrown) {
+                mostrarModal("Error", "AL CARGAR LA TABLA HUBO UN ERROR, POR FAVOR, CONTACTA CON SYSADMIN", "warning");
+            },
+            "dataSrc": function (json) {
+                console.log(json);
+                json.dataTable = [];
+                json.draw = 1;
+                json.recordsTotal = 0;
+                json.recordsFiltered = 0;
+                
+                if (json.code == 1) {
+                    json.draw = json.data.draw;
+                    json.recordsTotal = json.data.recordsTotal;
+                    json.recordsFiltered = json.data.recordsFiltered;
+                    json.dataTable = json.datosDatatable;
+                    console.log(json.dataTable);
+                    return json.dataTable;
+                }else{
+                    mostrarModal("Error", "Error loading data please contact your Administrator ", "warning");
+                }
+
+                
+              }
+        },
+        "columns": [
+            {
+                "data": "contractorName"
+            },
+            {
+                "data": "projectName"
+            },
+            {
+                "data": "date"
+            },
+            {
+                "data": "startTime"
+            },
+            {
+                "data": "endTime"
+            }
+        ]
+    });
+
 }

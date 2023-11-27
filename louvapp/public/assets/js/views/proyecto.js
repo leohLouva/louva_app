@@ -730,18 +730,15 @@ function graficaPorPuestoEnProyecto(){
 }
 
 function buscarObras() {
-    // Manejar el evento de envío del formulario
+
     buscarO = document.getElementById("buscarO").value;
     if (buscarO == '') {
         mostrarModal("Error","NO PUEDES BUSCAR CON CARACTERES VACIOS","2");
         return;
     }
-    
-        // Serializar el formulario correctamente
         var formData = buscarO;
-        console.log(formData);
         var baseRoute = document.getElementById("listadoObras").getAttribute("data-route");
-        // Realizar la solicitud AJAX
+
         $.ajax({
             url: baseRoute,
             type: "GET",

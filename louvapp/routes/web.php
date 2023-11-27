@@ -67,7 +67,7 @@ Route::middleware(['auth'])->group(function () {
     /***FUERZA DE TRABAJO */
     Route::get('fuerza-trabajo/lista-trabajadores', [App\Http\Controllers\UserController::class, 'index'])->name('lista-trabajadores.index');
     Route::get('fuerza-trabajo/editar-trabajador/{idUser}', [App\Http\Controllers\UserController::class, 'show'])->name('fuerza-trabajo.editar-trabajador.show');
-    Route::get('fuerza-trabajo/agregar-trabajador', [App\Http\Controllers\WorkerController::class, 'verAgregarTrabajador'])->name('agregar-trabajador.verAgregarTrabajador');
+    Route::get('fuerza-trabajo/agregar-trabajador', [App\Http\Controllers\UserController::class, 'verAgregarTrabajador'])->name('agregar-trabajador.verAgregarTrabajador');
     //obtiene los proyectos relacionados a la empresa
     Route::get('/obteberProyectos/{contratistaId}', [App\Http\Controllers\UserController::class,'getProjects']);
     //guarda usuario
@@ -80,7 +80,7 @@ Route::middleware(['auth'])->group(function () {
     //TABS DE obtener documentos
     Route::get('/obtenerDocumentos/{idUser}', [App\Http\Controllers\UserController::class, 'obtenerDocumentos'])->name('obtenerDocumentos');
     //eliminarArchivo
-    Route::delete('/eliminarArchivo/{idDocument}',  [App\Http\Controllers\UserController::class, 'eliminar'])->name('eliminarArchivo');
+    Route::post('/eliminarArchivo/{idDocument}',  [App\Http\Controllers\UserController::class, 'eliminar'])->name('eliminarArchivo');
     //Subir documentos
     Route::post('/uploadDocumentation', [App\Http\Controllers\UserController::class, 'storeDocuments'])->name('uploadDocumentation');
     //agregar imagen
@@ -91,6 +91,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/validateDoc/{idUser}', [App\Http\Controllers\UserController::class, 'getValidateDocuments'])->name('validateDoc');
     //actualizar validacion de documentos
     Route::post('/actualizar-estado-documentos', [App\Http\Controllers\UserController::class, 'actualizarEstadoDocumentos'])->name('actualizarEstadoDocumentos');
+    //Ver su fuerza de trabajo
+    Route::get('lista-trabajadores/{idUser}', [App\Http\Controllers\UserController::class, 'indexFuerzaTrabajador'])->name('lista-trabajadores.indexFuerzaTrabajador');
 
     //para escanear y checar entrada y salida del trabajador
     Route::get('fuerza-trabajo/scanner/{date}/{id}', [App\Http\Controllers\ScannerController::class, 'show'])->name('scanner.show');
@@ -112,9 +114,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/image', [App\Http\Controllers\ImageController::class, 'storeUser'])->name('imagenes.storeUser');
     Route::post('/image', [App\Http\Controllers\ImageController::class, 'store'])->name('imagenes.store');
     Route::post('/image/contractor', [App\Http\Controllers\ImageController::class, 'storeContractor'])->name('imagenes.storeContractor');
-    
-    Route::get('/get-uploads-documents-content', [App\Http\Controllers\UserController::class, 'getUploadsDocumentsContent']);
-
-
+   
 
 });

@@ -37,6 +37,30 @@ class UserController extends Controller
             
     }
 
+    public function verAgregarTrabajador()
+    {
+        //obtener el tipo de trabajador
+        $getUser_type = DB::table('user_type')
+        ->get();
+
+        //obtener los puestos de trabajo
+        $getJobs = DB::table('jobs')
+            ->get();
+        //obtener las empresas
+        $getContractors = DB::table('contractors')
+            ->get();
+        
+        $project = DB::table('projects')
+                ->get();
+
+        return view('fuerza-trabajo/agregar-trabajador', [
+            'contractors' => $getContractors,
+            'jobs' => $getJobs,
+            'types' =>$getUser_type,
+            'projects' =>$project
+        ]);
+    }
+
     public function store(Request $request)
     {
      try{   
@@ -156,8 +180,10 @@ class UserController extends Controller
                 ], 500); // Puedes ajustar el código de estado HTTP según sea necesario
             }
         }
+
     public function show($id)
     {
+
         $getJobs = DB::table('jobs')->get();
         
         $getContractors = DB::table('contractors')
@@ -187,6 +213,7 @@ class UserController extends Controller
             $getDocumentsWorker = DB::table('documents')
                 ->leftjoin('documentType', 'documentType.idDocument_type', '=', 'documents.typeOfDocument')
                 ->where('idWorker_workers', $id)
+                ->where('statusDocument', 0)
                 ->get();
 
             $documentIds = $getDocumentsWorker->pluck('typeOfDocument')->toArray();
@@ -196,12 +223,14 @@ class UserController extends Controller
             });
 
             $totalDocumentTypes = DB::table('documentType')->count();
+            
             $validDocuments = DB::table('documents')
             ->join('documentType', 'documentType.idDocument_type', '=', 'documents.typeOfDocument')
             ->where('idWorker_workers', $id)
-            ->where('validated', true) // Ajusta esto según tu esquema de base de datos
+            ->where('validated', 1) 
+            ->where('statusDocument', 0)
             ->get();
-        
+
             // Contar documentos válidos
             $countValidDocuments = count($validDocuments);
             
@@ -216,8 +245,6 @@ class UserController extends Controller
                 $messageValidated = "TIENES " . $countValidDocuments . " de " . $totalDocumentTypes . " DOCUMENTOS VALIDADOS";
             }
 
-            
-            
             $arrayWorker = array(
                 'worker' => $worker,
                 'jobs' => $getJobs,
@@ -233,8 +260,10 @@ class UserController extends Controller
 
             );
 
-        return view('fuerza-trabajo/editar-trabajador',  compact('arrayWorker'));
-        
+            return view('fuerza-trabajo/editar-trabajador', compact('arrayWorker'));
+            
+            
+
     }
 
     public function getProjects($contratistaId){
@@ -302,7 +331,8 @@ class UserController extends Controller
                 'path' => $imageName,
                 'idWorker_workers' => $request->workerId,
                 'typeOfDocument' => $request->typeOfDocument,
-                'validated' => 0
+                'validated' => 0,
+                'statusDocument' => 0
             ]);
             $documents->save();
 
@@ -322,45 +352,24 @@ class UserController extends Controller
         
     }
 
-    public function getUploadsDocumentsContent() {
-        
-            $getDocumentation = DB::table('documentType')->get(); 
+ 
 
-            $getDocumentsWorker = DB::table('documents')
-                ->leftjoin('documentType', 'documentType.idDocument_type', '=', 'documents.idDocument')
-                ->where('idWorker_workers', $id)
-                ->get();
-
-            // Obtén solo los valores 'idDocument' de cada documento
-            $documentIds = $getDocumentsWorker->pluck('idDocument')->toArray();
-            
-            // Filtra los documentos que no están en $documentIds
-            $documentsNotInWorker = $getDocumentation->reject(function ($document) use ($documentIds) {
-                return in_array($document->idDocument_type, $documentIds);
-            });
-            
-            $arrayWorker = array(
-                'documents' => $getDocumentsWorker,
-                'aDocuments' => $documentsNotInWorker,
-                'tusDocumentos' => $getDocumentsWorker->count(),
-                'totalDocumentos' => $getDocumentation->count()
-            );
-
-        return view('partials.documents', compact('arrayWorker'));
-    }
-
-    public function eliminar(Request $request,$id)
-    {
-        
+    public function eliminar($idDocument)
+    {   
+      
         try {
-
-            $documento = Documents::find($id);
+            $documento = Documents::find($idDocument);
+            
             $idUser = $documento->idWorker_workers;
-
+            //dd("este es el doc a eliminar " . $documento->typeOfDocument);
             if ($documento) {
-                $rutaArchivo = 'public/uploads/contractors/'.$request->contractorName.'/'.$request->path;
-                Storage::delete($rutaArchivo);
-                $documento->delete();
+                //$rutaArchivo = 'public/uploads/contractors/'.$request->contractorName.'/'.$request->path;
+
+                //Storage::delete($rutaArchivo);
+                //actualizamos el status el cual se refuera a que 1 = elimninar
+                $documento->statusDocument = 1;
+                $documento->save();
+
                 return response()->json([
                     'status' => '1',
                     'title' => 'ÉXITO',
@@ -393,12 +402,13 @@ class UserController extends Controller
                 ->join('users', 'users.idUser', '=', 'documents.idWorker_workers')        
                 ->join('contractors', 'contractors.idContractor', '=', 'users.idContractor_contractors')
                 ->where('idWorker_workers', $idUser)
+                ->where('statusDocument', 0)
                 ->get();
         $getCountDocu = $getDocumentsWorker->count();
         if($getCountDocu == 0){
             return view('fuerza-trabajo.partials.documentos', [
-                                                                'documentos' => NULL,
-                                                                'count' => $getCountDocu
+                'documentos' => NULL,
+                'count' => $getCountDocu
             ]);
         }else{
             return view('fuerza-trabajo.partials.documentos', [
@@ -412,6 +422,7 @@ class UserController extends Controller
         $getDocumentsWorker = DB::table('documents')
                 ->leftjoin('documentType', 'documentType.idDocument_type', '=', 'documents.typeOfDocument')
                 ->where('idWorker_workers', $idUser)
+                ->where('statusDocument', 0)
                 ->get();
 
         return view('fuerza-trabajo.partials.validar', [
@@ -426,6 +437,7 @@ class UserController extends Controller
 
     try {
         $formData = $request->data;
+
         foreach ($formData as $idDocument => $isChecked) {
 
             $documento = Documents::findOrFail($idDocument);
@@ -479,4 +491,58 @@ class UserController extends Controller
         }
     
     }
+
+    public function indexFuerzaTrabajador(Request $request, $id)
+    {
+        $orderByColumnIndex = $request->order[0]['column']; 
+        $orderBy = $request->columns[(int) $orderByColumnIndex]['data'];
+        $orderType = $request->order[0]['dir']; 
+        $stringToSearch = $request->search['value'];
+        $totalRecords = 0;
+        $totalRecordsFilteres = 0;
+
+        $worker = DB::table('attendences')
+            ->select('users.idUser', DB::raw('CONCAT(users.name, " ", users.lastName) AS nombreCompleto'),'contractors.contractorName','projects.projectName','attendences.date','attendences.startTime','attendences.endTime' )
+            ->join('users', 'users.idUser', '=', 'attendences.idUser_worker')
+            ->join('projects', 'projects.idProject', '=', 'attendences.idProject_project')
+            ->join('contractors', 'contractors.idContractor', '=', 'attendences.idContractor_contractors')
+            ->where('users.idUser','=',$id);
+        
+            if (!empty($stringToSearch)) {
+            $search = $stringToSearch;
+            $totalRecords = $worker->get()->count();
+            $worker->where(function ($querySearch) use ($search) {
+                $querySearch->where("contractors.contractorName", "LIKE", "%" . $search . "%")
+                    ->orWhere("users.name", "LIKE", "%" . $search . "%")
+                    ->orWhere("users.lastName", "LIKE", "%" . $search . "%")
+                    ->orWhere("attendences.date", "LIKE", "%" . $search . "%")
+                    ->orWhere("attendences.startTime", "LIKE", "%" . $search . "%")
+                    ->orWhere("attendences.endTime", "LIKE", "%" . $search . "%");
+            });
+            $totalRecordsFilteres = $worker->get()->count();
+        } else {
+            $totalRecordsFilteres = $worker->get()->count();
+            $totalRecords = $totalRecordsFilteres;
+        }
+        $list = $worker->orderBy($orderBy, $orderType)
+                ->skip(intval($request->start))
+                ->take(intval($request->length))
+                ->get();
+
+
+            $totalTrabajadores = $worker->count();
+            $response = array();
+            $response['code'] = 1;
+            $response['status'] = "success";
+            $response['msg'] = "INFORMACIÓN OBTENIDO CORRECTAMENTE";
+            $response['msgAdditional'] = "";
+            $response['datosDatatable'] = $list;
+            $response["data"]['draw'] = intval($request->query("draw"));
+            $response["data"]['recordsTotal'] = $totalRecords;
+            $response["data"]['recordsFiltered'] = $totalRecordsFilteres;
+            return json_encode($response);
+            
+
+    }
+        
 }

@@ -65,29 +65,7 @@ class WorkerController extends Controller
         //
     }
 
-    public function verAgregarTrabajador()
-    {
-        //obtener el tipo de trabajador
-        $getUser_type = DB::table('user_type')
-        ->get();
-
-        //obtener los puestos de trabajo
-        $getJobs = DB::table('jobs')
-            ->get();
-        //obtener las empresas
-        $getContractors = DB::table('contractors')
-            ->get();
-        
-        $project = DB::table('projects')
-                ->get();
-
-        return view('fuerza-trabajo/agregar-trabajador', [
-            'contractors' => $getContractors,
-            'jobs' => $getJobs,
-            'types' =>$getUser_type,
-            'projects' =>$project
-        ]);
-    }
+ 
 
     /**
      * Store a newly created resource in storage.

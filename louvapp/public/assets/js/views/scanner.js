@@ -46,6 +46,7 @@ function checarEntrada(){
         clock
     };
     console.log(formData);
+
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
     
     $.ajax({

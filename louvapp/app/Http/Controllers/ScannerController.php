@@ -108,7 +108,7 @@ class ScannerController extends Controller
         $today = now();
         $fechaHoy = $today->format('Y-m-d');
         $hora = $today->format('H:i:s');
-        
+
         $latestAttendence = DB::table('attendences')
             ->where('idUser_worker', $idWorker)
             ->whereDate('date', $request->data['fechaFormateada'])
@@ -134,15 +134,17 @@ class ScannerController extends Controller
                 // No hay un registro existente, puedes realizar la inserción
                 $scanner = new Scanner([
                     'idUser_worker' => $idWorker,
+                    'idRegister' => auth()->user()->idUser,
                     'idContractor_contractors' => $request->data['idContractor_contractors'],
                     'idProject_project' => $request->data['idProject_project'],
-                    'date' => $fechaHoy,
+                    'date' => $request->data['fechaFormateada'],
                     'startTime' => $request->data['clock']
                 ]);
+
                 $scanner->save();
             
                 $response = [
-                    'redirect' => redirect()->action([ScannerController::class, 'show'], ['date' => $fechaHoy, 'id' => $idWorker])->getTargetUrl(),
+                    'redirect' => redirect()->action([ScannerController::class, 'show'], ['date' => $request->data['fechaFormateada'], 'id' => $idWorker])->getTargetUrl(),
                     'message' => 'Entrada realizada correctamente',
                     'status' => 1
                 ];

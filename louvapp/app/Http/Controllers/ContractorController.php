@@ -90,6 +90,7 @@ class ContractorController extends Controller
     }
 
     public function update(Request $request, $idContractor){
+
         $oContractor = new Contractor();
         $oContractor = Contractor::findOrFail($idContractor);
         
@@ -103,7 +104,7 @@ class ContractorController extends Controller
             'domicilioContractor' => $request->domicilio,
             'codigoPostalContractor' => $request->cp,
             'idEstado_estado' => $request->estado,
-            'idMunicipio_municipio' => $request->municipio,
+            'idMunicipio_municipio' => $request->location,
             'img_contractor' => $request->flImage
         ]);
 

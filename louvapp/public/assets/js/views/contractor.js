@@ -27,7 +27,7 @@ function getLocation(){
 
 function actualizarContractor(){
     nombreEmpresa = document.getElementById("nombreEmpresa").value;
-    if (nombreEmpresa.length < 1 ) {
+    /*if (nombreEmpresa.length < 1 ) {
         mostrarModal("El nombre de la empresa no puede estar vacio ");        
         return;
     }
@@ -49,10 +49,7 @@ function actualizarContractor(){
     if (telefono.length < 1) {
         
     }
-    web = document.getElementById("web").value;
-    if (web.length < 1) {
-        
-    }
+   
     actividad = document.getElementById("actividad").value;
     if (actividad.length < 1) {
         
@@ -72,80 +69,60 @@ function actualizarContractor(){
     location = document.getElementById("location").value;
     if (location.length < 1) {
         
-    }
+    }*/
     
     document.getElementById("editContractor").submit();
 }
 
 function editarContractorON(){
 
-    nombreEmpresa = document.getElementById("nombreEmpresa");
-    nombreEmpresa.disabled = false;
-    rfc = document.getElementById("rfc");
-    rfc.disabled = false;
-    idProyecto = document.getElementById("idProyecto");
-    idProyecto.disabled = false;
-    email = document.getElementById("email");
-    email.disabled = false;
-    telefono = document.getElementById("telefono");
-    telefono.disabled = false;
-    web = document.getElementById("web");
-    web.disabled = false;
-    actividad = document.getElementById("actividad");
-    actividad.disabled = false;
-    domicilio = document.getElementById("domicilio");
-    domicilio.disabled = false;
-    cp = document.getElementById("cp");
-    cp.disabled = false;
-    estado = document.getElementById("estado");
-    estado.disabled = false;
-    location = document.getElementById("location");
-    location.disabled = false;
-    folderName = document.getElementById("folderName");
-    folderName.disabled = false;
-    flImage = document.getElementById("flImage");
-    flImage.disabled = false;
-    
-    guardar =document.getElementById("guardar-btn");
-    guardar.style.display = 'block';
-    on =document.getElementById("on-btn");
-    on.style.display = 'none';
-    off =document.getElementById("off-btn");
-    off.style.display = 'block';
+    var elementos = ["nombreEmpresa", "rfc", "idProyecto", "email", "telefono", "web", "actividad", "domicilio", "cp", "estado", "location", "folderName", "flImage"];
+
+    elementos.forEach(function(id) {
+        var elemento = document.getElementById(id);
+        if (elemento) {
+            elemento.disabled = false;
+        }
+    });
+    var guardar = document.getElementById("guardar-btn");
+    if (guardar) {
+        guardar.style.display = 'block';
+    }
+
+    var on = document.getElementById("on-btn");
+    if (on) {
+        on.style.display = 'none';
+    }
+
+    var off = document.getElementById("off-btn");
+    if (off) {
+        off.style.display = 'block';
+    }
+
+
 }
 
 function editarContractorOFF(){
-    nombreEmpresa = document.getElementById("nombreEmpresa");
-    nombreEmpresa.disabled = true;
-    rfc = document.getElementById("rfc");
-    rfc.disabled = true;
-    idProyecto = document.getElementById("idProyecto");
-    idProyecto.disabled = true;
-    email = document.getElementById("email");
-    email.disabled = true;
-    telefono = document.getElementById("telefono");
-    telefono.disabled = true;
-    web = document.getElementById("web");
-    web.disabled = true;
-    actividad = document.getElementById("actividad");
-    actividad.disabled = true;
-    domicilio = document.getElementById("domicilio");
-    domicilio.disabled = true;
-    cp = document.getElementById("cp");
-    cp.disabled = true;
-    estado = document.getElementById("estado");
-    estado.disabled = true;
-    location = document.getElementById("location");
-    location.disabled = true;
-    folderName = document.getElementById("folderName");
-    folderName.disabled = true;
-    flImage = document.getElementById("flImage");
-    flImage.disabled = true;
+    var elementos = ["nombreEmpresa", "rfc", "idProyecto", "email", "telefono", "web", "actividad", "domicilio", "cp", "estado", "location", "folderName", "flImage"];
 
-    guardar =document.getElementById("guardar-btn");
-    guardar.style.display = 'none';
-    on =document.getElementById("on-btn");
-    on.style.display = 'block';
-    off =document.getElementById("off-btn");
-    off.style.display = 'none';
+    elementos.forEach(function(id) {
+        var elemento = document.getElementById(id);
+        if (elemento) {
+            elemento.disabled = true;
+        }
+    });
+    var guardar = document.getElementById("guardar-btn");
+    if (guardar) {
+        guardar.style.display = 'none';
+    }
+
+    var on = document.getElementById("on-btn");
+    if (on) {
+        on.style.display = 'block';
+    }
+
+    var off = document.getElementById("off-btn");
+    if (off) {
+        off.style.display = 'none';
+    }
 }

@@ -63,7 +63,7 @@
                                             <td>{{strtoupper($worker->blodType)}}</td>
                                             <td>{{strtoupper($worker->chronicDiseases)}}</td>
                                             <td>{{strtoupper($worker->alergies)}}</td>
-                                            <td><a href="{{ route('fuerza-trabajo.editar-trabajador.show', ['idUser' => $worker->idUser]) }}" class="btn btn-outline-success rounded-pill" target="_blank"><i class="mdi mdi-account me-1"></i>VER DETALLE</a></td>
+                                            <td><a href="{{ route('fuerza-trabajo.editar-trabajador.show', ['idUser' => $worker->idUser]) }}" onclick="verFormEditarTrabajador()" class="btn btn-outline-success rounded-pill" target="_blank"><i class="mdi mdi-account me-1"></i>VER DETALLE</a></td>
                                         </tr>
                                     @endforeach
                                 </tbody>

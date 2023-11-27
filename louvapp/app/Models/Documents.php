@@ -24,7 +24,8 @@ class Documents extends Model
         'path',
         'idWorker_workers',
         'typeOfDocument',
-        'validated'
+        'validated',
+        'statusDocument',
         
     ];
 

@@ -1,6 +1,14 @@
 @extends('layouts.app')
 
 @section('main_container')
+<!-- Datatables css -->
+
+<link href="{{ asset("/assets/vendor/datatables.net-bs5/css/dataTables.bootstrap5.min.css") }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset("/assets/vendor/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css") }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset("/assets/vendor/datatables.net-fixedcolumns-bs5/css/fixedColumns.bootstrap5.min.css") }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset("/assets/vendor/datatables.net-fixedheader-bs5/css/fixedHeader.bootstrap5.min.css") }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset("/assets/vendor/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css") }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset("/assets/vendor/datatables.net-select-bs5/css/select.bootstrap5.min.css") }}" rel="stylesheet" type="text/css" />
 
 <script src="{{ asset("/assets/js/views/fuerza-trabajo.js") }}"></script>
 @push('js.app')
@@ -30,7 +38,7 @@
         </div>
     </div>
 </div>
-                                                   
+
 <ul class="nav nav-tabs mb-3">
     <li class="nav-item">
         <a href="#home" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
@@ -57,7 +65,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a href="#ft-personal" data-bs-toggle="tab" aria-expanded="true" class="nav-link " onclick="" >
+        <a href="#ft-personal" data-bs-toggle="tab" aria-expanded="true" class="nav-link " onclick="verFTtrabajador({{$arrayWorker['worker'][0]->idUser}})" >
             <i class="mdi mdi-account-circle d-md-none d-block"></i>
             <span class="d-none d-md-block">FUERZA DE TRABAJO</span>
         </a>
@@ -301,7 +309,6 @@
                     <div class="card-body"> 
                         <h3>DOCUMENTOS AGREGADOS:</h3>
 
-                        
                     </div>
                 </div>
             </div>
@@ -313,9 +320,25 @@
             </div>
         </div>
     </div>
+    
     <div class="tab-pane" id="ft-personal">
         <div class="card">
             <div class="card-body">
+                <table id="table_tf_personal" class="table w-100 nowrap" cellspacing="0" width="100%">
+                <thead style='font-size: 10px'>
+                        <tr>
+                            <th style='text-align:center' ;>CONTRATISTA </th>
+                            <th style='text-align:center' ;>PROYECTO</th>
+                            <th style='text-align:center' ;>FECHA</th>
+                            <th style='text-align:center' ;>ENTRADA</th>
+                            <th style='text-align:center' ;>SALIDA</th>
+                        </tr>
+                    </thead>
+                    <tbody  style='font-size: 10px; text-align: center;'></tbody>
+                </table>
+                <script>
+                        var ftPersonal = '{{ route("lista-trabajadores.indexFuerzaTrabajador", ["idUser" => $arrayWorker["worker"][0]->idUser]) }}';
+                </script>
             </div>
         </div>
     </div>
@@ -367,4 +390,23 @@
         document.getElementById("changePass").checked = false;
     });
 </script>
-@endsection
+ <!-- Datatable Demo Aapp js -->
+ <script src="{{ asset("/assets/js/pages/demo.datatable-init.js") }}"></script>
+@endsection    
+@push('scriptDatatable')
+    <!-- Datatables js -->
+    <script src="{{ asset("/assets/vendor/datatables.net/js/jquery.dataTables.min.js") }}"></script>
+    <script src="{{ asset("/assets/vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js") }}"></script>
+    <script src="{{ asset("/assets/vendor/datatables.net-responsive/js/dataTables.responsive.min.js") }}"></script>
+    <script src="{{ asset("/assets/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js") }}"></script>
+    <script src="{{ asset("/assets/vendor/datatables.net-fixedcolumns-bs5/js/fixedColumns.bootstrap5.min.js") }}"></script>
+    <script src="{{ asset("/assets/vendor/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js") }}"></script>
+    <script src="{{ asset("/assets/vendor/datatables.net-buttons/js/dataTables.buttons.min.js") }}"></script>
+    <script src="{{ asset("/assets/vendor/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js") }}"></script>
+    <script src="{{ asset("/assets/vendor/datatables.net-buttons/js/buttons.html5.min.js") }}"></script>
+    <script src="{{ asset("/assets/vendor/datatables.net-buttons/js/buttons.flash.min.js") }}"></script>
+    <script src="{{ asset("/assets/vendor/datatables.net-buttons/js/buttons.print.min.js") }}"></script>
+    <script src="{{ asset("/assets/vendor/datatables.net-keytable/js/dataTables.keyTable.min.js") }}"></script>
+    <script src="{{ asset("/assets/vendor/datatables.net-select/js/dataTables.select.min.js") }}"></script>
+
+@endpush

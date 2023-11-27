@@ -113,7 +113,7 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-7">
-                            <button type="button" class="btn btn-primary"  onclick="editarContractorON()" id="on-btn" style="display: block;" >EDITAR</button>
+                            <button type="button" class="btn btn-primary" onclick="editarContractorON()" id="on-btn" style="display: block;">EDITAR</button>
                             <button type="button" class="btn btn-primary" onclick="actualizarContractor()" id="guardar-btn" style="display: none;">ACTUALIZAR</button>        
                         </div>
                         <div class="col-5">
