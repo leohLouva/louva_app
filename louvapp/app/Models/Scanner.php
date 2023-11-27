@@ -14,6 +14,7 @@ class Scanner extends Model
     
     protected $fillable = [
         'idUser_worker',
+        'idRegister',
         'idContractor_contractors',
         'idProject_project',
         'date',
