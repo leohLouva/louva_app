@@ -50,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
     //Route::post('/editarProyecto', [App\Http\Controllers\ProjectController::class, 'update'])->name('project.update');
     Route::get('/proyecto/{id}', [App\Http\Controllers\ProjectController::class, 'detalle'])->name('proyecto.detalle');
     Route::post('/image/projectImage', [App\Http\Controllers\ProjectController::class, 'storeProject'])->name('imagenes.storeProject');
-    Route::get('/proyectos/editar-proyecto/{id}', [App\Http\Controllers\ProjectController::class, 'show'])->name('editar-proyecto.show');
+    Route::get('/proyectos/editar-obra/{id}', [App\Http\Controllers\ProjectController::class, 'show'])->name('editar-obra.show');
     Route::post('/editingProject/{id}',[App\Http\Controllers\ProjectController::class,'update'])->name('editando-proyecto.update');
     Route::get('/municipios/{contratistaId}', [App\Http\Controllers\MunicipioController::class,'obtenerMunicipiosPorEstado']);
 
@@ -106,6 +106,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('fuerza-trabajo/reporte-trabajadores-puestos', [App\Http\Controllers\ProjectController::class, 'indexC'])->name('reporte-trabajadores-puestos.indexC');
     Route::get('/proyecto/seleccionar', [App\Http\Controllers\ProjectController::class, 'showSelectionForm'])->name('proyecto.seleccionar');
     Route::post('/proyecto/empresas', [App\Http\Controllers\ProjectController::class, 'graphicByProjects'])->name('proyecto.empresas');
+    Route::post('/proyecto/empresas', [App\Http\Controllers\ProjectController::class, 'graphicByProjectsNew'])->name('proyecto.empresas');
     Route::post('/proyecto/empresas/puestos', [App\Http\Controllers\ProjectController::class, 'graphicByJobs'])->name('proyecto.puestos');
 
     

@@ -84,7 +84,7 @@ class ProjectController extends Controller
 
             $project->save();
             
-            return redirect()->route('editar-proyecto.show', ['id' => $project->idProject])->with('success', 'Proyecto agregado correctamente.');
+            return redirect()->route('editar-obra.show', ['id' => $project->idProject])->with('success', 'Proyecto agregado correctamente.');
 
             /*return response()->json([
                 //'redirect' => route('proyectos/editar-proyecto.show', ['idProject' => $project->idProject]),
@@ -172,7 +172,7 @@ class ProjectController extends Controller
             $getSystemConst = DB::table('construction_system')
                 ->get();
 
-            return view('obras/editar-proyecto', [
+            return view('obras/editar-obra', [
                 'states' => $getStates,
                 'locations' => $getMunicipio,
                 'owners' => $getOwner,
@@ -243,7 +243,7 @@ class ProjectController extends Controller
                 'updated_at' => now()
             ]);
             
-            return redirect()->route('editar-proyecto.show', ['id' => $oProject->idProject])->with('success', 'Proyecto editado correctamente.');
+            return redirect()->route('editar-obra.show', ['id' => $oProject->idProject])->with('success', 'Proyecto editado correctamente.');
             
         }
 
@@ -272,7 +272,7 @@ class ProjectController extends Controller
                 ->where('date', $dateToSearch)
                 ->where('proyecto_empresa.idContractor_project', $request->idEmpresa)
                 ->get();    
-            dd($getWorkersbyDay);
+            
             return response()->json([
                 'empresa' => $empresa,
                 'registro' => $getWorkersbyDay
@@ -281,6 +281,7 @@ class ProjectController extends Controller
         }
         
         public function graphicByProjects(Request $request)
+       
         {   
 
             $fechaOriginal = $request->fechaRegistro;
@@ -288,7 +289,7 @@ class ProjectController extends Controller
             $fechaFormateada = date("Y-m-d", $timestamp);
 
             $getWorkersbyDay = DB::table('attendences')
-                ->select('attendences.idContractor_contractors', 'c.contractorName AS empresa','ft_programado_empresa_proyectos.ft_programado', DB::raw('COUNT(*) as cuenta_checkin'))
+                ->select('attendences.idContractor_contractors','attendences.date', 'c.contractorName AS empresa','ft_programado_empresa_proyectos.ft_programado', DB::raw('COUNT(*) as cuenta_checkin'))
                 ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor',)
                 ->join('users', 'users.idUser', '=', 'attendences.idUser_worker')
                 ->join('jobs', 'jobs.idJob', '=', 'users.idJob_jobs')
@@ -301,13 +302,14 @@ class ProjectController extends Controller
                 ->where('attendences.idProject_project', $request->idProyecto)
                 ->groupBy('attendences.idContractor_contractors', 'c.contractorName','ft_programado_empresa_proyectos.ft_programado')
                 ->get();
+
                 
             $totalCuentaCheckin = 0;
 
             foreach ($getWorkersbyDay as $row) {
                 $totalCuentaCheckin += $row->cuenta_checkin;
             }
-
+            //dd($totalCuentaCheckin);
 
             return response()->json([
                 'registro' => $getWorkersbyDay,
@@ -316,7 +318,112 @@ class ProjectController extends Controller
             //return response()->json($empresa);
         }
 
-        
+        public function graphicByProjectsNew(Request $request)
+        {   
+
+            $fechaOriginal = $request->fechaRegistro;
+            $timestamp = strtotime($fechaOriginal);
+            $fechaFormateada = date("Y-m-d", $timestamp);
+
+            $startDate = now()->subDays(7)->format('Y-m-d');
+            $endDate = now()->format('Y-m-d');
+
+                $getWorkersbyDay = DB::table('attendences')
+                    ->select(
+                        'c.contractorName AS empresa',
+                        'j.jobName AS puesto',
+                        DB::raw('COUNT(*) as checkin_trabajadores'),
+                        'attendences.date',
+                        DB::raw('DAYNAME(attendences.date) as day_name'),
+                    )
+                        ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor')
+                        ->join('users', 'users.idUser', '=', 'attendences.idUser_worker')
+                        ->join('jobs as j', 'j.idJob', '=', 'users.idJob_jobs')
+                        ->where('date', $fechaFormateada)
+                        ->where('attendences.idProject_project', $request->idProyecto)
+                        ->groupBy('c.contractorName', 'j.jobName','attendences.date')
+                        ->get();
+
+                    $getWorkersHistoric = DB::table('attendences')
+                    ->select(
+                        DB::raw('COUNT(*) as total_checkins'),
+                        'attendences.date'
+                    )
+                    ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor')
+                    ->join('users', 'users.idUser', '=', 'attendences.idUser_worker')
+                    ->join('jobs as j', 'j.idJob', '=', 'users.idJob_jobs')
+                    ->where('attendences.idProject_project', $request->idProyecto)
+                    ->where('attendences.date', '>=', '2019-01-01') // Filtrar desde el 1 de enero de 2019
+                    ->groupBy('attendences.date')
+                    ->get();
+                
+            // Ahora procesamos los resultados para agrupar por empresa
+            $empresasConPuestos = [];
+
+            foreach ($getWorkersbyDay as $row) {
+                $empresa = $row->empresa;
+                $puesto = $row->puesto;
+                $cuentaCheckin = $row->checkin_trabajadores;
+                $day = $row->day_name;
+                $fecha = $row->date;
+                
+                // Verificamos si la empresa ya está en el arreglo
+                if (!isset($empresasConPuestos[$empresa])) {
+                    $empresasConPuestos[$empresa] = [];
+                }
+            
+                // Agregamos el puesto y la cuenta de check-in para la empresa
+                $empresasConPuestos[$empresa][] = [
+                    'puesto' => $puesto,
+                    'cuenta_checkin' => $cuentaCheckin,
+                    'fecha' => $fecha,
+                    'empresas'=> $row->empresa
+                ];
+                
+            }
+           
+            $puestos = [];
+
+            foreach ($getWorkersbyDay as $row) {
+                $puesto = $row->puesto;
+                $cuentaCheckin = $row->checkin_trabajadores;
+            
+                // Verificamos si el puesto ya está en el array
+                $index = array_search($puesto, array_column($puestos, 'puesto'));
+            
+                if ($index !== false) {
+                    // Si el puesto ya está en el array, sumamos la cuenta de check-ins
+                    $puestos[$index]['cuenta_checkin'] += $cuentaCheckin;
+                } else {
+                    // Si el puesto no está en el array, lo agregamos con la cuenta de check-ins
+                    $puestos[] = [
+                        'puesto' => $puesto,
+                        'cuenta_checkin' => $cuentaCheckin,
+                    ];
+                }
+            }
+            $totalCuentaCheckin = 0;
+
+            foreach ($getWorkersbyDay as $row) {
+                $totalCuentaCheckin += $row->checkin_trabajadores;
+            }
+
+
+
+            
+            
+            // Ahora $series contiene las series que necesitas
+
+            return response()->json([
+                'registro' => $getWorkersbyDay,
+                'cuenta'=> $totalCuentaCheckin,
+                'categorias' => $categories = array_keys($empresasConPuestos),
+                'puestos' => $puestos,
+                'historico' => $getWorkersHistoric
+            ]);
+            //return response()->json($empresa);
+        }
+
         public function indexC()
         {
     
@@ -391,3 +498,17 @@ class ProjectController extends Controller
 
 
 }
+/* ->select('attendences.idContractor_contractors','attendences.date','c.contractorName AS empresa','ft_programado_empresa_proyectos.ft_programado', DB::raw('COUNT(*) as checkin_trabajadores'))
+                ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor',)
+                ->join('users', 'users.idUser', '=', 'attendences.idUser_worker')
+                ->join('jobs', 'jobs.idJob', '=', 'users.idJob_jobs')
+                //->join('ft_programado_empresa_proyectos', 'attendences.idProject_project', '=', 'ft_programado_empresa_proyectos.idProject_FT_projects')
+                ->join('ft_programado_empresa_proyectos', function ($join) {
+                    $join->on('attendences.idProject_project', '=', 'ft_programado_empresa_proyectos.idProject_FT_projects')
+                         ->on('attendences.idContractor_contractors', '=', 'ft_programado_empresa_proyectos.idContractor_FT_contractors');
+                })
+                //->whereBetween('attendences.date', [$startDate, $endDate])
+                ->where('date', $fechaFormateada)
+                ->where('attendences.idProject_project', $request->idProyecto)
+                ->groupBy('attendences.idContractor_contractors','attendences.date', 'c.contractorName','ft_programado_empresa_proyectos.ft_programado')
+                ->get();*/
