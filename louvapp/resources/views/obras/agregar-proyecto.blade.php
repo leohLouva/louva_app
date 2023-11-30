@@ -8,7 +8,7 @@
     @vite('resources/js/app.js')
 @endpush
 @section('main_container')
-<script src="{{ asset("/assets/js/views/proyecto.js") }}"></script>
+<script src="{{ asset("/assets/js/views/obra.js") }}"></script>
 
 
 <!-- start page title -->

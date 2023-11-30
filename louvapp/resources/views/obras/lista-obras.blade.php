@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('main_container')
-<script src="{{ asset("/assets/js/views/proyecto.js") }}"></script>
+<script src="{{ asset("/assets/js/views/obra.js") }}"></script>
 
 <div class="row">
     <div class="col-12">
@@ -50,7 +50,7 @@
 
             <div class="card-body position-relative" id="listObras">
                 <h4 class="mt-0">
-                    <a href="{{ route('editar-proyecto.show', ['id' => $project->idProject]) }}" class="text-title"> {{ $project->projectName}}</a>
+                    <a href="{{ route('editar-obra.show', ['id' => $project->idProject]) }}" class="text-title"> {{ $project->projectName}}</a>
                 </h4>
                 <p class="mb-3">
                     <i class="mdi mdi-google-maps"></i><b>UBICACION:</b> {{$project->municipio}}, {{$project->estado}} <br>
@@ -61,7 +61,7 @@
                     </span>
                 </p>
                 <div class="mb-3" id="tooltip-container4" style="align-content: center;">
-                    <a href="{{ route('editar-proyecto.show', ['id' => $project->idProject]) }}" class="btn btn-warning rounded-pill mb-3" ><i class="uil uil-comment-alt-edit"></i> VER INFORMACIÓN</a>
+                    <a href="{{ route('editar-obra.show', ['id' => $project->idProject]) }}" class="btn btn-warning rounded-pill mb-3" ><i class="uil uil-comment-alt-edit"></i> VER INFORMACIÓN</a>
                 </div>            
             </div> <!-- end card-body-->
         </div> <!-- end card-->

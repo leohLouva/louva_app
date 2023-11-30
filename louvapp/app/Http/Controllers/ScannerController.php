@@ -13,77 +13,90 @@ class ScannerController extends Controller
     public function show($date,$id)
     {
 
-        if(auth()->user()->idType_user_type == 7){
+        if(auth()->user()->idType_user_type == 7 && auth()->user()->idContractor_contractors == 1){
             $fechaFormateada = date("Y-m-d", strtotime($date));
 
         $worker = DB::table('users')
             //->join('worker_status_incidentes', 'users.status', '=', 'worker_status_incidentes.idWorker_status')
             ->join('contractors', 'users.idContractor_contractors', '=', 'contractors.idContractor')
             ->join('jobs', 'users.idJob_jobs', '=', 'jobs.idJob')
-            //->join('proyecto_empresa', 'proyecto_empresa.idContractor_project', '=', 'users.idContractor_contractors')
-            ->join('projects', 'projects.idProject', '=', 'users.idProject_user')
+            ->join('proyecto_empresa', 'proyecto_empresa.idContractor_project', '=', 'users.idContractor_contractors')
+            ->join('projects', 'projects.idProject', '=', 'proyecto_empresa.idProyecto')
             ->where('users.idUser', '=', $id)
+            //->where('projects.idProject', '=', auth()->user()->idProject_user)
             ->get();
 
-        $getJobs = DB::table('jobs')->get();
-        
-        $getContractors = DB::table('contractors')->get();
-
-        $getNameDocuments = DB::table('documentType')->get();
-        
-        $getUser_type = DB::table('user_type')->get();
-       
-
-        $check = DB::table('attendences')
-            ->where('attendences.idUser_worker', $id)
-            ->whereDate('date', $fechaFormateada)
-            ->first(); 
-
-
-        if($check == NULL){//usuario no ha registrado entrada ni salida
-            $arrayWorker = array(
-                'status' => 1,
-                'date' => $date,
-                'worker' => $worker,
-                'jobs' => $getJobs,
-                'contractors' => $getContractors,
-                'types' => $getUser_type,
-                'message' =>  '',
-                'style' => '',
-                'horaEntrada' => 'SIN ENTRADA REGISTRADA',
-                'horaSalida' => 'SIN SALIDA REGISTRADA',
-            );
-
-        }else{ 
-            if($check->endTime == NULL){//ahora vamos a chcar el registro de salida.  
-                      
+            if ($worker->count() < 0) {
                 $arrayWorker = array(
-                    'status' => 1,
-                    'date' => $date,
-                    'worker' => $worker,
-                    'jobs' => $getJobs,
-                    'contractors' => $getContractors,
-                    'types' => $getUser_type,
-                    'message' =>  '',
-                    'horaEntrada' => $check->startTime,
-                    'horaSalida' => 'SIN SALIDA REGISTRADA',
-                    'style' => ''
-                );
-            }else{
-                $arrayWorker = array(
-                    'status' => 1,
-                    'date' => $date,
-                    'worker' => $worker,
-                    'jobs' => $getJobs,
-                    'contractors' => $getContractors,
-                    'types' => $getUser_type,
-                    'message' =>  '',
+                    'status' => 2,
+                    'date' => NULL,
+                    'worker' => NULL,
+                    'jobs' => NULL,
+                    'contractors' => NULL,
+                    'types' => NULL,
+                    'message' =>  'LO SIENTO MUCHO, TU USUARIO COMO REGISTRADOR, NO PERTENECE A ESTE PROYECTO',
                     'style' => '',
-                    'horaEntrada' => $check->startTime,
-                    'horaSalida' => $check->endTime,
+                    'horaEntrada' => NULL,
+                    'horaSalida' => NULL,
                 );
-            }   
-        }
+            } else {
+
+                $getJobs = DB::table('jobs')->get();
+                $getContractors = DB::table('contractors')->get();
+                $getNameDocuments = DB::table('documentType')->get();
+                $getUser_type = DB::table('user_type')->get();
+            
+                $check = DB::table('attendences')
+                    ->where('attendences.idUser_worker', $id)
+                    ->whereDate('date', $fechaFormateada)
+                    ->first(); 
+
+
+                if($check == NULL){//usuario no ha registrado entrada ni salida
+                    $arrayWorker = array(
+                        'status' => 1,
+                        'date' => $date,
+                        'worker' => $worker,
+                        'jobs' => $getJobs,
+                        'contractors' => $getContractors,
+                        'types' => $getUser_type,
+                        'message' =>  '',
+                        'style' => '',
+                        'horaEntrada' => 'SIN ENTRADA REGISTRADA',
+                        'horaSalida' => 'SIN SALIDA REGISTRADA',
+                    );
+
+                }else{ 
+                    if($check->endTime == NULL){//ahora vamos a chcar el registro de salida.  
+                            
+                        $arrayWorker = array(
+                            'status' => 1,
+                            'date' => $date,
+                            'worker' => $worker,
+                            'jobs' => $getJobs,
+                            'contractors' => $getContractors,
+                            'types' => $getUser_type,
+                            'message' =>  '',
+                            'horaEntrada' => $check->startTime,
+                            'horaSalida' => 'SIN SALIDA REGISTRADA',
+                            'style' => ''
+                        );
+                    }else{
+                        $arrayWorker = array(
+                            'status' => 1,
+                            'date' => $date,
+                            'worker' => $worker,
+                            'jobs' => $getJobs,
+                            'contractors' => $getContractors,
+                            'types' => $getUser_type,
+                            'message' =>  '',
+                            'style' => '',
+                            'horaEntrada' => $check->startTime,
+                            'horaSalida' => $check->endTime,
+                        );
+                    }   
+                }
+            }
 
         }else{
             $arrayWorker = array(
