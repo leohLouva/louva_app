@@ -27,7 +27,7 @@
     <div class="col-sm-8">
         <div class="text-sm-end">
             <a href="{{ route('lista-obras.index') }}" class="btn btn-primary rounded-pill mb-3" >VER TODAS LAS OBRASS</a>
-            <a href="{{ route('agregar-proyecto.verAgregarProyecto') }}" class="btn btn-danger rounded-pill mb-3"><i class="mdi mdi-plus"></i>  OBRA NUEVA</a>
+            <a href="{{ route('agregar-obra.verAgregarProyecto') }}" class="btn btn-danger rounded-pill mb-3"><i class="mdi mdi-plus"></i>  OBRA NUEVA</a>
         </div>
     </div>
 </div> 

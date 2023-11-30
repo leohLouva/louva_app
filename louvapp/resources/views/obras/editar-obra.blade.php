@@ -80,7 +80,7 @@
                             <input type="hidden" id="idProyecto" value="{{$projects->idProject}}">
                             <div class="input-group" id="datepicker2">
                                 <span class="input-group-text" id="inputGroupPrepend"><i class="ri-calendar-2-fill"></i></span>
-                                <input type="text" class="form-control" name="fechaInicioScript" id="fechaInicioScript" placeholder="" aria-describedby="inputGroupPrepend" data-provide="datepicker" data-date-container="#datepicker2" data-date-format="d-M-yyyy" data-date-autoclose="true"  value="{{ date('d-m-Y',strtotime("-1 days")) }}" onchange="getHistorico()">
+                                <input type="text" class="form-control" name="fechaInicioScript" id="fechaInicioScript" placeholder="" aria-describedby="inputGroupPrepend" data-provide="datepicker" data-date-container="#datepicker2" data-date-format="d-M-yyyy" data-date-autoclose="true"  value="{{ date('d-m-Y') }}" onchange="getHistorico()">
                             </div>
                         </div>
                         <div class="col-5">

@@ -269,7 +269,7 @@
                                     <a href="{{ route('lista-obras.index') }}" >VER</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('agregar-proyecto.verAgregarProyecto') }}">AGREGAR</a>
+                                    <a href="{{ route('agregar-obra.verAgregarProyecto') }}">AGREGAR</a>
                                 </li>
                             </ul>
                         </li>

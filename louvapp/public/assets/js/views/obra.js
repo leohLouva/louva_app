@@ -104,10 +104,8 @@ function getHistorico(){
             puestosTotales[puesto] += total;
         });
         
-        // Limpiar el contenedor
-        document.getElementById("puestosContainer").innerHTML = "";
         
-        // Iterar sobre el objeto y agregar elementos al contenedor
+        document.getElementById("puestosContainer").innerHTML = "";
         let filaActual = null;
         for (const [puesto, total] of Object.entries(puestosTotales)) {
             if (!filaActual) {
@@ -130,7 +128,6 @@ function getHistorico(){
             }
         }
         
-        // Agregar la última fila si hay elementos restantes
         if (filaActual) {
             document.getElementById("puestosContainer").appendChild(filaActual);
         }

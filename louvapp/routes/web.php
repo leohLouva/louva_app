@@ -43,14 +43,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('obras/lista-obras', [App\Http\Controllers\ProjectController::class, 'index'])->name('lista-obras.index');
     Route::get('/listado-obras/buscar', [App\Http\Controllers\ProjectController::class, 'buscarProyectos'])->name('proyectos.buscar');
 
-    Route::get('proyectos/agregar-proyecto', [App\Http\Controllers\ProjectController::class, 'verAgregarProyecto'])->name('agregar-proyecto.verAgregarProyecto');
+    Route::get('obra/agregar-obra', [App\Http\Controllers\ProjectController::class, 'verAgregarProyecto'])->name('agregar-obra.verAgregarProyecto');
 
     Route::post('addingProject', [App\Http\Controllers\ProjectController::class, 'store'])->name('addingProject');
     Route::post('addingProyecto', [App\Http\Controllers\ProjectController::class, 'store'])->name('addingProject');
     //Route::post('/editarProyecto', [App\Http\Controllers\ProjectController::class, 'update'])->name('project.update');
     Route::get('/proyecto/{id}', [App\Http\Controllers\ProjectController::class, 'detalle'])->name('proyecto.detalle');
     Route::post('/image/projectImage', [App\Http\Controllers\ProjectController::class, 'storeProject'])->name('imagenes.storeProject');
-    Route::get('/proyectos/editar-obra/{id}', [App\Http\Controllers\ProjectController::class, 'show'])->name('editar-obra.show');
+    Route::get('/obra/editar-obra/{id}', [App\Http\Controllers\ProjectController::class, 'show'])->name('editar-obra.show');
     Route::post('/editingProject/{id}',[App\Http\Controllers\ProjectController::class,'update'])->name('editando-proyecto.update');
     Route::get('/municipios/{contratistaId}', [App\Http\Controllers\MunicipioController::class,'obtenerMunicipiosPorEstado']);
 

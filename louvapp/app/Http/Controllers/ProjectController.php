@@ -48,7 +48,7 @@ class ProjectController extends Controller
             $getSystemConst = DB::table('construction_system')
                 ->get();
 
-            return view('obras/agregar-proyecto', [
+            return view('obras/agregar-obra', [
                 'states' => $getStates,
                 'owners' => $getOwner,
                 'reponsables' => $getResponsable,
