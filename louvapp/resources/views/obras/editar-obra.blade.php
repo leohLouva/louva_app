@@ -247,7 +247,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">DESCRIPCIÓN</label>
-                                <textarea class="form-control" name="descripcion" id="descripcion" rows="5" placeholder="" maxlength="140" oninput="convertirAMayusculas(this)" disabled>{{strtoupper($projects->description)}}</textarea>
+                                <textarea class="form-control" name="descripcion" id="descripcion" rows="5" placeholder="" maxlength="500" oninput="convertirAMayusculas(this)" disabled>{{strtoupper($projects->description)}}</textarea>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">NOMBRE DEL DESARROLLADOR</label>
