@@ -8,21 +8,66 @@
 @section('main_container')
 <!-- Apex Chart js -->
 <script src="{{ asset("/assets/vendor/apexcharts/apexcharts.min.js") }}"></script>
-<!-- Daterangepicker css -->
-<link rel="stylesheet" href="{{ asset("/assets/vendor/daterangepicker/daterangepicker.css") }}" type="text/css" />
+ <!-- Bootstrap Datepicker css -->
+ <link href="{{asset("/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css")}} rel="stylesheet" type="text/css" />
+
+
 
 
 <script src="{{ asset("/assets/js/views/obra.js") }}"></script>
 <style>
   .puesto-container {
-    margin-bottom: 70px; /* Ajusta el espaciado entre cada elemento */
-    /* Agrega cualquier otro estilo necesario */
-    margin-right: 45px;
-}
-#puestosContainer {
-    display: flex;
-    flex-wrap: wrap;
-}  
+    margin-bottom: 70px;
+        
+        margin-right: 45px;
+        margin-right: 10px; 
+
+        
+        @media (max-width: 768px) {
+            margin-right: 0; 
+            margin-bottom: 10px; 
+            display: block; 
+        }
+    }
+    #puestosContainer {
+        display: flex;
+        flex-wrap: wrap;
+    }     
+    .col-4, .col-3, .col-5 {
+            margin-bottom: 20px; 
+    }
+    /* Personaliza la posición del marcador de día activo */
+    .datepicker-dropdown td.active {
+        position: relative;
+    }
+
+    /* Ajusta la posición del círculo */
+    .datepicker-dropdown td.active:after {
+        content: "";
+        display: block;
+        width: 12px;  /* Ajusta el tamaño según sea necesario */
+        height: 12px; /* Ajusta el tamaño según sea necesario */
+        
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    #calendarRangeCss{
+        top: -300px;
+        z-index: 1;
+    }    
+
+    #graPrinc{
+        top: -300px;
+    }
+
+    #ftPuesto{
+        top: -45px;
+    }
+
+
 </style>
 
 <div class="row">
@@ -34,7 +79,7 @@
         </div>
     </div>
 
-    <div class="">
+    <div class="container">
         <div class="card-body">
             <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
                 <li class="nav-item">
@@ -56,17 +101,16 @@
                         <a href="#lista-ingresos-ft" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0">INGRESOS DE TRABAJADORES</a>
                     </h6>
                 </li>
-                
             </ul>       
             <div class="tab-content">
                 <div class="tab-pane show active" id="dashboard-obra" >
-                    <div class="row">
-                        <div class="col-4">
+                    <div class="row" id="bloque1">
+                        <div class="col-3">
                             <div class="card text-white bg-light overflow-hidden">
                                 <div class="card-body">
                                     <div class="toll-free-box text-center">
                                         <h4> <i class="mdi mdi-office-building-cog"></i>{{$projects->projectName}} </h4>
-                                    </div>
+                                    </div>  
                                 </div>
                             </div>
                         </div>
@@ -76,17 +120,11 @@
                                 <h3><span id="cuentaTrabajadores"></span></h3>
                                 <p class="text-muted font-15 mb-0"> INGRESOS TOTALES </p>
                             </div>
-                            <br>
-                            <input type="hidden" id="idProyecto" value="{{$projects->idProject}}">
-                            <div class="input-group" id="datepicker2">
-                                <span class="input-group-text" id="inputGroupPrepend"><i class="ri-calendar-2-fill"></i></span>
-                                <input type="text" class="form-control" name="fechaInicioScript" id="fechaInicioScript" placeholder="" aria-describedby="inputGroupPrepend" data-provide="datepicker" data-date-container="#datepicker2" data-date-format="d-M-yyyy" data-date-autoclose="true"  value="{{ date('d-m-Y') }}" onchange="getHistorico()">
-                            </div>
                         </div>
-                        <div class="col-5">
+                        <div class="col-6">
                             <div class="card">
                                 <div class="card-body">
-
+                                    <input type="hidden" id="idProyecto" value="{{$projects->idProject}}">
                                     <div dir="ltr">
                                         <div id="line-chart-zoomable" class="apex-charts" data-colors="#fa5c7c"></div>
                                     </div>
@@ -94,22 +132,50 @@
                             </div>
                         </div>
                     </div>
-                   
-                    <div class="row">
-                        <div class="col-7">
-                            <div class="card">
+                   <div class="row">
+                        <div class="col-6">
+                            <div class="input-daterange input-group calendarRange" id="calendarRangeCss">
+                                <span class="input-group-addon"> 
+                                    <p>
+                                        <h4> <a href="#" class="badge badge-info-lighten"> DEL </a></h4>
+                                    </p>
+                                </span> 
+                                <span class="input-group-text" id="inputGroupPrepend"><i class="ri-calendar-2-fill"></i></span>
+                                <input autocomplete="off" type="text" class="input-sm form-control" id="dateStart" style="text-align: center;" >
+                                <span class="input-group-addon"> 
+                                    <p>
+                                        <h4> <a href="#" class="badge badge-info-lighten"> AL </a></h4>
+                                    </p>
+                                </span> 
+                                <span class="input-group-text" id="inputGroupPrepend"><i class="ri-calendar-2-fill"></i></span>
+                                <input autocomplete="off" type="text" class="input-sm form-control" id="dateEnd" style="text-align: center;" value="{{ date('d-m-Y') }}" onchange="getHistorico()">
+                            </div><br>
+                            
+                        </div>
+                   </div>
+                    <div class="row" id="">
+                        <div class="col-6" id="parriba">
+                            <div class="card" id="graPrinc">
                                 <div class="card-body">
-                                    <h4 class="header-title"></h4>
+                                    <div class="header-title">
+                                        <div class="row">
+                                            <div class="col-7">
+                                                
+                                            </div>
+                                            <div class="col-5"></div>
+                                        </div>
+                                    </div>
                                     <div dir="ltr">
-                                        <div id="stacked-bar" class="apex-charts" data-colors="#727cf5,#0acf97,#fa5c7c,#6c757d,#39afd1"></div>    
+                                        <h4 class="header-title">FUERZA DE TRABAJO DEL </h4>
+                                        <div id="stacked-bar" class="apex-charts" data-colors="#727cf5,#0acf97,#fa5c7c,#6c757d,#39afd1,#F52EDD"></div>    
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-5">
-                            <div class="card">
+                        <div class="col-6">
+                            <div class="card" id="ftPuesto">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h4 class="header-title">FT POR PUESTO</h4>
+                                    <h4 class="header-title">FUERZA DE TRABAJO POR PUESTO</h4>
                                 </div>
 
                                 <div class="card-body pt-0 mb-2"  style="max-height: 319px;">
@@ -203,7 +269,7 @@
                             </div>
                             <div class="mb-3 position-relative" id="datepicker1">
                                 <label class="form-label">FECHA DE INICIO</label>
-                                <div class="input-group">
+                                <div class="input-daterange input-group calendarRange">
                                     <span class="input-group-text" id="inputGroupPrepend"><i class="ri-calendar-2-fill"></i></span>
                                     <input type="text" class="form-control" name="fechaInicio" id="fechaInicio" placeholder="" aria-describedby="inputGroupPrepend" data-provide="datepicker" data-date-container="#datepicker1" data-date-format="d-M-yyyy" data-date-autoclose="true"  value="{{ date('d-m-Y', strtotime($projects->fechaInicio))}}" oninput="convertirAMayusculas(this)" disabled>
                                 </div>
@@ -350,17 +416,12 @@
 
     <!-- Vendor js -->
     <script src="{{ asset("/assets/js/vendor.min.js") }}"></script>
+    <!-- Bootstrap Datepicker Plugin js -->
+    <script src={{ asset("assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js") }}></script>
+   
     <!-- App js -->
     <script src="{{ asset("/assets/js/app.min.js") }}"></script>
-    <!-- Bootstrap Datepicker Plugin js -->
-    <script src="{{ asset("/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js") }}"></script>
-     <!-- Datatable Demo Aapp js -->
-    <script src="{{ asset("/assets/js/pages/demo.datatable-init.js") }}"></script>
 
-    <script src="{{ asset("/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js") }}"></script>
-    <!-- Daterangepicker Plugin js -->
-    <script src="{{ asset("/assets/vendor/daterangepicker/moment.min.js") }}"></script>
-    <script src="{{ asset("/assets/vendor/daterangepicker/daterangepicker.js") }}"></script>
     <script>
         var proyectoEmpresasRoutePuestos = '{{ route('proyecto.puestos') }}';
         var proyectoEmpresasRoute = '{{ route('proyecto.empresas') }}';
@@ -368,13 +429,27 @@
     </script>
     <script>
     jQuery(document).ready(function($) {
-        // Tu código aquí
-        getHistorico()
+        
+        $('.calendarRange').datepicker({
+            format: 'dd-mm-yyyy',
+            autoclose: true,
+            todayHighlight: true,
+            orientation: 'bottom',
+
+        });
+        //$('#calendarRange').keypress(function (evt) { return false; });
+        console.log(new Date);
+        $("#dateStart").datepicker("update", getFormatDate(new Date));
+        //$("#dateEnd").datepicker("update", getFormatDate()) ;
+
+        getHistorico();
     });
     </script>
 
-@endsection
+
 @push('scriptDatatable')
+     <!-- Datatable Demo Aapp js -->
+     <script src="{{ asset("/assets/js/pages/demo.datatable-init.js") }}"></script>
     <!-- Datatables js -->
     <script src="{{ asset("/assets/vendor/datatables.net/js/jquery.dataTables.min.js") }}"></script>
     <script src="{{ asset("/assets/vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js") }}"></script>
@@ -390,3 +465,5 @@
     <script src="{{ asset("/assets/vendor/datatables.net-keytable/js/dataTables.keyTable.min.js") }}"></script>
     <script src="{{ asset("/assets/vendor/datatables.net-select/js/dataTables.select.min.js") }}"></script>
 @endpush
+
+@endsection

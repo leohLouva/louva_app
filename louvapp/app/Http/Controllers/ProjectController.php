@@ -321,43 +321,50 @@ class ProjectController extends Controller
         public function graphicByProjectsNew(Request $request)
         {   
 
-            $fechaOriginal = $request->fechaRegistro;
-            $timestamp = strtotime($fechaOriginal);
-            $fechaFormateada = date("Y-m-d", $timestamp);
+            $fechaInicioSinFormato = $request->fechaInicio;
+            $timestampInicio = strtotime($fechaInicioSinFormato);
 
-            $startDate = now()->subDays(7)->format('Y-m-d');
-            $endDate = now()->format('Y-m-d');
+            $fechaFinSinFormato = $request->fechaFin;
+            $timestampFin = strtotime($fechaFinSinFormato);
 
-                $getWorkersbyDay = DB::table('attendences')
-                    ->select(
-                        'c.contractorName AS empresa',
-                        'j.jobName AS puesto',
-                        DB::raw('COUNT(*) as checkin_trabajadores'),
-                        'attendences.date',
-                        DB::raw('DAYNAME(attendences.date) as day_name'),
-                    )
-                        ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor')
-                        ->join('users', 'users.idUser', '=', 'attendences.idUser_worker')
-                        ->join('jobs as j', 'j.idJob', '=', 'users.idJob_jobs')
-                        ->where('date', $fechaFormateada)
-                        ->where('attendences.idProject_project', $request->idProyecto)
-                        ->groupBy('c.contractorName', 'j.jobName','attendences.date')
-                        ->get();
+            //estas son la fechas formateadas para la consulta
+            $fechaInicio = date("Y-m-d", $timestampInicio);
+            $fechaFin = date("Y-m-d", $timestampFin);
 
-                    $getWorkersHistoric = DB::table('attendences')
-                    ->select(
-                        DB::raw('COUNT(*) as total_checkins'),
-                        'attendences.date'
-                    )
+            $getWorkersbyDay = DB::table('attendences')
+                ->select(
+                    'c.contractorName AS empresa',
+                    'j.jobName AS puesto',
+                    DB::raw('COUNT(*) as checkin_trabajadores'),
+                    'attendences.date',
+                    DB::raw('DAYNAME(attendences.date) as day_name'),
+                    'p.ft_programado',
+                )
                     ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor')
                     ->join('users', 'users.idUser', '=', 'attendences.idUser_worker')
                     ->join('jobs as j', 'j.idJob', '=', 'users.idJob_jobs')
-                    ->where('attendences.idProject_project', $request->idProyecto)
-                    ->where('attendences.date', '>=', '2019-01-01') // Filtrar desde el 1 de enero de 2019
-                    ->groupBy('attendences.date')
+                    ->join('ft_programado_empresa_proyectos as p', 'p.idContractor_FT_contractors', '=', 'attendences.idContractor_contractors')
+                    //->where('date', $fechaFormateada)
+                    ->whereBetween('attendences.date', [$fechaInicio, $fechaFin])
+                    ->groupBy('c.contractorName', 'j.jobName','attendences.date','p.ft_programado')
                     ->get();
+                    
+
+
+                    $getWorkersHistoric = DB::table('attendences')
+                        ->select(
+                            DB::raw('COUNT(*) as total_checkins'),
+                            'attendences.date'
+                            )
+                        ->join('contractors AS c', 'attendences.idContractor_contractors', '=', 'c.idContractor')
+                        ->join('users', 'users.idUser', '=', 'attendences.idUser_worker')
+                        ->join('jobs as j', 'j.idJob', '=', 'users.idJob_jobs')
+                        ->where('attendences.idProject_project', $request->idProyecto)
+                        ->where('attendences.date', '>=', '2019-01-01') 
+                        ->groupBy('attendences.date')
+                        ->get();
                 
-            // Ahora procesamos los resultados para agrupar por empresa
+
             $empresasConPuestos = [];
 
             foreach ($getWorkersbyDay as $row) {
@@ -408,10 +415,6 @@ class ProjectController extends Controller
                 $totalCuentaCheckin += $row->checkin_trabajadores;
             }
 
-
-
-            
-            
             // Ahora $series contiene las series que necesitas
 
             return response()->json([
@@ -419,7 +422,9 @@ class ProjectController extends Controller
                 'cuenta'=> $totalCuentaCheckin,
                 'categorias' => $categories = array_keys($empresasConPuestos),
                 'puestos' => $puestos,
-                'historico' => $getWorkersHistoric
+                'historico' => $getWorkersHistoric,
+                'fechaInicio' => $request->fechaInicio,
+                'fechaFin' => $request->fechaFin
             ]);
             //return response()->json($empresa);
         }
