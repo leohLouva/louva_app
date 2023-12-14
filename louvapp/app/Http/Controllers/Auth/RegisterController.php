@@ -1,73 +1,70 @@
 <?php
+// app/Http/Controllers/Auth/RegisterController.php
 
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use App\Models\Register;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail; 
 
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
     use RegistersUsers;
 
-    /**
-     * Where to redirect users after registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    // ... otros métodos ...
 
     /**
-     * Create a new controller instance.
+     * Show the registration form.
      *
-     * @return void
+     * @return \Illuminate\View\View
      */
-    public function __construct()
+    public function showRegistrationForm()
     {
-        $this->middleware('guest');
+        return view('auth.register');
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+    public function store(Request $request)
+    { 
+        $user = new Register([
+            'idContractor_contractors' => $request->data['contratista'],
+            'idProject_user' => $request->data['idProyecto'],
+            'idJob_jobs' => $request->data['puesto'],
+            'idType_user_type' => $request->data['tipoUsuario'],
+            'userName' => $request->data['nombreUsuario'],
+            'password' => Hash::make($request->password),
+            'email' => $request->data['correo'],
+            'isDisable' => 0,
+            'lastName' => $request->data['apellido'],
+            'name' => $request->data['nombre'],
+            'rfc' => $request->data['rfc'],
+            'personalPhone' => $request->data['telefonoPersonal'],
+            'emergencyPhone' => $request->data['telefonoEmergencia'],
+            'imgWorker' => $request->data['flImage']
         ]);
+        $user->save();
+        //$user->email
+        $email = 'l.h.v.m.n.c@gmail.com';
+        // Después de guardar el usuario
+        //\Mail::to($email)->send(new WelcomeMail($user));
+
+        //Mail::to($email)->send(new WelcomeMail($user));
+
+        
+            return response()->json([
+                'status' => '1',
+                'title' => 'ÉXITO',
+                'message' => 'TU REGISTRO HA SIDO ALMACENADO CON ÉXITO'
+            ]);
+
+        //return response()->json(['status' => 1, 'message' => 'Registro exitoso']);
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\Models\User
-     */
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
-    }
+
+    // ... otros métodos ...
+
 }

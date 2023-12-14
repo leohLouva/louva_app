@@ -32,6 +32,7 @@
                         <span><img src="{{ asset("/assets/images/logo.png") }}" alt="logo" height="150px"></span>
                     </a>
                 </div>
+                
                 <form method="POST" action="{{ route('login') }}">
                     @csrf <!-- Agrega el token CSRF -->
                 <div class="my-auto">
@@ -75,6 +76,12 @@
                                 {{ __('Forgot Your Password?') }}
                             </a>-->
                         @endif
+                    </div>
+                    <br>
+                    <div class="d-grid mb-3 text-center">
+                        <a href="" class="btn btn-success">
+                            {{ __('Registrarse') }}
+                        </a>
                     </div>
                     </form><!-- end form-->
                 

@@ -319,7 +319,7 @@ class ProjectController extends Controller
         }
 
         public function graphicByProjectsNew(Request $request)
-        {   
+        {      
 
             $fechaInicioSinFormato = $request->fechaInicio;
             $timestampInicio = strtotime($fechaInicioSinFormato);
@@ -345,6 +345,7 @@ class ProjectController extends Controller
                     ->join('jobs as j', 'j.idJob', '=', 'users.idJob_jobs')
                     ->join('ft_programado_empresa_proyectos as p', 'p.idContractor_FT_contractors', '=', 'attendences.idContractor_contractors')
                     //->where('date', $fechaFormateada)
+                    ->where('attendences.idProject_project', $request->idProyecto)
                     ->whereBetween('attendences.date', [$fechaInicio, $fechaFin])
                     ->groupBy('c.contractorName', 'j.jobName','attendences.date','p.ft_programado')
                     ->get();

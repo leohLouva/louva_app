@@ -57,11 +57,11 @@
                         <!-- Logo light -->
                         <a href="{{ url('/home') }}" class="logo-light">
                             <span class="logo-lg">
-                                <img src="{{ asset("assets/images/logo.png") }}" alt="logo">
+                                <img src="{{ asset("assets/images/logo.png") }}" alt="logo" style="width: 135px; height: 80px;">
 
                             </span>
                             <span class="logo-sm">
-                                <img src="{{ asset("assets/images/logo-sm.png") }}" alt="small logo">
+                                <img src="{{ asset("assets/images/logo.png") }}" alt="small logo">
                                 
                             </span>
                         </a>
@@ -69,10 +69,10 @@
                         <!-- Logo Dark -->
                         <a href="{{ url('/home') }}" class="logo-dark">
                             <span class="logo-lg">
-                                <img src="{{ asset("/assets/images/logo-dark.png") }}" alt="dark logo">
+                                <img src="{{ asset("/assets/images/logo-dark.png") }}" alt="dark logo" style="width: 160px; height: 85px;">
                             </span>
                             <span class="logo-sm">
-                                <img src="{{ asset("/assets/images/logo-dark-sm.png") }}" alt="small logo">
+                                <img src="{{ asset("/assets/images/logo-dark.png") }}" alt="small logo" >
                             </span>
                         </a>
                     </div>

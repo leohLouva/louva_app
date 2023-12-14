@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Auth::routes(); 
+//Registrar contratistas: 
+Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('showRegistrationForm');
+Route::post('/registrando',[App\Http\Controllers\Auth\RegisterController::class,'store'])->name('registrandoContratista');
 
 // Rutas protegidas
 Route::middleware(['auth'])->group(function () {
